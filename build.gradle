@@ -1,0 +1,75 @@
+import groovy.xml.MarkupBuilder
+
+plugins {
+    id 'java'
+}
+
+def MAIN_CLASS = 'fr.ostix.game.main.Main'
+group 'fr.ostix.game'
+version '1.0_Alpha'
+
+
+
+repositories {
+    mavenCentral()
+}
+
+task runConfiguration {
+    //Run
+    def run = new File("run")
+    if (!run.exists()) run.mkdirs()
+
+    String dir = projectDir.getAbsolutePath();
+    println(dir);
+
+
+    //Config
+    def runConfigurationsDir = new File(dir+"/.idea/runConfigurations")
+    runConfigurationsDir.mkdirs()
+    def taskName = 'Main'
+    def mainClass = MAIN_CLASS
+    def props = '-Djava.library.path=../natives -Dgame.logging.console.level=log -Dorg.lwjglx.VALIDATE'
+    def args = ''
+
+    def writer = new FileWriter(new File(runConfigurationsDir, "${taskName}.xml"))
+    def xml = new MarkupBuilder(writer)
+    xml.component(name: "ProjectRunConfigurationManager") {
+        configuration(default: 'false', name: taskName, type: "Application", factoryName: "Application", singleton: "true") {
+            option(name: 'MAIN_CLASS_NAME', value: mainClass)
+            option(name: 'VM_PARAMETERS', value: props)
+            option(name: 'PROGRAM_PARAMETERS', value: args)
+            option(name: 'WORKING_DIRECTORY', value: '$PROJECT_DIR$/run')
+            module(name: '$PROJECT_NAME$.main')
+        }
+    }
+
+}
+
+
+dependencies {
+    implementation fileTree('libs')
+
+    implementation "org.joml:joml:1.10.1"
+
+    // https://mvnrepository.com/artifact/org.lwjgl/lwjgl
+    implementation group: 'org.lwjgl', name: 'lwjgl', version: '3.2.3'
+    // https://mvnrepository.com/artifact/org.lwjgl/lwjgl-opengl
+    implementation group: 'org.lwjgl', name: 'lwjgl-opengl', version: '3.2.3'
+    // https://mvnrepository.com/artifact/org.lwjgl/lwjgl-openal
+    implementation group: 'org.lwjgl', name: 'lwjgl-openal', version: '3.2.3'
+    // https://mvnrepository.com/artifact/org.lwjgl/lwjgl-glfw
+    implementation group: 'org.lwjgl', name: 'lwjgl-glfw', version: '3.2.3'
+
+    // https://mvnrepository.com/artifact/org.l33tlabs.twl/pngdecoder
+    compile group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
+
+    // https://mvnrepository.com/artifact/net.sf.trove4j/trove4j
+    implementation group: 'net.sf.trove4j', name: 'trove4j', version: '3.0.3'
+
+    // https://mvnrepository.com/artifact/com.flowpowered/caustic-api
+    implementation group: 'com.flowpowered', name: 'caustic-api', version: '1.0.0'
+
+// https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.28'
+
+}
