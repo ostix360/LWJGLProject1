@@ -81,7 +81,6 @@ public class AudioManager {
 
             pcm.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm) * channels);
             stb_vorbis_close(decoder);
-
             return pcm;
         }
     }

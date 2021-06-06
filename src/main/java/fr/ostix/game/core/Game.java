@@ -54,7 +54,7 @@ public class Game extends Thread {
 
     private void init() {
         DisplayManager.createDisplay();
-        AudioManager.init(AL11.AL_EXPONENT_DISTANCE_CLAMPED);
+        AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
         world.initWorld(loader);
     }
 

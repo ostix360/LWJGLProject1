@@ -10,6 +10,7 @@ public class SoundSource {
 
     public SoundSource(float rollOffFactor, float referenceDistance, float maxDistance) {
         this.sourceID = alGenSources();
+        alSourcei(sourceID,AL_SOURCE_RELATIVE,AL_FALSE);
         alSourcef(sourceID, AL_ROLLOFF_FACTOR, rollOffFactor);
         alSourcef(sourceID, AL_REFERENCE_DISTANCE, referenceDistance);
         alSourcef(sourceID, AL_MAX_DISTANCE, maxDistance);

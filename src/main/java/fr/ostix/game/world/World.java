@@ -23,6 +23,7 @@ import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.openal.AL10;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,11 +97,21 @@ public class World {
 //        Matrix3f m = new Matrix3f(entity.getTransformationMatrix());
 //        System.out.println(Maths.matrix3x3ToVector3f(m));
 
-        SoundSource back = AudioManager.loadSound("ambiant",1,100,1000);
+        SoundSource back = AudioManager.loadSound("test1",1,10,20);
+
+        SoundSource back2  = AudioManager.loadSound("mc",1,10,20);
+
+
         back.setGain(0.2f);
         back.setPosition(new Vector3f(0,0,0));
         back.setLooping(true);
+        back.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
         back.play();
+        back2.setGain(0.2f);
+        back2.setPosition(new Vector3f(0,0,0));
+        back2.setLooping(true);
+        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
+       // back2.play();
 
     }
 
