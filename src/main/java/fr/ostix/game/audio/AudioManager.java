@@ -1,18 +1,15 @@
 package fr.ostix.game.audio;
 
-import fr.ostix.game.toolBox.FileUtils;
+import fr.ostix.game.toolBox.ToolDirectory;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.*;
 import org.lwjgl.stb.STBVorbisInfo;
 import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.stb.STBVorbis.*;
@@ -50,23 +47,26 @@ public class AudioManager {
     public static SoundSource loadSound(String path,float rollFactor,float refDistance,float maxDistance) {
         int bufferID = AL10.alGenBuffers();
         buffers.add(bufferID);
-        try (STBVorbisInfo info = STBVorbisInfo.malloc()){
-            ShortBuffer pcm = loadOggSound(path,info);
+        try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
+            ByteBuffer data = loadOggSound(path, info);
+            AL10.alBufferData(bufferID, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, data, info.sample_rate());
 
-            AL10.alBufferData(bufferID, info.channels() == 1 ? AL_FORMAT_MONO16 : AL_FORMAT_STEREO16, pcm, info.sample_rate());
+            int error = AL10.alGetError();
+            if (error != 0) {
+                System.err.println("Problem loading sound data into buffer. " + error);
+            }
         }
-        SoundSource sound = new SoundSource(rollFactor,refDistance,maxDistance);
+        SoundSource sound = new SoundSource(rollFactor, refDistance, maxDistance);
         sound.setSound(bufferID);
         sounds.add(sound);
         return sound;
     }
 
 
-    private static ShortBuffer loadOggSound(String path , STBVorbisInfo info) {
+    private static ByteBuffer loadOggSound(String path, STBVorbisInfo info) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
-            ByteBuffer vorbis = FileUtils.loadByteBufferFromResources(path,32*1024);
             IntBuffer error = stack.mallocInt(1);
-            long decoder = stb_vorbis_open_memory(vorbis, error, null);
+            long decoder = stb_vorbis_open_filename(ToolDirectory.RES_FOLDER + "/sounds/" + path + ".ogg", error, null);
             if (decoder == NULL) {
                 throw new RuntimeException("Failed to open Ogg Vorbis file. Error: " + error.get(0));
             }
@@ -77,9 +77,8 @@ public class AudioManager {
 
             int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-            ShortBuffer pcm = MemoryUtil.memAllocShort(lengthSamples);
-
-            pcm.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm) * channels);
+            ByteBuffer pcm = BufferUtils.createByteBuffer(lengthSamples * Short.BYTES * channels);
+            stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm.asShortBuffer());
             stb_vorbis_close(decoder);
             return pcm;
         }

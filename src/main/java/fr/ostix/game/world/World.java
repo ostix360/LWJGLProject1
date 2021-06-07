@@ -1,13 +1,12 @@
 package fr.ostix.game.world;
 
-import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.core.Input;
 import fr.ostix.game.core.loader.LoadEntity;
-import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.loader.LoadModel;
+import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
@@ -97,9 +96,9 @@ public class World {
 //        Matrix3f m = new Matrix3f(entity.getTransformationMatrix());
 //        System.out.println(Maths.matrix3x3ToVector3f(m));
 
-        SoundSource back = AudioManager.loadSound("test1",1,10,20);
+        SoundSource back = AudioManager.loadSound("ambiant", 1, 10, 20);
 
-        SoundSource back2  = AudioManager.loadSound("mc",1,10,20);
+        SoundSource back2 = AudioManager.loadSound("test1", 1, 10, 20);
 
 
         back.setGain(0.2f);

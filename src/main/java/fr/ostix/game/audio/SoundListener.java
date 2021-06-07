@@ -3,7 +3,6 @@ package fr.ostix.game.audio;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-
 import static org.lwjgl.openal.AL10.*;
 
 public class SoundListener {
@@ -21,8 +20,8 @@ public class SoundListener {
     public void updateTransform(Vector3f pos, Vector3f rotation) {
         alListener3f(AL_POSITION, pos.x(), pos.y(), pos.z());
         Matrix4f matrix4f = new Matrix4f().identity();
-        matrix4f.rotate((float) Math.toRadians(rotation.x()), new Vector3f(1, 0, 0))
-                .rotate((float) Math.toRadians(rotation.y()), new Vector3f(0, 1, 0));
+        matrix4f.rotate((float) Math.toRadians(rotation.x), new Vector3f(1, 0, 0))
+                .rotate((float) Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
         matrix4f.translate(-pos.x(), -pos.y(), -pos.z());
         Vector3f at = new Vector3f();
         matrix4f.positiveZ(at).negate();

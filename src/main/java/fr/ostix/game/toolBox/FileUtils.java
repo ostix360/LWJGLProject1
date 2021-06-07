@@ -21,17 +21,15 @@ public class FileUtils {
     public static ByteBuffer loadByteBufferFromResources(String resource,int bufferSize) {
         ByteBuffer buffer = null;
 
-        Path path = Paths.get(ToolDirectory.RES_FOLDER+"/sounds/"+resource+FileType.OGG);
+        Path path = Paths.get("/sounds/" + resource + FileType.OGG);
         if (Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
                 buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
-                while (fc.read(buffer) != -1) ;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            try (
-                    InputStream source = FileUtils.class.getResourceAsStream("/sounds/"+resource+".ogg")) {
+            try (InputStream source = FileUtils.class.getResourceAsStream("/sounds/" + resource + ".ogg")) {
                 assert source != null;
                 try (ReadableByteChannel rbc = Channels.newChannel(source)) {
                     buffer = createByteBuffer(bufferSize);

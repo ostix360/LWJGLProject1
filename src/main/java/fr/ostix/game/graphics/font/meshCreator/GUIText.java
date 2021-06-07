@@ -29,7 +29,7 @@ public class GUIText {
         this.position = position;
         this.lineMaxSize = maxLineLength;
         this.centerText = centered;
-        MasterFont.loadText(this);
+        MasterFont.add(this);
     }
 
     public void remove() {

@@ -2,7 +2,7 @@ package fr.ostix.game.audio;
 
 import org.joml.Vector3f;
 
-import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.AL11.*;
 
 public class SoundSource {
 

@@ -1,9 +1,10 @@
-package fr.ostix.game.graphics.shader;
+package fr.ostix.game.gui;
 
+import fr.ostix.game.graphics.shader.ShaderProgram;
 import fr.ostix.game.openGLUtils.uniform.MatrixUniform;
 import org.joml.Matrix4f;
 
-public class GuiShader extends ShaderProgram{
+public class GuiShader extends ShaderProgram {
 
     private final MatrixUniform transformationMatrix = new MatrixUniform("transformationMatrix");
 

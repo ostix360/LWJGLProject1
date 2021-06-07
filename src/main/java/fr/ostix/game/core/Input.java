@@ -1,5 +1,6 @@
 package fr.ostix.game.core;
 
+import fr.ostix.game.toolBox.Logger;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -35,30 +36,38 @@ public class Input {
         mouseDY = (float) mouseY - beforePositionY;
 
 
-        GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
-            @Override
-            public void invoke(long window, int key, int scancode, int action, int mods) {
-                keys[key] = action != GLFW_RELEASE;
-            }
-        });
+        try {
+            GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
+                @Override
+                public void invoke(long window, int key, int scancode, int action, int mods) {
+                    if (key == -1) {
+                        Logger.err("Error this key is unknown");
+                        return;
+                    }
+                    keys[key] = action != GLFW_RELEASE;
+                }
+            });
 
-        glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
-            @Override
-            public void invoke(long window, int button, int action, int mods) {
-                keysMouse[button] = action != GLFW_RELEASE;
-            }
-        });
+            glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
+                @Override
+                public void invoke(long window, int button, int action, int mods) {
+                    keysMouse[button] = action != GLFW_RELEASE;
+                }
+            });
 
-        glfwSetScrollCallback(window, (w, xoffset, yoffset) -> mouseDWhell = (float) (yoffset - xoffset));
+            glfwSetScrollCallback(window, (w, xoffset, yoffset) -> mouseDWhell = (float) (yoffset - xoffset));
 
-        MOUSE_X.flip();
-        MOUSE_Y.flip();
+            MOUSE_X.flip();
+            MOUSE_Y.flip();
 
-        beforePositionX = (float) MOUSE_X.get();
-        beforePositionY = (float) MOUSE_Y.get();
+            beforePositionX = (float) MOUSE_X.get();
+            beforePositionY = (float) MOUSE_Y.get();
 
-        MOUSE_X.flip();
-        MOUSE_Y.flip();
+            MOUSE_X.flip();
+            MOUSE_Y.flip();
+        } catch (Exception e) {
+            Logger.err("Error this key is not available : " + e.getMessage());
+        }
     }
 
     public static double getMouseX() {

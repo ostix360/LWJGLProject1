@@ -1,7 +1,5 @@
 package fr.ostix.game.graphics.font.rendering;
 
-
-
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
@@ -13,29 +11,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class MasterFont {
 
     private static final Map<FontType, List<GUIText>> guisTexts = new HashMap<>();
     private static Loader loader;
-    private static FontRenderer renderer;
+    private final FontRenderer renderer;
 
-    public static void init(Loader theLoader) {
+    public MasterFont(Loader theLoader) {
         renderer = new FontRenderer();
         loader = theLoader;
     }
 
-    public static void render() {
-        renderer.render(guisTexts);
-    }
-
-    public static void loadText(GUIText text) {
+    public static void add(GUIText text) {
         FontType font = text.getFont();
         TextMeshData data = font.loadText(text);
         MeshModel vao = loader.loadFontToVAO(data.getVertexPositions(), data.getTextureCoords());
         text.setMeshInfo(vao, data.getVertexCount());
         List<GUIText> textBatch = guisTexts.computeIfAbsent(font, k -> new ArrayList<>());
         textBatch.add(text);
+    }
+
+    public void render() {
+        renderer.render(guisTexts);
     }
 
     public static void remove(GUIText text) {
@@ -47,7 +44,15 @@ public class MasterFont {
 
     }
 
-    public static void cleanUp() {
+    public void cleanUp() {
+        for (FontType font : guisTexts.keySet()) {
+            List<GUIText> texts = guisTexts.get(font);
+            for (GUIText text : texts) {
+                text.remove();
+            }
+            texts.clear();
+        }
+        guisTexts.clear();
         renderer.cleanUp();
     }
 }

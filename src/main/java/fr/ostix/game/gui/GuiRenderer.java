@@ -1,15 +1,12 @@
-package fr.ostix.game.graphics.render;
+package fr.ostix.game.gui;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.shader.GuiShader;
-import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.toolBox.Maths;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
-
 
 import java.util.List;
 
