@@ -9,23 +9,22 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Texture {
+public class TextureLoader {
 
     private final int id;
 
-    public Texture(int id) {
+    public TextureLoader(int id) {
         this.id = id;
     }
 
-    public static Texture loadTexture(String file, int mode, boolean isClampEdge) {
+    public static TextureLoader loadTexture(String file, int mode, boolean isClampEdge) {
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File(RES_FOLDER +"/textures/" + file + ".png"));
+            image = ImageIO.read(new File(RES_FOLDER + "/textures/" + file + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +93,7 @@ public class Texture {
 
         glBindTexture(GL_TEXTURE_2D,0);
 
-        return new Texture(id);
+        return new TextureLoader(id);
     }
 
     public int getId() {

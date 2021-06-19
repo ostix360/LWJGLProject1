@@ -2,11 +2,11 @@ package fr.ostix.game.gui;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.graphics.model.MeshModel;
+import fr.ostix.game.openGLUtils.VAO;
 import fr.ostix.game.toolBox.Maths;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 
@@ -34,12 +34,12 @@ public class GuiRenderer {
             GL11.glBindTexture(GL_TEXTURE_2D,gui.getTexture().getId());
             Matrix4f matrix4f = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
             shader.loadTransformationMatrix(matrix4f);
+            shader.loadLayer(gui.getLayer());
             glDrawArrays(GL_TRIANGLE_STRIP, 0, quadModel.getVertexCount());
         }
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);
-        GL30.glDisableVertexAttribArray(0);
-        GL30.glBindVertexArray(0);
+        VAO.unbind(0);
         shader.unBind();
     }
 

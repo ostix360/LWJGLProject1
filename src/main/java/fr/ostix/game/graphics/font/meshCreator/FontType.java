@@ -1,24 +1,24 @@
 package fr.ostix.game.graphics.font.meshCreator;
 
-import fr.ostix.game.graphics.textures.Texture;
+import fr.ostix.game.graphics.textures.TextureLoader;
 
 public class FontType {
 
-	private final Texture textureAtlas;
-	private final TextMeshCreator loader;
+    private final TextureLoader textureLoaderAtlas;
+    private final TextMeshCreator loader;
 
 
-	public FontType(Texture textureAtlas, String fontFile) {
-		this.textureAtlas = textureAtlas;
-		this.loader = new TextMeshCreator(fontFile);
-	}
+    public FontType(TextureLoader textureLoaderAtlas, String fontFile) {
+        this.textureLoaderAtlas = textureLoaderAtlas;
+        this.loader = new TextMeshCreator(fontFile);
+    }
 
-	public Texture getTextureAtlas() {
-		return textureAtlas;
-	}
+    public TextureLoader getTextureAtlas() {
+        return textureLoaderAtlas;
+    }
 
-	public TextMeshData loadText(GUIText text) {
-		return loader.createTextMesh(text);
-	}
+    public TextMeshData loadText(GUIText text) {
+        return loader.createTextMesh(text);
+    }
 
 }

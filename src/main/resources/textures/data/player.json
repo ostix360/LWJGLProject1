@@ -1,0 +1,6 @@
+{
+  "name" :"player",
+  "path" :"entities/player",
+  "textureProperties" :{
+  }
+}

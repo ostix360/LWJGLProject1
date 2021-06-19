@@ -2,6 +2,10 @@ package fr.ostix.game.core;
 
 import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.core.loader.Loader;
+import fr.ostix.game.core.loader.ResourcePack;
+import fr.ostix.game.gui.MasterGui;
+import fr.ostix.game.menu.Screen;
+import fr.ostix.game.menu.StateManager;
 import fr.ostix.game.openGLUtils.DisplayManager;
 import fr.ostix.game.toolBox.Logger;
 import fr.ostix.game.world.World;
@@ -16,12 +20,18 @@ public class Game extends Thread {
     private boolean running = false;
 
     private World world;
+    private final StateManager stateManager;
 
-    private final Loader loader = Loader.INSTANCE;
+    private final Loader loader;
 
+    private Screen currentScreen;
+
+    private MasterGui guiManager;
 
     public Game() {
         super("Game");
+        loader = new Loader();
+        stateManager = new StateManager(loader);
     }
 
 
@@ -55,7 +65,11 @@ public class Game extends Thread {
     private void init() {
         DisplayManager.createDisplay();
         AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
-        world.initWorld(loader);
+        ResourcePack pack = new ResourcePack(loader).loadAllResource();
+        stateManager.init();
+        guiManager = new MasterGui(loader);
+
+        world.initWorld(loader, pack);
     }
 
 
@@ -113,15 +127,22 @@ public class Game extends Thread {
     private void update() {
         Input.updateInput(glfwGetCurrentContext());
         world.update();
+
+        currentScreen = stateManager.getCurrentState(stateManager.update());
+        currentScreen.update();
         glfwPollEvents();
     }
 
     private void render() {
+
         world.render();
+        guiManager.render();
 
     }
 
     private void exit() {
+        guiManager.cleanUp();
+        stateManager.cleanUp();
         running = false;
         AudioManager.cleanUp();
         loader.cleanUp();

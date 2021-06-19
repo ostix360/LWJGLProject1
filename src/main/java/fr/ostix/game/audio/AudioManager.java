@@ -41,10 +41,11 @@ public class AudioManager {
         AL.createCapabilities(deviceCaps);
 
         alDistanceModel(attenuationModel);
+
     }
 
 
-    public static SoundSource loadSound(String path,float rollFactor,float refDistance,float maxDistance) {
+    public static SoundSource loadSound(String path, boolean isAmbient) {
         int bufferID = AL10.alGenBuffers();
         buffers.add(bufferID);
         try (STBVorbisInfo info = STBVorbisInfo.malloc()) {
@@ -56,7 +57,7 @@ public class AudioManager {
                 System.err.println("Problem loading sound data into buffer. " + error);
             }
         }
-        SoundSource sound = new SoundSource(rollFactor, refDistance, maxDistance);
+        SoundSource sound = new SoundSource(isAmbient);
         sound.setSound(bufferID);
         sounds.add(sound);
         return sound;

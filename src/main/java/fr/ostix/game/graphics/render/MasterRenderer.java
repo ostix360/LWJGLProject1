@@ -108,7 +108,6 @@ public class MasterRenderer {
     }
 
     public void cleanUp() {
-        terrains.clear();
         this.terrainShader.cleanUp();
         this.shader.cleanUp();
         glDisable(GL_BLEND);

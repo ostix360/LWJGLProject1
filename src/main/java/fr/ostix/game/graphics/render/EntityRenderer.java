@@ -3,10 +3,9 @@ package fr.ostix.game.graphics.render;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.TextureModel;
+import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.ClassicShader;
 import fr.ostix.game.openGLUtils.VAO;
-import fr.ostix.game.toolBox.Maths;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL13;
 
@@ -50,7 +49,7 @@ public class EntityRenderer implements IRenderer {
         MeshModel meshModel = model.getMeshModel();
         meshModel.getVAO().bind(0, 1, 2);
 
-        TextureModel texture = model.getModelTexture();
+        Texture texture = model.getModelTexture();
         shader.loadSpecular(texture.getReflectivity(), texture.getShineDamper());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -62,7 +61,7 @@ public class EntityRenderer implements IRenderer {
     public void finish() {
         MasterRenderer.enableCulling();
         VAO.unbind(0, 1, 2);
-        TextureModel.unBindTexture();
+        Texture.unBindTexture();
     }
 
 

@@ -2,12 +2,14 @@ package fr.ostix.game.core.loader;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.graphics.textures.TextureData;
+import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.graphics.textures.TextureUtils;
 import fr.ostix.game.openGLUtils.VAO;
 import fr.ostix.game.toolBox.Logger;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+import org.lwjgl.opengl.GL30;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,16 +18,16 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
-import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
 
 public class Loader {
 
     public static final Loader INSTANCE = new Loader();
 
     private final List<VAO> VAOs = new ArrayList<>();
-    private final List<Texture> textures = new ArrayList<>();
+    private final List<TextureLoader> textureLoaders = new ArrayList<>();
 
     public MeshModel loadToVAO(float[] position, float[] texturesCoords,
                                float[] normals, int[] indices) {
@@ -54,7 +56,8 @@ public class Loader {
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
         vao.bind();
-        vao.storeDataInAttributeList(0, 3, vertices);
+        vao.storeDataInAttributeList(0, 2, vertices);
+        vao.setVertexCount(vertices.length / 2);
         VAO.unbind();
         return new MeshModel(vao);
     }
@@ -73,7 +76,7 @@ public class Loader {
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        textures.add(new Texture(texID));
+        textureLoaders.add(new TextureLoader(texID));
         return texID;
     }
 
@@ -99,20 +102,20 @@ public class Loader {
     }
 
 
-    public Texture loadTexture(String fileName) {
-        Texture texture = Texture.loadTexture( fileName, TextureUtils.MIPMAP_ANISOTROPIC_MODE, false);
-        textures.add(texture);
-        return texture;
+    public TextureLoader loadTexture(String fileName) {
+        TextureLoader textureLoader = TextureLoader.loadTexture(fileName, TextureUtils.MIPMAP_ANISOTROPIC_MODE, false);
+        textureLoaders.add(textureLoader);
+        return textureLoader;
     }
 
-    public Texture loadTextureFont(String textureFontName) {
-        Texture texture = Texture.loadTexture("font/" + textureFontName,0,false);
+    public TextureLoader loadTextureFont(String textureFontName) {
+        TextureLoader textureLoader = TextureLoader.loadTexture("font/" + textureFontName, 0, false);
         GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
         GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0);
-        textures.add(texture);
-        return texture;
+        textureLoaders.add(textureLoader);
+        return textureLoader;
     }
 
     public void cleanUp() {
@@ -120,9 +123,9 @@ public class Loader {
             vao.cleanUP();
         }
         VAOs.clear();
-        for (Texture t : textures) {
+        for (TextureLoader t : textureLoaders) {
             GL11.glDeleteTextures(t.getId());
         }
-        textures.clear();
+        textureLoaders.clear();
     }
 }

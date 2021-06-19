@@ -8,12 +8,12 @@ public class SoundSource {
 
     private final int sourceID;
 
-    public SoundSource(float rollOffFactor, float referenceDistance, float maxDistance) {
+    public SoundSource(boolean isAmbient) {
         this.sourceID = alGenSources();
-        alSourcei(sourceID,AL_SOURCE_RELATIVE,AL_FALSE);
-        alSourcef(sourceID, AL_ROLLOFF_FACTOR, rollOffFactor);
-        alSourcef(sourceID, AL_REFERENCE_DISTANCE, referenceDistance);
-        alSourcef(sourceID, AL_MAX_DISTANCE, maxDistance);
+        alSourcei(sourceID, AL_SOURCE_RELATIVE, isAmbient ? AL_TRUE : AL_FALSE);
+//        alSourcef(sourceID, AL_ROLLOFF_FACTOR, rollOffFactor);
+//        alSourcef(sourceID, AL_REFERENCE_DISTANCE, referenceDistance);
+//        alSourcef(sourceID, AL_MAX_DISTANCE, maxDistance);
     }
 
     public void setLooping(boolean looping) {

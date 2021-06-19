@@ -1,22 +1,19 @@
 package fr.ostix.game.world;
 
-import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.core.Input;
-import fr.ostix.game.core.loader.LoadEntity;
-import fr.ostix.game.core.loader.LoadModel;
 import fr.ostix.game.core.loader.Loader;
+import fr.ostix.game.core.loader.ResourcePack;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.TextureModel;
+import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.render.MasterRenderer;
 import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.FileType;
 import fr.ostix.game.world.interaction.InteractionWorld;
 import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
@@ -25,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL10;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +32,10 @@ public class World {
     private final InteractionWorld interactionWorld = new InteractionWorld();
 
     public static final int MAX_LIGHTS = 2;
+
+    Texture texturedModel;
+    private HashMap<String, Texture> textures;
+    private HashMap<String, SoundSource> sounds;
 
     private final List<Entity> entities = new ArrayList<>();
     private final List<Light> lights = new ArrayList<>();
@@ -45,35 +47,28 @@ public class World {
     SoundListener listener;
 
     MeshModel firstModel;
-    TextureModel textureModel;
+    private HashMap<String, Model> models;
     Model model;
     Entity entity;
     Player player;
     Camera cam;
 
-    public void initWorld(Loader loader) {
-        firstModel = LoadModel.loadModel("lowPolyTree.obj", loader);
-        Model playerModel = new Model(LoadModel.loadModel("player/player",FileType.OBJ,loader),new TextureModel(loader.loadTexture("player")));
+    public void initWorld(Loader loader, ResourcePack pack) {
+        this.textures = pack.getTextureByName();
+        this.sounds = pack.getSoundByName();
+        this.models = pack.getModelByName();
 
-        textureModel = new TextureModel(loader.loadTexture("lowPolyTree"));
-        textureModel.setReflectivity(0.2f);
-        textureModel.setShineDamper(5);
-        model = new Model(firstModel, textureModel);
-        entity = new Entity(model, new Vector3f(0, getTerrainHeight(0,0), 0), new Vector3f(0, 0, 0), 1);
-        entity.setSound("test");
-        player = new Player(LoadEntity.loadEntity("player", FileType.OBJ));
+        player = new Player(pack.getModelByName().get("player"), new Vector3f(55, 0, 55), new Vector3f(0), 1);
 
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
-        Light sunc = new Light(new Vector3f(-100000, 100000, 100000), Color.SUN, 0.2f);
-        listener = new SoundListener(player.getPosition(), new Vector3f(),player.getRotation());
-        entities.add(entity);
+        listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
         entities.add(player);
         lights.add(sun);
         //  lights.add(sunc);
 
         initTerrain(loader);
-        initEntity(loader);
+        initEntity();
 
 
         renderer = new MasterRenderer(loader);
@@ -96,27 +91,27 @@ public class World {
 //        Matrix3f m = new Matrix3f(entity.getTransformationMatrix());
 //        System.out.println(Maths.matrix3x3ToVector3f(m));
 
-        SoundSource back = AudioManager.loadSound("ambiant", 1, 10, 20);
+        SoundSource back = pack.getSoundByName().get("ambient");
 
-        SoundSource back2 = AudioManager.loadSound("test1", 1, 10, 20);
+        // SoundSource back2 = AudioManager.loadSound("test1", 1, 10, 20);
 
 
         back.setGain(0.2f);
-        back.setPosition(new Vector3f(0,0,0));
+        back.setPosition(new Vector3f(0, 0, 0));
         back.setLooping(true);
-        back.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
+        back.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
         back.play();
-        back2.setGain(0.2f);
-        back2.setPosition(new Vector3f(0,0,0));
-        back2.setLooping(true);
-        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
-       // back2.play();
+//        back2.setGain(0.2f);
+//        back2.setPosition(new Vector3f(0,0,0));
+//        back2.setLooping(true);
+//        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
+        // back2.play();
 
     }
 
-    private void initEntity(Loader loader) {
+    private void initEntity() {
 
-       // Model treeModel = new Model(LoadModel.loadModel("tree",".dae", loader), new TextureModel(loader.loadTexture("tree")).setTransparency(true));
+        // Model treeModel = new Model(LoadModel.loadModel("tree",".dae", loader), new TextureModel(loader.loadTexture("tree")).setTransparency(true));
 //        Model grassModel = new Model(LoadModel.loadModel("grassModel", loader),
 //                new TextureModel(loader.loadTexture("flower")));
 //        grassModel.getModelTexture().setTransparency(true).setUseFakeLighting(true);
@@ -141,13 +136,13 @@ public class World {
     }
 
     private void initTerrain(Loader loader) {
-        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("terrain/grassy2").getId());
-        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("terrain/mud").getId());
-        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("terrain/grassFlowers").getId());
-        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("terrain/path").getId());
+        TerrainTexture backgroundTexture = new TerrainTexture(textures.get("grassy2").getTextureID());
+        TerrainTexture rTexture = new TerrainTexture(textures.get("mud").getTextureID());
+        TerrainTexture gTexture = new TerrainTexture(textures.get("grassFlowers").getTextureID());
+        TerrainTexture bTexture = new TerrainTexture(textures.get("path").getTextureID());
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("terrain/blendMap").getId());
+        TerrainTexture blendMap = new TerrainTexture(textures.get("blendMap").getTextureID());
 
         worldIndex = new int[2][2];
         int index = 0;
@@ -180,6 +175,7 @@ public class World {
     public void render() {
         cam.move();
         renderer.renderScene(entities, terrains, lights, cam);
+
     }
 
     public static float getTerrainHeight(float worldX, float worldZ) {

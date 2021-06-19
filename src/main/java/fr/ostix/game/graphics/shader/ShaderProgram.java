@@ -64,7 +64,7 @@ public abstract class ShaderProgram {
 
     private StringBuilder readShader(String file) {
         StringBuilder sb = new StringBuilder();
-        BufferedReader reader = null;
+        BufferedReader reader;
         try {
             reader = new BufferedReader(
                     new InputStreamReader(

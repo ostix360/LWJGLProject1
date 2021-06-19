@@ -5,7 +5,6 @@ import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.graphics.model.Model;
 import org.joml.Vector3f;
-import org.lwjgl.openal.AL11;
 
 
 public class Entity {
@@ -73,8 +72,8 @@ public class Entity {
     }
 
     public void setSound(String sound) {
-       this.sound = AudioManager.loadSound(sound,10f,50,95);
-       this.sound.setGain(1);
+       this.sound = AudioManager.loadSound(sound, false);
+        this.sound.setGain(1);
        this.sound.setPosition(getPosition());
        this.sound.setSpeed(new Vector3f());
     }

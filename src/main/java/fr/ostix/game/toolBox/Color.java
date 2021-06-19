@@ -1,6 +1,7 @@
 package fr.ostix.game.toolBox;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,10 @@ public class Color {
 
     public Vector3f getVec3f() {
         return new Vector3f(this.red, this.green, this.blue);
+    }
+
+    public Vector4f getVec4f() {
+        return new Vector4f(this.red, this.green, this.blue, this.alpha);
     }
 }
 

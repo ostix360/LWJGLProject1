@@ -4,8 +4,6 @@ import fr.ostix.game.entity.BoundingModel;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.TextureModel;
-import fr.ostix.game.toolBox.FileType;
 import org.joml.Vector3f;
 import org.yaml.snakeyaml.Yaml;
 
@@ -15,13 +13,6 @@ import java.util.HashMap;
 public class LoadEntity {
 
     private static final Loader LOADER = Loader.INSTANCE;
-
-    public static Entity loadEntity(String modelAndTexture, FileType modelExtension) {
-        Model m = new Model(LoadModel.loadModel(modelAndTexture+"/"+modelAndTexture, modelExtension,
-                LOADER),
-                new TextureModel(LOADER.loadTexture(modelAndTexture)));
-        return loadAllProperties(modelAndTexture, m);
-    }
 
     @SuppressWarnings("unchecked")
     private static Entity loadAllProperties(String file, Model m) {
@@ -37,7 +28,7 @@ public class LoadEntity {
             for (int i = 0; i < boundingModelsProperties.size(); i++) {
                 HashMap<String, Object> boundingModel = (HashMap<String, Object>) boundingModelsProperties.get("b"+ i);
                 String modelName = (String) boundingModel.get("path");
-                MeshModel mM = LoadModel.loadModel(file+"/"+modelName, LOADER);
+                MeshModel mM = LoadMeshModel.loadModel(file + "/" + modelName, LOADER);
                 Vector3f posM = parseVector3f((String) boundingModel.get("pos"));
                 Vector3f rotM = parseVector3f((String) boundingModel.get("rot"));
                 float scaleM = Float.parseFloat(String.valueOf(boundingModel.get("scale")).trim());

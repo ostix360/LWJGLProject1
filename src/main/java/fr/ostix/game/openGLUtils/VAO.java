@@ -64,6 +64,10 @@ public class VAO {
         VBOs.clear();
     }
 
+    public void setVertexCount(int vertexCount) {
+        this.vertexCount = vertexCount;
+    }
+
     public int getVertexCount() {
         return vertexCount;
     }

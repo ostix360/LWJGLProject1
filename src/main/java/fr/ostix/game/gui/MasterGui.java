@@ -32,7 +32,7 @@ public class MasterGui {
     }
 
     public void cleanUp() {
-        guis.clear();
+        removeAllGui();
         renderer.cleanUp();
     }
 }

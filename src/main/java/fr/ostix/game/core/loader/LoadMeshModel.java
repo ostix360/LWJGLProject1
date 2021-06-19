@@ -8,15 +8,15 @@ import java.util.Objects;
 
 import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
 
-public class LoadModel {
+public class LoadMeshModel {
 
     public static MeshModel loadModel(String fileName, Loader loader) {
         AIScene scene = Assimp.aiImportFile(RES_FOLDER + "\\model\\" + fileName,
-                Assimp.aiProcess_Triangulate|
-                        Assimp.aiProcess_CalcTangentSpace|
-                        Assimp.aiProcess_LimitBoneWeights|
-                        Assimp.aiProcess_GenSmoothNormals|
-                Assimp.aiProcess_FlipUVs
+                Assimp.aiProcess_Triangulate |
+                        Assimp.aiProcess_CalcTangentSpace |
+                        Assimp.aiProcess_LimitBoneWeights |
+                        Assimp.aiProcess_GenSmoothNormals |
+                        Assimp.aiProcess_FlipUVs
         );
 
 
