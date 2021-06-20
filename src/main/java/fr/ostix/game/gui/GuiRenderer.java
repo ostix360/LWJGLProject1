@@ -31,7 +31,7 @@ public class GuiRenderer {
         glDisable(GL_DEPTH_TEST);
         for (GuiTexture gui : guis) {
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            GL11.glBindTexture(GL_TEXTURE_2D,gui.getTexture().getId());
+            GL11.glBindTexture(GL_TEXTURE_2D, gui.getTexture());
             Matrix4f matrix4f = Maths.createTransformationMatrix(gui.getPosition(), gui.getScale());
             shader.loadTransformationMatrix(matrix4f);
             shader.loadLayer(gui.getLayer());

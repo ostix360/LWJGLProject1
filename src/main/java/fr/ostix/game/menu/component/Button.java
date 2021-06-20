@@ -1,7 +1,6 @@
 package fr.ostix.game.menu.component;
 
 import fr.ostix.game.core.Input;
-import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.toolBox.Color;
 import org.lwjgl.glfw.GLFW;
 
@@ -9,8 +8,8 @@ public class Button extends Component {
 
     private boolean pressed;
 
-    public Button(float x, float y, float width, float height, TextureLoader textureLoader) {
-        super(x, y, width, height, textureLoader);
+    public Button(float x, float y, float width, float height, int texture) {
+        super(x, y, width, height, texture);
         this.texture.setLayer(new Color(0.45f, 0.45f, 0.5f, 0.85f));
     }
 

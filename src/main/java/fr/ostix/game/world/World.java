@@ -4,15 +4,15 @@ import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.core.Input;
 import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.loader.ResourcePack;
+import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.render.MasterRenderer;
+import fr.ostix.game.menu.Screen;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.world.interaction.InteractionWorld;
 import fr.ostix.game.world.texture.TerrainTexture;
@@ -26,16 +26,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class World {
+public class World extends Screen {
 
     private MasterRenderer renderer;
+
+    private boolean isInit = false;
     private final InteractionWorld interactionWorld = new InteractionWorld();
 
     public static final int MAX_LIGHTS = 2;
 
-    Texture texturedModel;
+
     private HashMap<String, Texture> textures;
     private HashMap<String, SoundSource> sounds;
+    private HashMap<String, Model> models;
 
     private final List<Entity> entities = new ArrayList<>();
     private final List<Light> lights = new ArrayList<>();
@@ -45,13 +48,13 @@ public class World {
     private static int[][] worldIndex;
 
     SoundListener listener;
-
-    MeshModel firstModel;
-    private HashMap<String, Model> models;
-    Model model;
     Entity entity;
     Player player;
     Camera cam;
+
+    public World() {
+        super("World");
+    }
 
     public void initWorld(Loader loader, ResourcePack pack) {
         this.textures = pack.getTextureByName();
@@ -75,21 +78,6 @@ public class World {
 
         interactionWorld.init(1f / 60f, entities,terrains);
 
-//        Quaternion q = Maths.angleAxisToQuaternion(90,1,1,1);
-//        Quaternionf q2 = new Quaternionf(q.getX(),q.getY(),q.getZ(),q.getW());
-//        Logger.err(q.toString());
-//        Logger.err(q2.toString());
-//        Vector3 v2 = new Vector3((float)Math.toDegrees(q.getVectorV().getX()),
-//                (float)Math.toDegrees(q.getVectorV().getY()),
-//                (float)Math.toDegrees(q.getVectorV().getZ()));
-//        Vector3f v = new Vector3f();
-//        v = q2.getEulerAnglesXYZ(v);
-//        Logger.err(v2.toString());
-//        Logger.err(v.toString());
-//        System.err.println(entity.getTransformationMatrix().getEulerAnglesZYX(new Vector3f()).toString());
-//        Quaternion q = Quaternion.fromMatrix(entity.getTransformationMatrix());
-//        Matrix3f m = new Matrix3f(entity.getTransformationMatrix());
-//        System.out.println(Maths.matrix3x3ToVector3f(m));
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
@@ -106,7 +94,7 @@ public class World {
 //        back2.setLooping(true);
 //        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
         // back2.play();
-
+        isInit = true;
     }
 
     private void initEntity() {
@@ -156,6 +144,7 @@ public class World {
 
     }
 
+    @Override
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
         processInteraction();
@@ -190,8 +179,13 @@ public class World {
 
     }
 
+    @Override
     public void cleanUp() {
         interactionWorld.finish();
         renderer.cleanUp();
+    }
+
+    public boolean isInit() {
+        return isInit;
     }
 }

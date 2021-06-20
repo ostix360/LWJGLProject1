@@ -2,11 +2,13 @@ package fr.ostix.game.core;
 
 import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.loader.ResourcePack;
+import fr.ostix.game.core.resources.ResourcePack;
+import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.menu.StateManager;
 import fr.ostix.game.openGLUtils.DisplayManager;
+import fr.ostix.game.openGLUtils.OpenGlUtils;
 import fr.ostix.game.toolBox.Logger;
 import fr.ostix.game.world.World;
 import org.lwjgl.openal.AL11;
@@ -17,9 +19,10 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Game extends Thread {
 
 
+    public static FontType gameFont;
+
     private boolean running = false;
 
-    private World world;
     private final StateManager stateManager;
 
     private final Loader loader;
@@ -37,7 +40,6 @@ public class Game extends Thread {
 
     public void start() {
         super.start();
-        world = new World();
         Logger.log("start");
         running = true;
     }
@@ -65,11 +67,13 @@ public class Game extends Thread {
     private void init() {
         DisplayManager.createDisplay();
         AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
-        ResourcePack pack = new ResourcePack(loader).loadAllResource();
-        stateManager.init();
+
         guiManager = new MasterGui(loader);
 
-        world.initWorld(loader, pack);
+        glfwShowWindow(glfwGetCurrentContext());
+        stateManager.init(guiManager);
+        ResourcePack pack = stateManager.getPack();
+        gameFont = new FontType(pack.getTextureByName().get("candara").getTextureID(), "candara");
     }
 
 
@@ -118,7 +122,7 @@ public class Game extends Thread {
 
         if (System.currentTimeMillis() - timer > 1000) {
             timer += 1000;
-            glfwSetWindowTitle(glfwGetCurrentContext(), "Test " + ticks + " ticks " + frames + " fps");
+            glfwSetWindowTitle(glfwGetCurrentContext(), currentScreen.getTitle() + "  ||  " + ticks + " ticks " + frames + " fps");
             ticks = 0;
             frames = 0;
         }
@@ -126,7 +130,6 @@ public class Game extends Thread {
 
     private void update() {
         Input.updateInput(glfwGetCurrentContext());
-        world.update();
 
         currentScreen = stateManager.getCurrentState(stateManager.update());
         currentScreen.update();
@@ -134,8 +137,11 @@ public class Game extends Thread {
     }
 
     private void render() {
-
-        world.render();
+        if (currentScreen instanceof World) {
+            ((World) currentScreen).render();
+        } else {
+            OpenGlUtils.clearGL();
+        }
         guiManager.render();
 
     }
@@ -146,7 +152,6 @@ public class Game extends Thread {
         running = false;
         AudioManager.cleanUp();
         loader.cleanUp();
-        world.cleanUp();
         DisplayManager.closeDisplay();
         Logger.log("Exiting");
     }

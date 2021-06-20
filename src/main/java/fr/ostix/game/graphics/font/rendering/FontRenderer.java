@@ -5,8 +5,6 @@ import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
 import fr.ostix.game.openGLUtils.VAO;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +23,7 @@ public class FontRenderer {
         prepare();
         for (FontType font : guisTexts.keySet()) {
             GL13.glActiveTexture(GL13.GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, font.getTextureAtlas().getId());
+            glBindTexture(GL_TEXTURE_2D, font.getTextureAtlas());
             for (GUIText text : guisTexts.get(font)) {
                 renderText(text);
             }

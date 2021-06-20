@@ -33,7 +33,7 @@ public class DisplayManager {
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
         glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
-        //  glfwWindowHint(GLFW_FLOATING,GLFW_TRUE);
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
         window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -72,6 +72,7 @@ public class DisplayManager {
     }
 
     public static void updateDisplay() {
+
         try (MemoryStack stack = MemoryStack.stackPush()) {
             IntBuffer width = stack.mallocInt(1);
             IntBuffer height = stack.mallocInt(1);
@@ -100,5 +101,9 @@ public class DisplayManager {
 
     public static int getHeight() {
         return height;
+    }
+
+    public static long getWindow() {
+        return window;
     }
 }

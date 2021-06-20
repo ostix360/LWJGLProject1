@@ -1,21 +1,20 @@
 package fr.ostix.game.gui;
 
-import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.openGLUtils.DisplayManager;
 import fr.ostix.game.toolBox.Color;
 import org.joml.Vector2f;
 
 public class GuiTexture {
     private final Vector2f position;
-    private final Vector2f scale;
-    private final TextureLoader textureLoader;
+    private final int texture;
+    private Vector2f scale;
     private Color layer = new Color(0, 0, 0, 0);
     private boolean hasLayer = false;
 
-    public GuiTexture(TextureLoader textureLoader, Vector2f position, Vector2f scale) {
+    public GuiTexture(int texture, Vector2f position, Vector2f scale) {
         this.position = convertPos(position, scale);
-        this.scale = convertSCale(scale);
-        this.textureLoader = textureLoader;
+        this.scale = convertScale(scale);
+        this.texture = texture;
     }
 
     private Vector2f convertPos(Vector2f pos, Vector2f scale) {
@@ -26,8 +25,12 @@ public class GuiTexture {
         return new Vector2f(value.x() / DisplayManager.getWidth() * 2 - 1, 1 - (value.y() / DisplayManager.getHeight() * 2));
     }
 
-    private Vector2f convertSCale(Vector2f value) {
+    private Vector2f convertScale(Vector2f value) {
         return new Vector2f(value.x() / DisplayManager.getWidth(), value.y() / DisplayManager.getHeight());
+    }
+
+    public void setScale(Vector2f scale) {
+        this.scale = convertScale(scale);
     }
 
     public Vector2f getPosition() {
@@ -38,8 +41,8 @@ public class GuiTexture {
         return scale;
     }
 
-    public TextureLoader getTexture() {
-        return textureLoader;
+    public int getTexture() {
+        return texture;
     }
 
     public boolean hasLayer() {
