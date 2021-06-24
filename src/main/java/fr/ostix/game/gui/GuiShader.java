@@ -1,8 +1,8 @@
 package fr.ostix.game.gui;
 
 import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.openGLUtils.uniform.MatrixUniform;
-import fr.ostix.game.openGLUtils.uniform.Vector4fUniform;
+import fr.ostix.game.openGLToolBox.uniform.MatrixUniform;
+import fr.ostix.game.openGLToolBox.uniform.Vector4fUniform;
 import fr.ostix.game.toolBox.Color;
 import org.joml.Matrix4f;
 

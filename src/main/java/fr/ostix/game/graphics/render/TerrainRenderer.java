@@ -1,8 +1,9 @@
 package fr.ostix.game.graphics.render;
 
 import fr.ostix.game.graphics.model.MeshModel;
+import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.TerrainShader;
-import fr.ostix.game.openGLUtils.VAO;
+import fr.ostix.game.openGLToolBox.VAO;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.world.Terrain;
 import fr.ostix.game.world.texture.TerrainTexturePack;
@@ -57,6 +58,7 @@ public class TerrainRenderer {
     }
 
     private void unbindTexturedModel() {
+        Texture.unBindTexture();
         VAO.unbind(0, 1, 2);
     }
 

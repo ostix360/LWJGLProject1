@@ -1,6 +1,6 @@
 package fr.ostix.game.graphics.model;
 
-import fr.ostix.game.openGLUtils.VAO;
+import fr.ostix.game.openGLToolBox.VAO;
 
 public class MeshModel {
 

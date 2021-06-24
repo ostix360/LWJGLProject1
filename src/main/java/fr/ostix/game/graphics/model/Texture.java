@@ -1,15 +1,18 @@
 package fr.ostix.game.graphics.model;
 
 import fr.ostix.game.core.resources.TextureProperties;
+import fr.ostix.game.graphics.textures.TextureLoader;
 import org.lwjgl.opengl.GL11;
 
 public class Texture {
     private final int textureID;
+    private final int size;
     private final TextureProperties properties;
 
-    public Texture(int textureID, TextureProperties properties) {
-        this.textureID = textureID;
+    public Texture(TextureLoader textureID, TextureProperties properties) {
+        this.textureID = textureID.getId();
         this.properties = properties;
+        this.size = textureID.getWidth();
     }
 
     public static void unBindTexture() {
@@ -59,5 +62,9 @@ public class Texture {
 
     public void bindTexture() {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureID);
+    }
+
+    public int getSize() {
+        return size;
     }
 }

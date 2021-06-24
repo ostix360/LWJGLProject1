@@ -3,10 +3,10 @@ package fr.ostix.game.world.skybox;
 
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.openGLUtils.uniform.FloatUniform;
-import fr.ostix.game.openGLUtils.uniform.IntUniform;
-import fr.ostix.game.openGLUtils.uniform.MatrixUniform;
-import fr.ostix.game.openGLUtils.uniform.Vector3fUniform;
+import fr.ostix.game.openGLToolBox.uniform.FloatUniform;
+import fr.ostix.game.openGLToolBox.uniform.IntUniform;
+import fr.ostix.game.openGLToolBox.uniform.MatrixUniform;
+import fr.ostix.game.openGLToolBox.uniform.Vector3fUniform;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
 import org.joml.Matrix4f;

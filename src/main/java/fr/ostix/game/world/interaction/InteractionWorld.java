@@ -12,7 +12,6 @@ import com.flowpowered.react.engine.Material;
 import com.flowpowered.react.math.Quaternion;
 import com.flowpowered.react.math.Transform;
 import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.entity.BoundingModel;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.toolBox.Maths;
@@ -23,7 +22,6 @@ import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TFloatArrayList;
 import gnu.trove.list.array.TIntArrayList;
 import org.joml.AxisAngle4d;
-import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -73,28 +71,28 @@ public class InteractionWorld {
 
     private void addAllEntity(List<Entity> entities) {
         for (Entity e : entities) {
-            if (e.isUseBondingModels()) {
-                int index = 0;
-                for (BoundingModel b : e.getBoundingModels()) {
-                    for (int i = 0; i < b.getModel().getVAO().getPosition().length; i++) {
-                        meshPositions.add(b.getModel().getVAO().getPosition()[i] * b.getScale());
-                    }
-                    meshIndices.addAll(b.getModel().getVAO().getIndices());
-                    TFloatList positions = new TFloatArrayList(meshPositions);
-                    TIntList indices = new TIntArrayList(meshIndices);
-                    MeshGenerator.toWireframe(positions, indices, false);
-                    final ConvexMeshShape meshShape = new ConvexMeshShape(positions.toArray(), positions.size() / 3, 12);
-                    for (int i = 0; i < indices.size(); i += 2) {
-                        meshShape.addEdge(indices.get(i), indices.get(i + 1));
-                    }
-                    meshShape.setIsEdgesInformationUsed(true);
-                    addBody(e, meshShape, 100, index);
-
-                    meshPositions.clear();
-                    meshIndices.clear();
-                    index++;
-                }
-            } else {
+//            if (e.isUseBondingModels()) {
+//                int index = 0;
+//                for (BoundingModel b : e.getBoundingModels()) {
+//                    for (int i = 0; i < b.getModel().getVAO().getPosition().length; i++) {
+//                        meshPositions.add(b.getModel().getVAO().getPosition()[i] * b.getScale());
+//                    }
+//                    meshIndices.addAll(b.getModel().getVAO().getIndices());
+//                    TFloatList positions = new TFloatArrayList(meshPositions);
+//                    TIntList indices = new TIntArrayList(meshIndices);
+//                    MeshGenerator.toWireframe(positions, indices, false);
+//                    final ConvexMeshShape meshShape = new ConvexMeshShape(positions.toArray(), positions.size() / 3, 12);
+//                    for (int i = 0; i < indices.size(); i += 2) {
+//                        meshShape.addEdge(indices.get(i), indices.get(i + 1));
+//                    }
+//                    meshShape.setIsEdgesInformationUsed(true);
+//                    addBody(e, meshShape, 100, index);
+//
+//                    meshPositions.clear();
+//                    meshIndices.clear();
+//                    index++;
+//                }
+ //           } else {
                 for (int i = 0; i < e.getModel().getMeshModel().getVAO().getPosition().length; i++) {
                     meshPositions.add(e.getModel().getMeshModel().getVAO().getPosition()[i] * e.getScale());
                 }
@@ -116,7 +114,7 @@ public class InteractionWorld {
         }
         BoxShape box = new BoxShape(20, 9, 20);
         //addBody(box);
-    }
+//    }
 
     public void update(Player player) {
         dynamicsWorld.update();
@@ -179,34 +177,34 @@ public class InteractionWorld {
 //        RigidBody body = dynamicsWorld.createRigidBody(new Transform(
 //                new Vector3(0,0,0),
 //        new Quaternion(0,0,0,1)),10,shape);
-        body.enableMotion(e.canMove());
+//        body.enableMotion(e.canMove());
         body.enableGravity(true);
         body.enableCollision(true);
         body.setMaterial(PHYSICS_MATERIAL);
         addBody(body, e);
     }
 
-    private void addBody(Entity e, CollisionShape shape, float mass, int index) {
-        AxisAngle4d angles = new AxisAngle4d();
-        Matrix4f m = e.getTransform().getTransformation();
-        m.rotateXYZ(e.getBoundingModels()[index].getRot());
-        m.getRotation(angles);
-        Quaternionf q = new Quaternionf(angles);
-        RigidBody body = dynamicsWorld.createRigidBody(new Transform(
-                        new Vector3(e.getPosition().x() + e.getBoundingModels()[index].getPos().x(),
-                                e.getPosition().y() + e.getBoundingModels()[index].getPos().y(),
-                                e.getPosition().z() + e.getBoundingModels()[index].getPos().z()),
-                        new Quaternion(q.x(), q.y(), q.z(), q.w())),
-                            mass, shape);
+//    private void addBody(Entity e, CollisionShape shape, float mass, int index) {
+//        AxisAngle4d angles = new AxisAngle4d();
+//        Matrix4f m = e.getTransform().getTransformation();
+//        m.rotateXYZ(e.getBoundingModels()[index].getRot());
+//        m.getRotation(angles);
+//        Quaternionf q = new Quaternionf(angles);
 //        RigidBody body = dynamicsWorld.createRigidBody(new Transform(
-//                new Vector3(0,0,0),
-//        new Quaternion(0,0,0,1)),10,shape);
-        body.enableMotion(e.canMove());
-        body.enableGravity(true);
-        body.enableCollision(true);
-        body.setMaterial(PHYSICS_MATERIAL);
-        addBody(body, e);
-    }
+//                        new Vector3(e.getPosition().x() + e.getBoundingModels()[index].getPos().x(),
+//                                e.getPosition().y() + e.getBoundingModels()[index].getPos().y(),
+//                                e.getPosition().z() + e.getBoundingModels()[index].getPos().z()),
+//                        new Quaternion(q.x(), q.y(), q.z(), q.w())),
+//                            mass, shape);
+////        RigidBody body = dynamicsWorld.createRigidBody(new Transform(
+////                new Vector3(0,0,0),
+////        new Quaternion(0,0,0,1)),10,shape);
+//        body.enableMotion(e.canMove());
+//        body.enableGravity(true);
+//        body.enableCollision(true);
+//        body.setMaterial(PHYSICS_MATERIAL);
+//        addBody(body, e);
+//    }
 
     private void addTerrain(Terrain t, CollisionShape shape) {
         RigidBody body = dynamicsWorld.createRigidBody(new Transform(new Vector3(t.getX(), 0, t.getZ()),

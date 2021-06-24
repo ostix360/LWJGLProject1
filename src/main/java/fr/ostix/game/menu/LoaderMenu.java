@@ -5,7 +5,7 @@ import fr.ostix.game.core.loader.ResourcePackLoader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.openGLUtils.DisplayManager;
+import fr.ostix.game.openGLToolBox.DisplayManager;
 import org.joml.Vector2f;
 
 public class LoaderMenu extends Screen {
@@ -34,7 +34,9 @@ public class LoaderMenu extends Screen {
     }
 
     public ResourcePack getPack() {
-        return new ResourcePack(pack.getTextureByName(), pack.getSoundByName(), pack.getModelByName());
+        return new ResourcePack(pack.getTextureByName(),
+                pack.getSoundByName(), pack.getModelByName(),
+                pack.getAnimatedModelByName(),pack.getAnimationByName());
     }
 
 }

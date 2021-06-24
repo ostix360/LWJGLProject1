@@ -2,7 +2,8 @@ package fr.ostix.game.gui;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.openGLUtils.VAO;
+import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.openGLToolBox.VAO;
 import fr.ostix.game.toolBox.Maths;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
@@ -36,6 +37,7 @@ public class GuiRenderer {
             shader.loadTransformationMatrix(matrix4f);
             shader.loadLayer(gui.getLayer());
             glDrawArrays(GL_TRIANGLE_STRIP, 0, quadModel.getVertexCount());
+            Texture.unBindTexture();
         }
         glEnable(GL_DEPTH_TEST);
         glDisable(GL_BLEND);

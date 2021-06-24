@@ -1,10 +1,13 @@
 package fr.ostix.game.entity;
 
 
-import fr.ostix.game.audio.AudioManager;
-import fr.ostix.game.audio.SoundSource;
+import fr.ostix.game.entity.component.Component;
+import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Entity {
@@ -13,21 +16,9 @@ public class Entity {
     protected Vector3f position;
     protected Vector3f rotation;
     protected float scale;
-    protected BoundingModel[] boundingModels;
-    protected SoundSource sound;
-
-    protected boolean useBondingModels;
-    protected boolean canMove = false;
     private Transform transform;
 
-    public Entity(Model model, Vector3f position, Vector3f rotation, float scale, BoundingModel[] boundingModels) {
-        this.model = model;
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
-        this.boundingModels = boundingModels;
-        useBondingModels = true;
-    }
+    private final List<Component> components = new ArrayList<>();
 
     public Entity(Model model, Vector3f position, Vector3f rotation, float scale) {
         this.model = model;
@@ -36,7 +27,18 @@ public class Entity {
         this.scale = scale;
     }
 
+    public void addComponent(Component c) {
+        components.add(c);
+    }
 
+    public void update() {
+        for (Component c : components) {
+            if (c instanceof ParticleComponent){
+                ((ParticleComponent) c).setOffset(new Vector3f(0,8.5f,0));
+            }
+            c.update();
+        }
+    }
 
     public void setPosition(Vector3f position) {
         this.position = position;
@@ -55,33 +57,6 @@ public class Entity {
         transform.setRotation(rotation);
     }
 
-    public boolean isUseBondingModels() {
-        return useBondingModels;
-    }
-
-    public Entity setUseBondingModels(boolean useBondingModels) {
-        this.useBondingModels = useBondingModels;
-        return this;
-    }
-
-
-    public void playSound(){
-        if (!sound.isPlaying()){
-            sound.play();
-        }
-    }
-
-    public void setSound(String sound) {
-       this.sound = AudioManager.loadSound(sound, false);
-        this.sound.setGain(1);
-       this.sound.setPosition(getPosition());
-       this.sound.setSpeed(new Vector3f());
-    }
-
-    public BoundingModel[] getBoundingModels() {
-        return boundingModels;
-    }
-
     public Model getModel() {
         return model;
     }
@@ -98,13 +73,9 @@ public class Entity {
         return scale;
     }
 
-
     public Transform getTransform() {
-        return transform = new Transform(position, rotation,scale);
+        return transform = new Transform(position, rotation, scale);
     }
 
 
-    public boolean canMove() {
-        return canMove;
-    }
 }

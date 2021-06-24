@@ -2,15 +2,19 @@ package fr.ostix.game.world;
 
 import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
-import fr.ostix.game.core.Input;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
+import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
+import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.graphics.particles.MasterParticle;
+import fr.ostix.game.graphics.particles.ParticleSystem;
+import fr.ostix.game.graphics.particles.ParticleTexture;
 import fr.ostix.game.graphics.render.MasterRenderer;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.toolBox.Color;
@@ -18,7 +22,6 @@ import fr.ostix.game.world.interaction.InteractionWorld;
 import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.openal.AL10;
 
 import java.util.ArrayList;
@@ -44,37 +47,52 @@ public class World extends Screen {
     private final List<Light> lights = new ArrayList<>();
     private static final List<Terrain> terrains = new ArrayList<>();
 
-
     private static int[][] worldIndex;
 
     SoundListener listener;
-    Entity entity;
     Player player;
     Camera cam;
+    AnimatedModel an;
 
     public World() {
         super("World");
     }
+
+
 
     public void initWorld(Loader loader, ResourcePack pack) {
         this.textures = pack.getTextureByName();
         this.sounds = pack.getSoundByName();
         this.models = pack.getModelByName();
 
-        player = new Player(pack.getModelByName().get("player"), new Vector3f(55, 0, 55), new Vector3f(0), 1);
+        renderer = new MasterRenderer(loader);
 
+        MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
+
+
+        player = new Player(pack.getModelByName().get("player"), new Vector3f(0, 0, 0), new Vector3f(0), 1);
+        ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getTextureID(), 8, true),
+                60, 1.5f, 0, 60 * 2.2f, 12);
+        system.randomizeRotation();
+        system.setLifeError(0.2f);
+        system.setDirection(new Vector3f(0, 0.3f, 0), 0.001f);
+        system.setSpeedError(0.5f);
+        system.setScaleError(0.05f);
+        //player.addComponent(new ParticleComponent(system, player));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
-        entities.add(player);
+       // entities.add(player);
         lights.add(sun);
         //  lights.add(sunc);
-
+        an = pack.getAnimatedModelByName().get("model");
+        Animation ani = pack.getAnimationByName().get(an).get("model");
+        an.doAnimation(ani);
         initTerrain(loader);
         initEntity();
 
 
-        renderer = new MasterRenderer(loader);
+
 
         interactionWorld.init(1f / 60f, entities,terrains);
 
@@ -148,23 +166,26 @@ public class World extends Screen {
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
         processInteraction();
-        listener.updateTransform(player.getPosition(), player.getRotation());
-
-        if (Input.keys[GLFW.GLFW_KEY_P]){
-            entity.playSound();
+        for (Entity e : entities){
+            e.update();
         }
+        an.update(1f/60f);
+
+        listener.updateTransform(player.getPosition(), player.getRotation());
+        MasterParticle.update(cam);
+
     }
 
     private void processInteraction() {
 
-        interactionWorld.update(player);
+        //interactionWorld.update(player);
     }
 
 
     public void render() {
         cam.move();
-        renderer.renderScene(entities, terrains, lights, cam);
-
+        renderer.renderScene(an,entities, terrains, lights, cam);
+        MasterParticle.render(cam);
     }
 
     public static float getTerrainHeight(float worldX, float worldZ) {
@@ -183,6 +204,7 @@ public class World extends Screen {
     public void cleanUp() {
         interactionWorld.finish();
         renderer.cleanUp();
+        MasterParticle.cleanUp();
     }
 
     public boolean isInit() {

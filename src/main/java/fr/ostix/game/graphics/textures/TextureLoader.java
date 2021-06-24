@@ -16,9 +16,11 @@ import static org.lwjgl.opengl.GL11.*;
 public class TextureLoader {
 
     private final int id;
+    private final int width;
 
-    public TextureLoader(int id) {
+    public TextureLoader(int id, int width) {
         this.id = id;
+        this.width = width;
     }
 
     public static TextureLoader loadTexture(String file, int mode, boolean isClampEdge) {
@@ -93,11 +95,14 @@ public class TextureLoader {
 
         glBindTexture(GL_TEXTURE_2D,0);
 
-        return new TextureLoader(id);
+        return new TextureLoader(id,w);
     }
 
     public int getId() {
         return id;
     }
 
+    public int getWidth() {
+        return this.width;
+    }
 }

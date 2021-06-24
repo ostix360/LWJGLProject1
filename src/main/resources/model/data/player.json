@@ -1,5 +1,6 @@
 {
-  "name" :"player",
-  "path" :"player/player.obj",
-  "texture" :"player"
+  "name" :"model",
+  "path" :"model",
+  "texture" :"animated",
+  "canAnimated" : true
 }

@@ -5,7 +5,8 @@ import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.textures.TextureData;
 import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.graphics.textures.TextureUtils;
-import fr.ostix.game.openGLUtils.VAO;
+import fr.ostix.game.openGLToolBox.VAO;
+import fr.ostix.game.openGLToolBox.VBO;
 import fr.ostix.game.toolBox.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -15,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,20 @@ public class Loader {
         return new MeshModel(vao);
     }
 
+    public MeshModel loadToVAO(int[]indices,float[] position, float[] texturesCoords,float[] normals,int[] jointIDs,float[] vertexWeights){
+        VAO vao = VAO.createVAO();
+        VAOs.add(vao);
+        vao.bind();
+        vao.storeIndicesInVAO(indices);
+        vao.storeDataInAttributeList(0, 3,position);
+        vao.storeDataInAttributeList(1, 2, texturesCoords);
+        vao.storeDataInAttributeList(2, 3, normals);
+        vao.storeIntDataInAttributeList(3, 3, jointIDs);
+        vao.storeDataInAttributeList(4, 3, vertexWeights);
+        VAO.unbind();
+        return new MeshModel(vao);
+    }
+
     public MeshModel loadFontToVAO(float[] pos, float[] texturesCoords){
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
@@ -51,6 +67,20 @@ public class Loader {
         VAO.unbind();
         return new MeshModel(vao);
     }
+
+
+
+    public void addInstance(VAO vao, VBO vbo, int attrib, int dataSize, int instanceDataLength, int offset) {
+        vao.addInstance(vbo,attrib,dataSize,instanceDataLength,offset);
+    }
+
+    public void updateVBO(VBO vbo, float[] data, FloatBuffer buffer) {
+        buffer.clear();
+        buffer.put(data);
+        buffer.flip();
+        vbo.updateVBO(buffer);
+    }
+
 
     public MeshModel loadToVAO(float[] vertices) {
         VAO vao = VAO.createVAO();
@@ -76,7 +106,7 @@ public class Loader {
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        textureLoaders.add(new TextureLoader(texID));
+        textureLoaders.add(new TextureLoader(texID,500));
         return texID;
     }
 

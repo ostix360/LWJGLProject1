@@ -8,6 +8,7 @@ import org.joml.Math;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.assimp.AIMatrix4x4;
 
 public class Maths {
 
@@ -49,9 +50,9 @@ public class Maths {
     public static Matrix4f createViewMatrix(Camera cam) {
         Matrix4f matrix4f = new Matrix4f();
         matrix4f.identity();
-        matrix4f.rotate((float) Math.toRadians(cam.getPitch()), new Vector3f(1, 0, 0));
-        matrix4f.rotate((float) Math.toRadians(cam.getYaw()), new Vector3f(0, 1, 0));
-        matrix4f.rotate((float) Math.toRadians(cam.getRoll()), new Vector3f(0, 0, 1));
+        matrix4f.rotate(Math.toRadians(cam.getPitch()), new Vector3f(1, 0, 0));
+        matrix4f.rotate(Math.toRadians(cam.getYaw()), new Vector3f(0, 1, 0));
+        matrix4f.rotate(Math.toRadians(cam.getRoll()), new Vector3f(0, 0, 1));
         Vector3f cameraPos = cam.getPosition();
         Vector3f negativeCameraPos = new Vector3f(-cameraPos.x, -cameraPos.y, -cameraPos.z);
         matrix4f.translate(negativeCameraPos);
@@ -107,5 +108,30 @@ public class Maths {
         final float halfAngle = (float) (java.lang.Math.toRadians(angle) / 2);
         final float q = (float) (java.lang.Math.sin(halfAngle) / java.lang.Math.sqrt(x * x + y * y + z * z));
         return new Quaternion(x * q, y * q, z * q, (float) java.lang.Math.cos(halfAngle));
+    }
+
+    public static Matrix4f fromAssimpMatrix(AIMatrix4x4 AIm) {
+        Matrix4f m = new Matrix4f().identity();
+
+        m.m00(AIm.a1());
+        m.m01(AIm.a2());
+        m.m02(AIm.a3());
+        m.m03(AIm.a4());
+
+        m.m10(AIm.b1());
+        m.m11(AIm.b2());
+        m.m12(AIm.b3());
+        m.m13(AIm.b4());
+
+        m.m20(AIm.c1());
+        m.m21(AIm.c2());
+        m.m22(AIm.c3());
+        m.m23(AIm.c4());
+
+        m.m30(AIm.d1());
+        m.m31(AIm.d2());
+        m.m32(AIm.d3());
+        m.m33(AIm.d4());
+        return m;
     }
 }

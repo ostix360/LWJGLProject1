@@ -1,6 +1,6 @@
 package fr.ostix.game.gui;
 
-import fr.ostix.game.openGLUtils.DisplayManager;
+import fr.ostix.game.openGLToolBox.DisplayManager;
 import fr.ostix.game.toolBox.Color;
 import org.joml.Vector2f;
 

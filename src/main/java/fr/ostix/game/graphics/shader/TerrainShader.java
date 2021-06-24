@@ -3,7 +3,7 @@ package fr.ostix.game.graphics.shader;
 
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.openGLUtils.uniform.*;
+import fr.ostix.game.openGLToolBox.uniform.*;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.world.World;

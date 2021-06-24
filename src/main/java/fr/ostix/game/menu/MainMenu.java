@@ -4,7 +4,7 @@ import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.component.Button;
-import fr.ostix.game.openGLUtils.DisplayManager;
+import fr.ostix.game.openGLToolBox.DisplayManager;
 
 public class MainMenu extends Screen {
 

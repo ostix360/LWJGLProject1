@@ -3,7 +3,7 @@ package fr.ostix.game.graphics.font.rendering;
 
 import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
-import fr.ostix.game.openGLUtils.VAO;
+import fr.ostix.game.openGLToolBox.VAO;
 import org.lwjgl.opengl.GL13;
 
 import java.util.List;

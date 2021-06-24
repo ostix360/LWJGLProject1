@@ -3,15 +3,18 @@ package fr.ostix.game.core.loader;
 import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.core.loader.json.JsonUtils;
+import fr.ostix.game.core.resources.AnimationResources;
 import fr.ostix.game.core.resources.ModelResources;
 import fr.ostix.game.core.resources.SoundResources;
 import fr.ostix.game.core.resources.TextureResources;
+import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
+import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.openGLUtils.DisplayManager;
+import fr.ostix.game.openGLToolBox.DisplayManager;
 import fr.ostix.game.toolBox.ToolDirectory;
 import org.joml.Vector2f;
 
@@ -19,7 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static fr.ostix.game.openGLUtils.OpenGlUtils.clearGL;
+import static fr.ostix.game.openGLToolBox.OpenGlUtils.clearGL;
 
 public class ResourcePackLoader {
 
@@ -28,6 +31,8 @@ public class ResourcePackLoader {
     private final HashMap<String, Texture> textureByName = new HashMap<>();
     private final HashMap<String, SoundSource> soundByName = new HashMap<>();
     private final HashMap<String, Model> modelByName = new HashMap<>();
+    private final HashMap<String,AnimatedModel> animatedModelByName = new HashMap<>();
+    private final HashMap<AnimatedModel,HashMap<String, Animation>> animationByName = new HashMap<>();
 
     private boolean isLoaded = false;
 
@@ -40,7 +45,7 @@ public class ResourcePackLoader {
         Vector2f pos = new Vector2f(90, DisplayManager.getHeight() - 150);
 
 
-        ProgressManager.ProgressBar resourcesBar = ProgressManager.addProgressBar("Loading All Resource", 3);
+        ProgressManager.ProgressBar resourcesBar = ProgressManager.addProgressBar("Loading All Resource", 4);
         clearGL();
         masterGui.render();
         resourcesBar.update("Loading Textures... ");
@@ -49,7 +54,7 @@ public class ResourcePackLoader {
 
 
         GuiTexture bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.33333333 * (DisplayManager.getWidth() - 180)), 50));
+                new Vector2f((float) (0.25 * (DisplayManager.getWidth() - 180)), 50));
         MasterGui.addGui(bar);
         clearGL();
         masterGui.render();
@@ -60,8 +65,7 @@ public class ResourcePackLoader {
 
 
         bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.66666667 * (DisplayManager.getWidth() - 180)), 50));
-        MasterGui.addGui(bar);
+                new Vector2f((float) (0.5 * (DisplayManager.getWidth() - 180)), 50));
         MasterGui.addGui(bar);
         clearGL();
 
@@ -70,6 +74,15 @@ public class ResourcePackLoader {
         loadAllModels();
         DisplayManager.updateDisplay();
 
+        bar = new GuiTexture(progress.getId(), pos,
+                new Vector2f((float) (0.75 * (DisplayManager.getWidth() - 180)), 50));
+        MasterGui.addGui(bar);
+        clearGL();
+
+        masterGui.render();
+        resourcesBar.update("Loading Animations... ");
+        loadAllAnimations();
+        DisplayManager.updateDisplay();
 
         bar = new GuiTexture(progress.getId(), pos,
                 new Vector2f((float) (DisplayManager.getWidth() - 180), 50));
@@ -98,7 +111,7 @@ public class ResourcePackLoader {
             assert current != null;
             String name = current.getName();
             texturesBar.update(name);
-            Texture tex = new Texture(loader.loadTexture(current.getPath()).getId(), current.getTextureProperties());
+            Texture tex = new Texture(loader.loadTexture(current.getPath()), current.getTextureProperties());
             textureByName.put(name, tex);
         }
         ProgressManager.remove(texturesBar);
@@ -142,10 +155,48 @@ public class ResourcePackLoader {
             assert current != null;
             String name = current.getName();
             modelBar.update(name);
-            Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
-            modelByName.put(name, model);
+            if (current.canAnimated()){
+                AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(),textureByName.get(current.getTexture()), loader);
+                animatedModelByName.put(name,model);
+            }
+//            Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
+//            modelByName.put(name, model);
         }
         ProgressManager.remove(modelBar);
+    }
+
+    private void loadAllAnimations() {
+        File modelFolder = new File(ToolDirectory.RES_FOLDER + "/animations/", DATA);
+        ProgressManager.ProgressBar animationBar = ProgressManager.addProgressBar("Loading All Animations", Objects.requireNonNull(modelFolder.listFiles()).length);
+
+        for (File currentFile : Objects.requireNonNull(modelFolder.listFiles())) {
+            String json = JsonUtils.loadJson(currentFile.getAbsolutePath());
+            if (json.isEmpty()) {
+                new Exception("a json a model is empty...");
+            }
+            AnimationResources current = JsonUtils.gsonInstance().fromJson(json, AnimationResources.class);
+            if (current == null) {
+                new NullPointerException("The file cannot " + currentFile.getName() + " be read");
+            }
+            assert current != null;
+            current.loadAnimation();
+            animationBar.update(current.getAnimationName());
+            optimizeAnimation(current);
+        }
+        ProgressManager.remove(animationBar);
+    }
+
+    private void optimizeAnimation(AnimationResources current) {
+        AnimatedModel model = animatedModelByName.get(current.getModelName());
+        HashMap<String,Animation> batch = animationByName.get(model);
+        if (batch != null) {
+            batch.put(current.getAnimationName(), current.getAnimation());
+        }else{
+            HashMap<String,Animation> newBatch = new HashMap<>();
+            newBatch.put(current.getAnimationName(), current.getAnimation());
+            animationByName.put(model, newBatch);
+        }
+
     }
 
     public boolean isLoaded() {
@@ -163,5 +214,13 @@ public class ResourcePackLoader {
 
     public HashMap<String, Model> getModelByName() {
         return modelByName;
+    }
+
+    public HashMap<String, AnimatedModel> getAnimatedModelByName() {
+        return animatedModelByName;
+    }
+
+    public HashMap<AnimatedModel, HashMap<String, Animation>> getAnimationByName() {
+        return animationByName;
     }
 }

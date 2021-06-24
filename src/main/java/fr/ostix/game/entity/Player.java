@@ -3,7 +3,6 @@ package fr.ostix.game.entity;
 import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.core.Input;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.world.World;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -28,16 +27,10 @@ public class Player extends Entity {
     private final int sprintTime = 60;
     private final boolean isSprinting = false;
 
-    public Player(Entity e) {
-        super(e.getModel(),e.position,e.rotation,e.getScale(),e.boundingModels);
-        this.boundingModels = e.boundingModels;
-        this.useBondingModels = e.useBondingModels;
-        this.canMove = true;
-    }
+
 
     public Player(Model model, Vector3f position, Vector3f rotation, float scale) {
         super(model, position, rotation, scale);
-        this.canMove = true;
     }
 
 
