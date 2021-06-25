@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AnimationLoader {
 
-    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(0), new Vector3f(1, 0, 0));
+    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
 
     private final XmlNode animationData;
     private final XmlNode jointHierarchy;

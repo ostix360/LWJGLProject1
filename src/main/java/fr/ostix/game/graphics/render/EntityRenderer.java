@@ -1,10 +1,12 @@
 package fr.ostix.game.graphics.render;
 
 import fr.ostix.game.entity.Entity;
+import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.ClassicShader;
+import fr.ostix.game.openGLToolBox.OpenGlUtils;
 import fr.ostix.game.openGLToolBox.VAO;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL13;
@@ -19,8 +21,8 @@ public class EntityRenderer implements IRenderer {
     ClassicShader shader;
 
     public EntityRenderer(ClassicShader shader,Matrix4f projectionMatrix) {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+
+        OpenGlUtils.cullBackFaces(true);
         this.shader = shader;
         this.shader.bind();
         this.shader.loadProjectionMatrix(projectionMatrix);
@@ -29,7 +31,11 @@ public class EntityRenderer implements IRenderer {
 
     public void render(Map<Model, List<Entity>> entities) {
         for (Model model : entities.keySet()) {
-            prepareTexturedModel(model);
+            if (model instanceof AnimatedModel) {
+                prepareAnimatedTexturedModel((AnimatedModel) model);
+            } else {
+                prepareTexturedModel(model);
+            }
             List<Entity> batch = entities.get(model);
             for (Entity entity : batch) {
                 prepareInstance(entity);
@@ -37,6 +43,19 @@ public class EntityRenderer implements IRenderer {
             }
             finish();
         }
+    }
+
+    private void prepareAnimatedTexturedModel(AnimatedModel model) {
+        MeshModel mesh = model.getMeshModel();
+        mesh.getVAO().bind(0, 1, 2, 3, 4);
+        shader.isAnimated.loadBooleanToUniform(true);
+        shader.jointTransforms.loadMatrixArray(model.getJointTransforms());
+
+        Texture texture = model.getTexture();
+        shader.loadSpecular(texture.getReflectivity(), texture.getShineDamper());
+
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        texture.bindTexture();
     }
 
     @Override
@@ -49,7 +68,7 @@ public class EntityRenderer implements IRenderer {
         MeshModel meshModel = model.getMeshModel();
         meshModel.getVAO().bind(0, 1, 2);
 
-        Texture texture = model.getModelTexture();
+        Texture texture = model.getTexture();
         shader.loadSpecular(texture.getReflectivity(), texture.getShineDamper());
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
@@ -59,8 +78,8 @@ public class EntityRenderer implements IRenderer {
 
     @Override
     public void finish() {
-        MasterRenderer.enableCulling();
-        VAO.unbind(0, 1, 2);
+        OpenGlUtils.cullBackFaces(true);
+        VAO.unbind(0, 1, 2, 3, 4);
         Texture.unBindTexture();
     }
 

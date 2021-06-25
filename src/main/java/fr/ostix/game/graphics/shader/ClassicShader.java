@@ -2,9 +2,7 @@ package fr.ostix.game.graphics.shader;
 
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.openGLToolBox.uniform.FloatUniform;
-import fr.ostix.game.openGLToolBox.uniform.MatrixUniform;
-import fr.ostix.game.openGLToolBox.uniform.Vector3fUniform;
+import fr.ostix.game.openGLToolBox.uniform.*;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.world.World;
@@ -26,13 +24,15 @@ public class ClassicShader extends ShaderProgram {
     private final FloatUniform[] lightPower = new FloatUniform[MAX_LIGHTS];
     private final FloatUniform reflectivity = new FloatUniform("reflectivity");
     private final FloatUniform shine = new FloatUniform("shine");
+    public final MatrixUniformArray jointTransforms = new MatrixUniformArray("jointTransforms", 50);
+    public final BooleanUniform isAnimated = new BooleanUniform("isAnimated");
     private final Vector3fUniform skyColor = new Vector3fUniform("skyColor");
 
     public ClassicShader() {
         super("shader");
         initLightsUniform();
         super.getAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix,
-                reflectivity, shine, skyColor);
+                reflectivity, shine, skyColor, jointTransforms, isAnimated);
         super.getAllUniformLocations(lightPos);
         super.getAllUniformLocations(lightColor);
         super.getAllUniformLocations(lightAttenuation);
@@ -45,6 +45,8 @@ public class ClassicShader extends ShaderProgram {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
         super.bindAttribute(2, "normals");
+        super.bindAttribute(3, "jointIndices");
+        super.bindAttribute(4, "weights");
     }
 
 

@@ -7,8 +7,6 @@ import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.openGLToolBox.OpenGlUtils;
 import fr.ostix.game.openGLToolBox.VAO;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 
 /**
@@ -41,14 +39,14 @@ public class AnimatedModelRenderer {
      */
     public void render(AnimatedModel entity, ICamera camera, Vector3f lightDir) {
         prepare(camera, lightDir);
-        entity.getModel().getModelTexture().bindTexture();
 
-        shader.transformation.loadMatrixToUniform(entity.getTransform().getTransformation());
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        entity.getModel().getModelTexture().bindTexture();
-        entity.getModel().getMeshModel().getVAO().bind(0, 1, 2,3,4);
+//        shader.transformation.loadMatrixToUniform(entity.getTransform().getTransformation());
+//
+//        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//        entity.getModel().getModelTexture().bindTexture();
+//        entity.getModel().getMeshModel().getVAO().bind(0, 1, 2,3,4);
         shader.jointTransforms.loadMatrixArray(entity.getJointTransforms());
-        GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getMeshModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+        //  GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getMeshModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
         VAO.unbind(0, 1, 2, 3, 4);
         Texture.unBindTexture();
         finish();

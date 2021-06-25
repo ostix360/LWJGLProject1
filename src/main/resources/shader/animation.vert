@@ -24,14 +24,14 @@ void main(void){
 
     for(int i=0;i<MAX_WEIGHTS;i++){
         mat4 jointTransform = jointTransforms[in_jointIndices[i]];
-        vec4 posePosition = jointTransform * vec4(in_position, 1.0);
+        vec4 posePosition = jointTransform *   vec4(in_position, 1.0);
         totalLocalPos += posePosition * in_weights[i];
         pass_Color = jointTransform * vec4(1,1,1,1) /3;
         vec4 worldNormal = jointTransform * vec4(in_normal, 0.0);
         totalNormal += worldNormal * in_weights[i];
     }
 
-    gl_Position = projectionViewMatrix * totalLocalPos;
+    gl_Position = projectionViewMatrix * transformationMatrix * totalLocalPos;
     pass_normal = totalNormal.xyz;
     pass_textureCoords = in_textureCoords;
 

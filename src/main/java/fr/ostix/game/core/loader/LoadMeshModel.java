@@ -50,7 +50,7 @@ public class LoadMeshModel {
         for (int v = 0; v < mesh.mNumVertices(); v++) {
             AIVector3D position = mesh.mVertices().get(v);
             AIVector3D normal = Objects.requireNonNull(mesh.mNormals()).get(v);
-            AIVector3D texCoord = mesh.mTextureCoords(0).get(v);
+            AIVector3D texCoord = Objects.requireNonNull(mesh.mTextureCoords(0)).get(v);
 
             /*
              * The above assumes that the program has texture coordinates, if it doesn't the program will throw a null pointer exception.
@@ -114,7 +114,7 @@ public class LoadMeshModel {
         for (int v = 0; v < mesh.mNumVertices(); v++) {
             AIVector3D position = mesh.mVertices().get(v);
             AIVector3D normal = Objects.requireNonNull(mesh.mNormals()).get(v);
-            AIVector3D texCoord = mesh.mTextureCoords(0).get(v);
+            AIVector3D texCoord = Objects.requireNonNull(mesh.mTextureCoords(0)).get(v);
 
             /*
              * The above assumes that the program has texture coordinates, if it doesn't the program will throw a null pointer exception.
@@ -153,7 +153,7 @@ public class LoadMeshModel {
         int sizeOfVertex = 4;
 
         for (int b = 0; b < mesh.mNumBones(); b++) {
-            AIBone bone = AIBone.create(mesh.mBones().get(b));
+            AIBone bone = AIBone.create(Objects.requireNonNull(mesh.mBones()).get(b));
             boneMap.put(bone.mName().dataString(), b);
             System.out.println("...");
 
@@ -202,18 +202,18 @@ public class LoadMeshModel {
             String name = bone.mName().dataString();
             System.out.println(name);
             Matrix4f transform = Maths.fromAssimpMatrix(bone.mOffsetMatrix());
-            bones[b] = new JointData(b,name,transform);
+            bones[b] = new JointData(b, name, transform);
         }
 
-        JointData jointDataRoot = new JointData(bones[0].index,bones[0].nameId,CORRECTION.mul(inverseRootTransformation));
+        JointData jointDataRoot = new JointData(bones[0].index, bones[0].nameId, CORRECTION.mul(inverseRootTransformation));
         for (int i = 1; i < bones.length; i++) {
             jointDataRoot.addChild(bones[i]);
         }
 
         Joint jointRoot = createJoints(jointDataRoot);
 
-       return new AnimatedModel(loader.loadToVAO(indices,pos,texCoords,normals,boneIndex,weightIndex),
-                tex,new Vector3f(0),new Vector3f(0),1,jointRoot,3);
+        return new AnimatedModel(loader.loadToVAO(indices, pos, texCoords, normals, boneIndex, weightIndex),
+                tex, jointRoot, 3);
     }
     private static Joint createJoints(JointData data) {
         Joint joint = new Joint(data.index, data.nameId, data.bindLocalTransform);

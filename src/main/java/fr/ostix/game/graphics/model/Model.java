@@ -14,7 +14,7 @@ public class Model {
         return meshModel;
     }
 
-    public Texture getModelTexture() {
+    public Texture getTexture() {
         return texture;
     }
 }

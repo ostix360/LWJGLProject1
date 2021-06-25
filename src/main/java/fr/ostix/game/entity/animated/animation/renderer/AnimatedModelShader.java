@@ -24,7 +24,7 @@ public class AnimatedModelShader extends ShaderProgram {
      */
     public AnimatedModelShader() {
         super("animation");
-        super.getAllUniformLocations(projectionViewMatrix, lightDirection, jointTransforms);
+        super.getAllUniformLocations(projectionViewMatrix, transformation, lightDirection, jointTransforms);
         super.validateProgram();
     }
 

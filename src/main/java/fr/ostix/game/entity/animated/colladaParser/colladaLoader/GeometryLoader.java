@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GeometryLoader {
 
-    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
+    private static final Matrix4f CORRECTION = new Matrix4f().translate(0, 10, 0);
 
     private final XmlNode meshData;
 
@@ -68,7 +68,6 @@ public class GeometryLoader {
             float y = Float.parseFloat(posData[i * 3 + 1]);
             float z = Float.parseFloat(posData[i * 3 + 2]);
             Vector4f position = new Vector4f(x, y, z, 1);
-            CORRECTION.transform(position);
             vertices.add(new Vertex(vertices.size(), new Vector3f(position.x(),position.y(),position.z()), vertexWeights.get(vertices.size())));
         }
     }
@@ -84,7 +83,6 @@ public class GeometryLoader {
             float y = Float.parseFloat(normData[i * 3 + 1]);
             float z = Float.parseFloat(normData[i * 3 + 2]);
             Vector4f norm = new Vector4f(x, y, z, 0f);
-            CORRECTION.transform(norm);
             normals.add(new Vector3f(norm.x, norm.y, norm.z));
         }
     }

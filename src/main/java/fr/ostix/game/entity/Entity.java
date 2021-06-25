@@ -54,7 +54,7 @@ public class Entity {
 
     public void increaseRotation(Vector3f value) {
         rotation.add(value);
-        transform.setRotation(rotation);
+        //transform.setRotation(rotation);
     }
 
     public Model getModel() {

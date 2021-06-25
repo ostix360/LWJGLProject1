@@ -16,6 +16,6 @@ void main(void){
     vec4 diffuseColour = texture(diffuseMap, pass_textureCoords);
     vec3 unitNormal = normalize(pass_normal);
     float diffuseLight = max(dot(-lightDirection, unitNormal), 0.0) * lightBias.x + lightBias.y;
-    out_colour = pass_Color;
+    out_colour = diffuseColour;
 
 }

@@ -12,7 +12,6 @@ import fr.ostix.game.entity.animated.colladaParser.dataStructures.SkeletonData;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.toolBox.ToolDirectory;
-import org.joml.Vector3f;
 
 public class AnimatedModelLoader {
 
@@ -29,7 +28,7 @@ public class AnimatedModelLoader {
         MeshModel model = createVao(entityData.getMeshData(),loader);
         SkeletonData skeletonData = entityData.getJointsData();
         Joint headJoint = createJoints(skeletonData.headJoint);
-        return new AnimatedModel(model, texture, new Vector3f(55,5,55),new Vector3f(0),1,headJoint, skeletonData.jointCount);
+        return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount);
     }
 
     /**

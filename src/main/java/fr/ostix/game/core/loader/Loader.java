@@ -49,7 +49,7 @@ public class Loader {
         VAOs.add(vao);
         vao.bind();
         vao.storeIndicesInVAO(indices);
-        vao.storeDataInAttributeList(0, 3,position);
+        vao.storePositionInAttributeList(0, 3, position);
         vao.storeDataInAttributeList(1, 2, texturesCoords);
         vao.storeDataInAttributeList(2, 3, normals);
         vao.storeIntDataInAttributeList(3, 3, jointIDs);

@@ -93,6 +93,7 @@ public class InteractionWorld {
 //                    index++;
 //                }
  //           } else {
+            System.out.println(e.getModel().getMeshModel().getVAO().getPosition() == null);
                 for (int i = 0; i < e.getModel().getMeshModel().getVAO().getPosition().length; i++) {
                     meshPositions.add(e.getModel().getMeshModel().getVAO().getPosition()[i] * e.getScale());
                 }
@@ -135,7 +136,7 @@ public class InteractionWorld {
             }
 
             if (entry.getValue() != null) shape.getTransform().setQ(q);
-            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ());
+            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ()) + 2.8f;
             if (transform.getPosition().getY() < terrainHeight) {
                 if (entry.getValue() != null) {
                     assert shape != null;
@@ -177,7 +178,7 @@ public class InteractionWorld {
 //        RigidBody body = dynamicsWorld.createRigidBody(new Transform(
 //                new Vector3(0,0,0),
 //        new Quaternion(0,0,0,1)),10,shape);
-//        body.enableMotion(e.canMove());
+        body.enableMotion(true);
         body.enableGravity(true);
         body.enableCollision(true);
         body.setMaterial(PHYSICS_MATERIAL);

@@ -3,12 +3,12 @@ package fr.ostix.game.graphics.render;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
-import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.shader.ClassicShader;
 import fr.ostix.game.graphics.shader.TerrainShader;
 import fr.ostix.game.openGLToolBox.DisplayManager;
+import fr.ostix.game.openGLToolBox.OpenGlUtils;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.world.Terrain;
 import fr.ostix.game.world.skybox.SkyboxRenderer;
@@ -34,18 +34,15 @@ public class MasterRenderer {
 
     private final TerrainRenderer terrainRenderer;
     private final TerrainShader terrainShader = new TerrainShader();
-    private final AnimatedModelRenderer animationRenderer = new AnimatedModelRenderer();
-
     private final SkyboxRenderer skyboxRenderer;
 
     private List<Terrain> terrains;
     private static Matrix4f projectionMatrix;
 
     private final Map<Model, List<Entity>> entities = new HashMap<>();
-    private final List<AnimatedModel> animatedModels = new ArrayList<>();
 
     public MasterRenderer(Loader loader) {
-        enableCulling();
+        OpenGlUtils.cullBackFaces(true);
         projectionMatrix = createProjectionMatrix();
         this.entityRenderer = new EntityRenderer(shader, projectionMatrix);
         this.terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
@@ -60,10 +57,6 @@ public class MasterRenderer {
         createProjectionMatrix();
     }
 
-    public static void enableCulling() {
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-    }
 
     private void processEntity(Entity e) {
         Model model = e.getModel();
@@ -77,16 +70,16 @@ public class MasterRenderer {
         }
     }
 
-    public void renderScene(AnimatedModel animatedModel, List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera camera) {
+    public void renderScene(List<Entity> entities, List<Terrain> terrains, List<Light> lights, Camera camera) {
         for (Entity entity : entities) {
             processEntity(entity);
         }
         this.terrains = terrains;
 
-        render(animatedModel,lights, camera);
+        render(lights, camera);
     }
 
-    private void render(AnimatedModel animatedModel,List<Light> lights, Camera cam) {
+    private void render(List<Light> lights, Camera cam) {
         this.initFrame();
         shader.bind();
         shader.loadLight(lights);
@@ -94,8 +87,6 @@ public class MasterRenderer {
         shader.loadViewMatrix(cam);
         entityRenderer.render(entities);
         shader.unBind();
-
-        animationRenderer.render(animatedModel, cam,lights.get(0).getPosition());
 
         terrainShader.bind();
         //terrainShader.loadClipPlane(clipPlane);
@@ -110,12 +101,7 @@ public class MasterRenderer {
         entities.clear();
     }
 
-    public static void disableCulling() {
-        glDisable(GL_CULL_FACE);
-    }
-
     public void cleanUp() {
-        animationRenderer.cleanUp();
         this.terrainShader.cleanUp();
         this.shader.cleanUp();
         glDisable(GL_BLEND);

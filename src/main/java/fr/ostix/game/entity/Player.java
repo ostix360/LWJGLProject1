@@ -15,7 +15,7 @@ public class Player extends Entity {
     private static final float RUN_SPEED = 160;
     private static final float TURN_SPEED = 780;
     public static final float GRAVITY = 100f;
-    private static final float JUMP_POWER = 1000;
+    private static final float JUMP_POWER = 1;
 
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
@@ -28,11 +28,13 @@ public class Player extends Entity {
     private final boolean isSprinting = false;
 
 
-
     public Player(Model model, Vector3f position, Vector3f rotation, float scale) {
         super(model, position, rotation, scale);
     }
 
+    public Player(Entity e) {
+        super(e.getModel(), e.getPosition(), e.getRotation(), e.getScale());
+    }
 
     public void move() {
         checkInputs();
@@ -41,13 +43,15 @@ public class Player extends Entity {
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
         forceToCenter.set(new Vector3(dx, 0, dz));
-    //    upwardsSpeed += GRAVITY;
-        if (upwardsSpeed <= 0f){
+        //    upwardsSpeed += GRAVITY;
+        if (upwardsSpeed <= 0f) {
             canJump = true;
             upwardsSpeed = 0f;
         }
-        forceToCenter.add(new Vector3(0, upwardsSpeed , 0));
-        if (!canJump){
+        forceToCenter.add(new Vector3(0, upwardsSpeed, 0));
+
+        super.increasePosition(new Vector3f(dx, upwardsSpeed, dz));
+        if (!canJump) {
             this.upwardsSpeed -= GRAVITY;
         }
 

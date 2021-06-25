@@ -1,13 +1,11 @@
 package fr.ostix.game.entity.animated.animation.animatedModel;
 
-import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.entity.animated.animation.animation.Animator;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 
 /**
@@ -20,7 +18,7 @@ import org.joml.Vector3f;
  *
  * @author Karl
  */
-public class AnimatedModel extends Entity {
+public class AnimatedModel extends Model {
 
     // skeleton
     private final Joint rootJoint;
@@ -45,14 +43,15 @@ public class AnimatedModel extends Entity {
      * @param jointCount - the number of joints in the joint hierarchy (skeleton) for
      *                   this entity.
      */
-    public AnimatedModel(MeshModel model, Texture texture,Vector3f position, Vector3f rotation, float scale,  Joint rootJoint, int jointCount) {
-        super(new Model(model,texture), position, rotation, scale);
+    public AnimatedModel(MeshModel model, Texture texture, Joint rootJoint, int jointCount) {
+        super(model, texture);
         // skin
         this.rootJoint = rootJoint;
         this.jointCount = jointCount;
         this.animator = new Animator(this);
         rootJoint.calcInverseBindTransform(new Matrix4f());
     }
+
     /**
      * @return The root joint of the joint hierarchy. This joint has no parent,
      * and every other joint in the skeleton is a descendant of this

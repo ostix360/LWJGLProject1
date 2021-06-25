@@ -10,6 +10,7 @@ import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.MasterParticle;
@@ -69,8 +70,10 @@ public class World extends Screen {
 
         MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
 
-
-        player = new Player(pack.getModelByName().get("player"), new Vector3f(0, 0, 0), new Vector3f(0), 1);
+        an = pack.getAnimatedModelByName().get("model");
+        Animation ani = pack.getAnimationByName().get(an).get("model");
+        an.doAnimation(ani);
+        player = new Player(an, new Vector3f(55, 5, 55), new Vector3f(0), 1);
         ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getTextureID(), 8, true),
                 60, 1.5f, 0, 60 * 2.2f, 12);
         system.randomizeRotation();
@@ -78,16 +81,14 @@ public class World extends Screen {
         system.setDirection(new Vector3f(0, 0.3f, 0), 0.001f);
         system.setSpeedError(0.5f);
         system.setScaleError(0.05f);
-        //player.addComponent(new ParticleComponent(system, player));
+        player.addComponent(new ParticleComponent(system, player));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
-       // entities.add(player);
+        entities.add(player);
         lights.add(sun);
         //  lights.add(sunc);
-        an = pack.getAnimatedModelByName().get("model");
-        Animation ani = pack.getAnimationByName().get(an).get("model");
-        an.doAnimation(ani);
+
         initTerrain(loader);
         initEntity();
 
@@ -120,10 +121,10 @@ public class World extends Screen {
         // Model treeModel = new Model(LoadModel.loadModel("tree",".dae", loader), new TextureModel(loader.loadTexture("tree")).setTransparency(true));
 //        Model grassModel = new Model(LoadModel.loadModel("grassModel", loader),
 //                new TextureModel(loader.loadTexture("flower")));
-//        grassModel.getModelTexture().setTransparency(true).setUseFakeLighting(true);
+//        grassModel.getTexture().setTransparency(true).setUseFakeLighting(true);
 //        Model fernModel = new Model(LoadModel.loadModel("fern", loader),
 //                new TextureModel(loader.loadTexture("fern")));
-//        fernModel.getModelTexture().setTransparency(true);
+//        fernModel.getTexture().setTransparency(true);
         Random r = new Random();
         for (int i = 0; i < 5; i++) {
             float x = r.nextFloat() * 400;
@@ -178,13 +179,13 @@ public class World extends Screen {
 
     private void processInteraction() {
 
-        //interactionWorld.update(player);
+        interactionWorld.update(player);
     }
 
 
     public void render() {
         cam.move();
-        renderer.renderScene(an,entities, terrains, lights, cam);
+        renderer.renderScene(entities, terrains, lights, cam);
         MasterParticle.render(cam);
     }
 
