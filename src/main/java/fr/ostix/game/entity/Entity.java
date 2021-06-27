@@ -17,13 +17,14 @@ public class Entity {
     protected Vector3f rotation;
     protected float scale;
     private Transform transform;
+    protected MovementType movement;
 
     private final List<Component> components = new ArrayList<>();
 
     public Entity(Model model, Vector3f position, Vector3f rotation, float scale) {
         this.model = model;
         this.position = position;
-        this.rotation = rotation;
+        this.rotation = rotation.add(0, 0, 0);
         this.scale = scale;
     }
 
@@ -33,8 +34,8 @@ public class Entity {
 
     public void update() {
         for (Component c : components) {
-            if (c instanceof ParticleComponent){
-                ((ParticleComponent) c).setOffset(new Vector3f(0,8.5f,0));
+            if (c instanceof ParticleComponent) {
+                ((ParticleComponent) c).setOffset(new Vector3f(0, 8.5f, 0));
             }
             c.update();
         }
@@ -77,5 +78,24 @@ public class Entity {
         return transform = new Transform(position, rotation, scale);
     }
 
+    public MovementType getMovement() {
+        return movement;
+    }
+
+    public enum MovementType {
+        FORWARD("run"),
+        BACK("back"),
+        JUMP("jump"),
+        STATIC("staying");
+        String id;
+
+        MovementType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
 
 }

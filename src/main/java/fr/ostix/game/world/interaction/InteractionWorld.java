@@ -93,7 +93,6 @@ public class InteractionWorld {
 //                    index++;
 //                }
  //           } else {
-            System.out.println(e.getModel().getMeshModel().getVAO().getPosition() == null);
                 for (int i = 0; i < e.getModel().getMeshModel().getVAO().getPosition().length; i++) {
                     meshPositions.add(e.getModel().getMeshModel().getVAO().getPosition()[i] * e.getScale());
                 }
@@ -136,7 +135,7 @@ public class InteractionWorld {
             }
 
             if (entry.getValue() != null) shape.getTransform().setQ(q);
-            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ()) + 2.8f;
+            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ());
             if (transform.getPosition().getY() < terrainHeight) {
                 if (entry.getValue() != null) {
                     assert shape != null;

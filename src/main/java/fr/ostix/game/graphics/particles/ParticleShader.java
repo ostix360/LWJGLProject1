@@ -1,8 +1,8 @@
 package fr.ostix.game.graphics.particles;
 
 import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.openGLToolBox.uniform.FloatUniform;
-import fr.ostix.game.openGLToolBox.uniform.MatrixUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.FloatUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniform;
 import org.joml.Matrix4f;
 
 public class ParticleShader extends ShaderProgram {

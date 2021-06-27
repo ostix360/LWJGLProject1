@@ -1,4 +1,4 @@
-package fr.ostix.game.openGLToolBox.uniform;
+package fr.ostix.game.toolBox.OpenGL.uniform;
 
 import fr.ostix.game.toolBox.Logger;
 import org.lwjgl.opengl.GL20;

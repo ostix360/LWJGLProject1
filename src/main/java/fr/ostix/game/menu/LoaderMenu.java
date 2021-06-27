@@ -5,7 +5,7 @@ import fr.ostix.game.core.loader.ResourcePackLoader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.openGLToolBox.DisplayManager;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import org.joml.Vector2f;
 
 public class LoaderMenu extends Screen {

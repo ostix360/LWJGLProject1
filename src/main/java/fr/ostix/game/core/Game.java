@@ -7,9 +7,9 @@ import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.menu.StateManager;
-import fr.ostix.game.openGLToolBox.DisplayManager;
-import fr.ostix.game.openGLToolBox.OpenGlUtils;
 import fr.ostix.game.toolBox.Logger;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
+import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.world.World;
 import org.lwjgl.openal.AL11;
 

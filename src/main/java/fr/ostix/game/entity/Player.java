@@ -65,9 +65,12 @@ public class Player extends Entity {
     }
 
     private void checkInputs() {
+        this.movement = MovementType.STATIC;
         if (Input.keys[GLFW_KEY_W] || Input.keys[GLFW_KEY_UP]) {
+            this.movement = MovementType.FORWARD;
             this.currentSpeed = RUN_SPEED;
         } else if (Input.keys[GLFW_KEY_S] || Input.keys[GLFW_KEY_DOWN]) {
+            this.movement = MovementType.BACK;
             this.currentSpeed = -RUN_SPEED;
         } else {
             this.currentSpeed = 0;
@@ -82,6 +85,7 @@ public class Player extends Entity {
         }
 
         if (Input.keys[GLFW_KEY_SPACE]) {
+            this.movement = MovementType.JUMP;
             this.jump();
         }
         if (Input.keys[GLFW_KEY_LEFT_SHIFT]){

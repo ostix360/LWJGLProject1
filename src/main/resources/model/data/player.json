@@ -1,6 +1,6 @@
 {
-  "name" :"model",
-  "path" :"model",
+  "name" :"player",
+  "path" :"player",
   "texture" :"animated",
-  "canAnimated" : true
+  "canAnimated" :true
 }

@@ -13,7 +13,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -49,7 +48,7 @@ public class AnimationLoader {
      * @return The keyframe.
      */
     private static KeyFrame createKeyFrame(KeyFrameData data) {
-        Map<String, JointTransform> map = new HashMap<String, JointTransform>();
+        HashMap<String, JointTransform> map = new HashMap<>();
         for (JointTransformData jointData : data.jointTransforms) {
             JointTransform jointTransform = createTransform(jointData);
             map.put(jointData.jointNameId, jointTransform);

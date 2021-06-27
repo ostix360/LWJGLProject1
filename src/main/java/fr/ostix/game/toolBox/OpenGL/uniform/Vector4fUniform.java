@@ -1,4 +1,4 @@
-package fr.ostix.game.openGLToolBox.uniform;
+package fr.ostix.game.toolBox.OpenGL.uniform;
 
 import org.joml.Vector4f;
 import org.lwjgl.opengl.GL20;

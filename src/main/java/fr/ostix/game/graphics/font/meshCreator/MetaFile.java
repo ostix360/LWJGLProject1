@@ -1,7 +1,7 @@
 package fr.ostix.game.graphics.font.meshCreator;
 
 
-import fr.ostix.game.openGLToolBox.DisplayManager;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import fr.ostix.game.toolBox.ToolDirectory;
 
 import java.io.BufferedReader;

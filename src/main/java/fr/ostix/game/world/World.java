@@ -8,8 +8,8 @@ import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
-import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.animation.AnimationComponent;
 import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
@@ -53,7 +53,6 @@ public class World extends Screen {
     SoundListener listener;
     Player player;
     Camera cam;
-    AnimatedModel an;
 
     public World() {
         super("World");
@@ -70,9 +69,7 @@ public class World extends Screen {
 
         MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
 
-        an = pack.getAnimatedModelByName().get("model");
-        Animation ani = pack.getAnimationByName().get(an).get("model");
-        an.doAnimation(ani);
+        AnimatedModel an = pack.getAnimatedModelByName().get("player");
         player = new Player(an, new Vector3f(55, 5, 55), new Vector3f(0), 1);
         ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getTextureID(), 8, true),
                 60, 1.5f, 0, 60 * 2.2f, 12);
@@ -82,6 +79,7 @@ public class World extends Screen {
         system.setSpeedError(0.5f);
         system.setScaleError(0.05f);
         player.addComponent(new ParticleComponent(system, player));
+        player.addComponent(new AnimationComponent(player, pack.getAnimationByName().get(an)));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
@@ -91,8 +89,6 @@ public class World extends Screen {
 
         initTerrain(loader);
         initEntity();
-
-
 
 
         interactionWorld.init(1f / 60f, entities,terrains);
@@ -170,7 +166,6 @@ public class World extends Screen {
         for (Entity e : entities){
             e.update();
         }
-        an.update(1f/60f);
 
         listener.updateTransform(player.getPosition(), player.getRotation());
         MasterParticle.update(cam);

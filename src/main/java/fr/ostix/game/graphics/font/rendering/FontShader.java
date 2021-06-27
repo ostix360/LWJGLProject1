@@ -2,8 +2,8 @@ package fr.ostix.game.graphics.font.rendering;
 
 
 import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.openGLToolBox.uniform.Vector2fUniform;
-import fr.ostix.game.openGLToolBox.uniform.Vector3fUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.Vector2fUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.Vector3fUniform;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 

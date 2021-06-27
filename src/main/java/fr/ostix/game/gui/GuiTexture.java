@@ -1,7 +1,7 @@
 package fr.ostix.game.gui;
 
-import fr.ostix.game.openGLToolBox.DisplayManager;
 import fr.ostix.game.toolBox.Color;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import org.joml.Vector2f;
 
 public class GuiTexture {

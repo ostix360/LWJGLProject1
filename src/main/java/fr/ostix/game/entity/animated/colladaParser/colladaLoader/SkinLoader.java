@@ -4,8 +4,11 @@ package fr.ostix.game.entity.animated.colladaParser.colladaLoader;
 import fr.ostix.game.entity.animated.colladaParser.dataStructures.SkinningData;
 import fr.ostix.game.entity.animated.colladaParser.dataStructures.VertexSkinData;
 import fr.ostix.game.entity.animated.colladaParser.xmlParser.XmlNode;
+import fr.ostix.game.toolBox.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -34,10 +37,9 @@ public class SkinLoader {
                 .substring(1);
         XmlNode jointsNode = skinningData.getChildWithAttribute("source", "id", jointDataId).getChild("Name_array");
         String[] names = jointsNode.getData().split(" ");
-        List<String> jointsList = new ArrayList<String>();
-        for (String name : names) {
-            jointsList.add(name);
-        }
+        List<String> jointsList = new ArrayList<>();
+        Logger.log("SkinLoader 42 " + Arrays.toString(names));
+        Collections.addAll(jointsList, names);
         return jointsList;
     }
 
@@ -65,7 +67,7 @@ public class SkinLoader {
 
     private List<VertexSkinData> getSkinData(XmlNode weightsDataNode, int[] counts, float[] weights) {
         String[] rawData = weightsDataNode.getChild("v").getData().split(" ");
-        List<VertexSkinData> skinningData = new ArrayList<VertexSkinData>();
+        List<VertexSkinData> skinningData = new ArrayList<>();
         int pointer = 0;
         for (int count : counts) {
             VertexSkinData skinData = new VertexSkinData();

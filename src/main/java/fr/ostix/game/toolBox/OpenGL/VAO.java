@@ -1,4 +1,4 @@
-package fr.ostix.game.openGLToolBox;
+package fr.ostix.game.toolBox.OpenGL;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;

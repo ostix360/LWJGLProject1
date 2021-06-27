@@ -5,7 +5,6 @@ import fr.ostix.game.entity.animated.colladaParser.dataStructures.JointTransform
 import fr.ostix.game.entity.animated.colladaParser.dataStructures.KeyFrameData;
 import fr.ostix.game.entity.animated.colladaParser.xmlParser.XmlNode;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
@@ -13,8 +12,6 @@ import java.util.List;
 
 
 public class AnimationLoader {
-
-    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
 
     private final XmlNode animationData;
     private final XmlNode jointHierarchy;
@@ -29,7 +26,7 @@ public class AnimationLoader {
         float[] times = getKeyTimes();
         float duration = times[times.length - 1];
         KeyFrameData[] keyFrames = initKeyFrames(times);
-        List<XmlNode> animationNodes = animationData.getChildren("animation");
+        List<XmlNode> animationNodes = animationData.getChild("animation").getChildren("animation");
         for (XmlNode jointNode : animationNodes) {
             loadJointTransforms(keyFrames, jointNode, rootNode);
         }
@@ -37,7 +34,7 @@ public class AnimationLoader {
     }
 
     private float[] getKeyTimes() {
-        XmlNode timeData = animationData.getChild("animation").getChild("source").getChild("float_array");
+        XmlNode timeData = animationData.getChild("animation").getChild("animation").getChild("source").getChild("float_array");
         String[] rawTimes = timeData.getData().split(" ");
         float[] times = new float[rawTimes.length];
         for (int i = 0; i < times.length; i++) {
@@ -69,7 +66,7 @@ public class AnimationLoader {
 
     private String getJointName(XmlNode jointData) {
         XmlNode channelNode = jointData.getChild("channel");
-        String data = channelNode.getAttribute("target");
+        String data = channelNode.getAttribute("target").substring(9);
         return data.split("/")[0];
     }
 
@@ -86,10 +83,10 @@ public class AnimationLoader {
             Matrix4f transform = new Matrix4f();
             transform.set(buffer);
             transform.transpose();
-            if (root) {
-                //because up axis in Blender is different to up axis in game
-                transform.mul(CORRECTION);
-            }
+//            if (root) {
+//                //because up axis in Blender is different to up axis in game
+//                transform.mul(CORRECTION);
+//            }
             keyFrames[i].addJointTransform(new JointTransformData(jointName, transform));
         }
     }

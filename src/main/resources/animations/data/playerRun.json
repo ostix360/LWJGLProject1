@@ -1,5 +1,5 @@
 {
- "animationName" : "model",
- "modelName" : "model",
- "texture" : "player"
+  "animationName" :"run",
+  "modelName" :"player",
+  "texture" :"player"
 }

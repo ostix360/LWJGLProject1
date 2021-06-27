@@ -1,6 +1,6 @@
 package fr.ostix.game.entity.animated.animation.animation;
 
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Represents one keyframe of an animation. This contains the timestamp of the
@@ -18,7 +18,7 @@ import java.util.Map;
 public class KeyFrame {
 
     private final float timeStamp;
-    private final Map<String, JointTransform> pose;
+    private final HashMap<String, JointTransform> pose;
 
     /**
      * @param timeStamp      - the time (in seconds) that this keyframe occurs during the
@@ -27,7 +27,7 @@ public class KeyFrame {
      *                       keyframe, indexed by the name of the joint that they should be
      *                       applied to.
      */
-    public KeyFrame(float timeStamp, Map<String, JointTransform> jointKeyFrames) {
+    public KeyFrame(float timeStamp, HashMap<String, JointTransform> jointKeyFrames) {
         this.timeStamp = timeStamp;
         this.pose = jointKeyFrames;
     }
@@ -45,7 +45,7 @@ public class KeyFrame {
      * they correspond to. This basically represents the "pose" at this
      * keyframe.
      */
-    protected Map<String, JointTransform> getJointKeyFrames() {
+    protected HashMap<String, JointTransform> getJointKeyFrames() {
         return pose;
     }
 

@@ -14,7 +14,7 @@ import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.openGLToolBox.DisplayManager;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import fr.ostix.game.toolBox.ToolDirectory;
 import org.joml.Vector2f;
 
@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static fr.ostix.game.openGLToolBox.OpenGlUtils.clearGL;
+import static fr.ostix.game.toolBox.OpenGL.OpenGlUtils.clearGL;
 
 public class ResourcePackLoader {
 

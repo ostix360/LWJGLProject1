@@ -1,4 +1,4 @@
-package fr.ostix.game.openGLToolBox;
+package fr.ostix.game.toolBox.OpenGL;
 
 import fr.ostix.game.toolBox.Logger;
 import org.lwjgl.glfw.Callbacks;

@@ -2,9 +2,9 @@ package fr.ostix.game.entity.animated.animation.renderer;
 
 import fr.ostix.game.graphics.render.AnimatedModelRenderer;
 import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.openGLToolBox.uniform.MatrixUniform;
-import fr.ostix.game.openGLToolBox.uniform.MatrixUniformArray;
-import fr.ostix.game.openGLToolBox.uniform.Vector3fUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniform;
+import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniformArray;
+import fr.ostix.game.toolBox.OpenGL.uniform.Vector3fUniform;
 
 public class AnimatedModelShader extends ShaderProgram {
 

@@ -1,7 +1,7 @@
 package fr.ostix.game.graphics.shader;
 
-import fr.ostix.game.openGLToolBox.uniform.Uniform;
 import fr.ostix.game.toolBox.Logger;
+import fr.ostix.game.toolBox.OpenGL.uniform.Uniform;
 
 import java.io.BufferedReader;
 import java.io.IOException;

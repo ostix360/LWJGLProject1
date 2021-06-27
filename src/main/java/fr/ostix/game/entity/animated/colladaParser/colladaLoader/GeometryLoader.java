@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class GeometryLoader {
 
-    private static final Matrix4f CORRECTION = new Matrix4f().translate(0, 10, 0);
+    private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
 
     private final XmlNode meshData;
 
@@ -68,12 +68,13 @@ public class GeometryLoader {
             float y = Float.parseFloat(posData[i * 3 + 1]);
             float z = Float.parseFloat(posData[i * 3 + 2]);
             Vector4f position = new Vector4f(x, y, z, 1);
+            //CORRECTION.transform(position);
             vertices.add(new Vertex(vertices.size(), new Vector3f(position.x(),position.y(),position.z()), vertexWeights.get(vertices.size())));
         }
     }
 
     private void readNormals() {
-        String normalsId = meshData.getChild("polylist").getChildWithAttribute("input", "semantic", "NORMAL")
+        String normalsId = meshData.getChild("triangles").getChildWithAttribute("input", "semantic", "NORMAL")
                 .getAttribute("source").substring(1);
         XmlNode normalsData = meshData.getChildWithAttribute("source", "id", normalsId).getChild("float_array");
         int count = Integer.parseInt(normalsData.getAttribute("count"));
@@ -83,12 +84,13 @@ public class GeometryLoader {
             float y = Float.parseFloat(normData[i * 3 + 1]);
             float z = Float.parseFloat(normData[i * 3 + 2]);
             Vector4f norm = new Vector4f(x, y, z, 0f);
+            //CORRECTION.transform(norm);
             normals.add(new Vector3f(norm.x, norm.y, norm.z));
         }
     }
 
     private void readTextureCoords() {
-        String texCoordsId = meshData.getChild("polylist").getChildWithAttribute("input", "semantic", "TEXCOORD")
+        String texCoordsId = meshData.getChild("triangles").getChildWithAttribute("input", "semantic", "TEXCOORD")
                 .getAttribute("source").substring(1);
         XmlNode texCoordsData = meshData.getChildWithAttribute("source", "id", texCoordsId).getChild("float_array");
         int count = Integer.parseInt(texCoordsData.getAttribute("count"));
@@ -101,7 +103,7 @@ public class GeometryLoader {
     }
 
     private void assembleVertices() {
-        XmlNode poly = meshData.getChild("polylist");
+        XmlNode poly = meshData.getChild("triangles");
         int typeCount = poly.getChildren("input").size();
         String[] indexData = poly.getChild("p").getData().split(" ");
         for (int i = 0; i < indexData.length / typeCount; i++) {

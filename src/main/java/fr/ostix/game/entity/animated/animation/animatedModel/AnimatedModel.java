@@ -25,6 +25,8 @@ public class AnimatedModel extends Model {
     private final int jointCount;
 
     private final Animator animator;
+    private Animation priorityAnimation;
+    private Animation secondAnimation;
 
     /**
      * Creates a new entity capable of animation. The inverse bind transform for
@@ -71,6 +73,7 @@ public class AnimatedModel extends Model {
      * @param animation - the animation to be carried out.
      */
     public void doAnimation(Animation animation) {
+        priorityAnimation = animation;
         animator.doAnimation(animation);
     }
 
@@ -113,4 +116,11 @@ public class AnimatedModel extends Model {
         }
     }
 
+    public Animation getPriorityAnimation() {
+        return priorityAnimation;
+    }
+
+    public Animation getSecondAnimation() {
+        return secondAnimation;
+    }
 }

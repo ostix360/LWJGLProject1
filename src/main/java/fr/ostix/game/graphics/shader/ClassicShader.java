@@ -2,9 +2,9 @@ package fr.ostix.game.graphics.shader;
 
 import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.openGLToolBox.uniform.*;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
+import fr.ostix.game.toolBox.OpenGL.uniform.*;
 import fr.ostix.game.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

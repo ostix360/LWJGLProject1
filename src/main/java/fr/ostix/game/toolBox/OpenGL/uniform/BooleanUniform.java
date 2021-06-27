@@ -1,4 +1,4 @@
-package fr.ostix.game.openGLToolBox.uniform;
+package fr.ostix.game.toolBox.OpenGL.uniform;
 
 import static org.lwjgl.opengl.GL20.glUniform1f;
 

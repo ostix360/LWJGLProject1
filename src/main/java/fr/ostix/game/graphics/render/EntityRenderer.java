@@ -6,8 +6,8 @@ import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.ClassicShader;
-import fr.ostix.game.openGLToolBox.OpenGlUtils;
-import fr.ostix.game.openGLToolBox.VAO;
+import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
+import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL13;
 

@@ -3,8 +3,8 @@ package fr.ostix.game.world.skybox;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.openGLToolBox.VAO;
 import fr.ostix.game.toolBox.Color;
+import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL13;
 
