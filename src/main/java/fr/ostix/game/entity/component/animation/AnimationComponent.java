@@ -7,6 +7,7 @@ import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.entity.component.Component;
 import fr.ostix.game.entity.component.ComponentType;
 import fr.ostix.game.toolBox.Logger;
+import org.joml.Random;
 
 import java.util.HashMap;
 
@@ -28,7 +29,8 @@ public class AnimationComponent extends Component {
         AnimatedModel model = (AnimatedModel) e.getModel();
         Animation a = animations.get(e.getMovement().getId());
         if (a == null) {
-            Logger.warn("The animation, " + e.getMovement().getId() + " for the model " + " is not available");
+            if (new Random().nextInt(4) == 0)
+                Logger.warn("The animation, " + e.getMovement().getId() + " for the model " + " is not available");
         } else {
             if (model.getPriorityAnimation() == null) {
                 model.doAnimation(a);

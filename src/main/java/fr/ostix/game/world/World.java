@@ -9,6 +9,8 @@ import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.ai.AIComponent;
+import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
 import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
@@ -78,6 +80,8 @@ public class World extends Screen {
         system.setDirection(new Vector3f(0, 0.3f, 0), 0.001f);
         system.setSpeedError(0.5f);
         system.setScaleError(0.05f);
+        AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
+        player.addComponent(new AIComponent(player, ai));
         player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, pack.getAnimationByName().get(an)));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
@@ -162,8 +166,10 @@ public class World extends Screen {
     @Override
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
-        processInteraction();
-        for (Entity e : entities){
+        // processInteraction();
+
+        player.move();
+        for (Entity e : entities) {
             e.update();
         }
 

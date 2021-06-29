@@ -82,6 +82,10 @@ public class Entity {
         return movement;
     }
 
+    public void setMovement(MovementType movement) {
+        this.movement = movement;
+    }
+
     public enum MovementType {
         FORWARD("run"),
         BACK("back"),
