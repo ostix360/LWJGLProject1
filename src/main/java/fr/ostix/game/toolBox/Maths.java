@@ -1,8 +1,7 @@
 package fr.ostix.game.toolBox;
 
 import com.flowpowered.math.imaginary.Quaternionf;
-import com.flowpowered.react.math.Quaternion;
-import com.flowpowered.react.math.Vector3;
+import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.entity.camera.Camera;
 import org.joml.Math;
 import org.joml.Matrix4f;

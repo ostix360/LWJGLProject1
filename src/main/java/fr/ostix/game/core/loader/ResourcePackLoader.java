@@ -31,8 +31,8 @@ public class ResourcePackLoader {
     private final HashMap<String, Texture> textureByName = new HashMap<>();
     private final HashMap<String, SoundSource> soundByName = new HashMap<>();
     private final HashMap<String, Model> modelByName = new HashMap<>();
-    private final HashMap<String,AnimatedModel> animatedModelByName = new HashMap<>();
-    private final HashMap<AnimatedModel,HashMap<String, Animation>> animationByName = new HashMap<>();
+    private final HashMap<String, AnimatedModel> animatedModelByName = new HashMap<>();
+    private final HashMap<AnimatedModel, HashMap<String, Animation>> animationByName = new HashMap<>();
 
     private boolean isLoaded = false;
 
@@ -155,9 +155,9 @@ public class ResourcePackLoader {
             assert current != null;
             String name = current.getName();
             modelBar.update(name);
-            if (current.canAnimated()){
-                AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(),textureByName.get(current.getTexture()), loader);
-                animatedModelByName.put(name,model);
+            if (current.canAnimated()) {
+                AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
+                animatedModelByName.put(name, model);
             }
 //            Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
 //            modelByName.put(name, model);
@@ -188,11 +188,11 @@ public class ResourcePackLoader {
 
     private void optimizeAnimation(AnimationResources current) {
         AnimatedModel model = animatedModelByName.get(current.getModelName());
-        HashMap<String,Animation> batch = animationByName.get(model);
+        HashMap<String, Animation> batch = animationByName.get(model);
         if (batch != null) {
             batch.put(current.getAnimationName(), current.getAnimation());
-        }else{
-            HashMap<String,Animation> newBatch = new HashMap<>();
+        } else {
+            HashMap<String, Animation> newBatch = new HashMap<>();
             newBatch.put(current.getAnimationName(), current.getAnimation());
             animationByName.put(model, newBatch);
         }

@@ -13,7 +13,7 @@ public class LoadAnimation {
 
     public static void loadAnimatedModel(String animationFile) {
 
-        animation = AnimationLoader.loadAnimation(ToolDirectory.RES_FOLDER+animationFile+ FileType.COLLADA.getExtension());
+        animation = AnimationLoader.loadAnimation(ToolDirectory.RES_FOLDER + animationFile + FileType.COLLADA.getExtension());
 
     }
 

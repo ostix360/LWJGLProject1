@@ -1,7 +1,9 @@
 package fr.ostix.game.entity;
 
 
+import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.entity.component.Component;
+import fr.ostix.game.entity.component.collision.CollisionComponent;
 import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import org.joml.Vector3f;
@@ -12,12 +14,15 @@ import java.util.List;
 
 public class Entity {
 
+    protected final Vector3 forceToCenter = new Vector3();
+    protected final Vector3 torque = new Vector3();
     private final Model model;
     protected Vector3f position;
     protected Vector3f rotation;
     protected float scale;
-    private Transform transform;
+    private final Transform transform;
     protected MovementType movement;
+    private CollisionComponent collision;
 
     private final List<Component> components = new ArrayList<>();
 
@@ -26,6 +31,15 @@ public class Entity {
         this.position = position;
         this.rotation = rotation.add(0, 0, 0);
         this.scale = scale;
+        this.transform = new Transform(position, rotation, scale);
+    }
+
+    public CollisionComponent getCollision() {
+        return collision;
+    }
+
+    public void setCollision(CollisionComponent collision) {
+        this.collision = collision;
     }
 
     public void addComponent(Component c) {
@@ -75,7 +89,10 @@ public class Entity {
     }
 
     public Transform getTransform() {
-        return transform = new Transform(position, rotation, scale);
+        transform.setRotation(rotation);
+        transform.setPosition(position);
+        transform.setScale(scale);
+        return transform;
     }
 
     public MovementType getMovement() {
@@ -85,6 +102,16 @@ public class Entity {
     public void setMovement(MovementType movement) {
         this.movement = movement;
     }
+
+    public Vector3 getForceToCenter() {
+        return forceToCenter;
+    }
+
+
+    public Vector3 getTorque() {
+        return torque.multiply(100);
+    }
+
 
     public enum MovementType {
         FORWARD("run"),
@@ -101,5 +128,7 @@ public class Entity {
             return id;
         }
     }
+
+
 
 }

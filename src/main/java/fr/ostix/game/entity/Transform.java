@@ -7,9 +7,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class Transform {
-    private final Vector3f position;
+    private Vector3f position;
     private Vector3f rotation;
-    private final float scale;
+    private float scale;
     private Matrix3f rotationMatrix;
 
     public Transform(Vector3f position, Vector3f rotation,float scale) {
@@ -31,5 +31,13 @@ public class Transform {
         Matrix4f m = Maths.createTransformationMatrix(this.position,this.rotation,this.scale);
         if (rotationMatrix != null)m.mul(rotationMatrix.get(new Matrix4f()));
         return m;
+    }
+
+    public void setPosition(Vector3f position) {
+        this.position = position;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 }

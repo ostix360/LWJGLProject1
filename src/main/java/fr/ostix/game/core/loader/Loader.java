@@ -44,7 +44,7 @@ public class Loader {
         return new MeshModel(vao);
     }
 
-    public MeshModel loadToVAO(int[]indices,float[] position, float[] texturesCoords,float[] normals,int[] jointIDs,float[] vertexWeights){
+    public MeshModel loadToVAO(int[] indices, float[] position, float[] texturesCoords, float[] normals, int[] jointIDs, float[] vertexWeights) {
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
         vao.bind();
@@ -58,7 +58,7 @@ public class Loader {
         return new MeshModel(vao);
     }
 
-    public MeshModel loadFontToVAO(float[] pos, float[] texturesCoords){
+    public MeshModel loadFontToVAO(float[] pos, float[] texturesCoords) {
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
         vao.bind();
@@ -69,9 +69,8 @@ public class Loader {
     }
 
 
-
     public void addInstance(VAO vao, VBO vbo, int attrib, int dataSize, int instanceDataLength, int offset) {
-        vao.addInstance(vbo,attrib,dataSize,instanceDataLength,offset);
+        vao.addInstance(vbo, attrib, dataSize, instanceDataLength, offset);
     }
 
     public void updateVBO(VBO vbo, float[] data, FloatBuffer buffer) {
@@ -106,7 +105,7 @@ public class Loader {
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        textureLoaders.add(new TextureLoader(texID,500));
+        textureLoaders.add(new TextureLoader(texID, 500));
         return texID;
     }
 
@@ -116,7 +115,7 @@ public class Loader {
         ByteBuffer buffer = null;
         InputStream fis;
         try {
-            fis = new FileInputStream(RES_FOLDER+"/textures/skybox/" + fileName + ".png");
+            fis = new FileInputStream(RES_FOLDER + "/textures/skybox/" + fileName + ".png");
             PNGDecoder decoder = new PNGDecoder(fis);
             width = decoder.getWidth();
             height = decoder.getHeight();

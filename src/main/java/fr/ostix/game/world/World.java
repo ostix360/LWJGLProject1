@@ -12,7 +12,6 @@ import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.entity.component.ai.AIComponent;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
-import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.MasterParticle;
@@ -21,7 +20,7 @@ import fr.ostix.game.graphics.particles.ParticleTexture;
 import fr.ostix.game.graphics.render.MasterRenderer;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.world.interaction.InteractionWorld;
+import fr.ostix.game.world.interaction.CollisionSystem;
 import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
 import org.joml.Vector3f;
@@ -37,10 +36,10 @@ public class World extends Screen {
     private MasterRenderer renderer;
 
     private boolean isInit = false;
-    private final InteractionWorld interactionWorld = new InteractionWorld();
 
     public static final int MAX_LIGHTS = 2;
 
+    private final CollisionSystem collision = new CollisionSystem();
 
     private HashMap<String, Texture> textures;
     private HashMap<String, SoundSource> sounds;
@@ -82,7 +81,7 @@ public class World extends Screen {
         system.setScaleError(0.05f);
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
         player.addComponent(new AIComponent(player, ai));
-        player.addComponent(new ParticleComponent(system, player));
+       // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, pack.getAnimationByName().get(an)));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
@@ -95,8 +94,7 @@ public class World extends Screen {
         initEntity();
 
 
-        interactionWorld.init(1f / 60f, entities,terrains);
-
+        collision.init(1/60f,entities);
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
@@ -166,22 +164,19 @@ public class World extends Screen {
     @Override
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
-        // processInteraction();
 
-        player.move();
         for (Entity e : entities) {
             e.update();
         }
+        collision.update();
+
+
 
         listener.updateTransform(player.getPosition(), player.getRotation());
         MasterParticle.update(cam);
 
     }
 
-    private void processInteraction() {
-
-        interactionWorld.update(player);
-    }
 
 
     public void render() {
@@ -204,7 +199,7 @@ public class World extends Screen {
 
     @Override
     public void cleanUp() {
-        interactionWorld.finish();
+        collision.finish();
         renderer.cleanUp();
         MasterParticle.cleanUp();
     }

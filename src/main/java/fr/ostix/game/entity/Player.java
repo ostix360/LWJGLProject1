@@ -1,7 +1,7 @@
 package fr.ostix.game.entity;
 
-import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.core.Input;
+import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.graphics.model.Model;
 import org.joml.Vector3f;
 
@@ -9,8 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends Entity {
 
-    private final Vector3 forceToCenter = new Vector3();
-    private final Vector3 torque = new Vector3();
+
 
     private static final float RUN_SPEED = 160;
     private static final float TURN_SPEED = 780;
@@ -36,9 +35,16 @@ public class Player extends Entity {
         super(e.getModel(), e.getPosition(), e.getRotation(), e.getScale());
     }
 
+    @Override
+    public void update() {
+        this.move();
+        super.update();
+    }
+
     public void move() {
         checkInputs();
         super.increaseRotation(new Vector3f(0, this.currentTurnSpeed * 0.0023f, 0));
+        torque.set(new Vector3(0,this.currentTurnSpeed,0));
         float distance = currentSpeed * 0.006f;
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
@@ -93,9 +99,6 @@ public class Player extends Entity {
         }
     }
 
-    public Vector3 getForceToCenter() {
-        return forceToCenter;
-    }
 
     public int getHealth() {
         return health;
@@ -105,9 +108,6 @@ public class Player extends Entity {
         return sprintTime;
     }
 
-    public Vector3 getTorque() {
-        return torque.multiply(100);
-    }
 
 }
 

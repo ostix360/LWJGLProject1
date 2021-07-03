@@ -1,5 +1,6 @@
 package fr.ostix.game.entity.component.ai;
 
+import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.component.Component;
 import fr.ostix.game.entity.component.ComponentType;
@@ -42,8 +43,9 @@ public class AIComponent extends Component {
 
         float dx = (float) (pos * Math.sin(Math.toRadians(e.getRotation().y())));
         float dz = (float) (pos * Math.cos(Math.toRadians(e.getRotation().y())));
-        e.increaseRotation(new Vector3f(0, rotY, 0));
-        e.increasePosition(new Vector3f(dx, 0, dz));
+        e.getTorque().set(new Vector3(0, rotY, 0));
+        e.increaseRotation(new Vector3f(0,rotY,0));
+        e.getForceToCenter().add(new Vector3(dx, 0, dz));
     }
 
     private float generateRotation(float average, float errorMargin) {
