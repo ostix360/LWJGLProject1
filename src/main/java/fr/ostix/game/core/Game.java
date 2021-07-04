@@ -7,10 +7,10 @@ import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.menu.StateManager;
+import fr.ostix.game.menu.WorldState;
 import fr.ostix.game.toolBox.Logger;
 import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
-import fr.ostix.game.world.World;
 import org.lwjgl.openal.AL11;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -73,7 +73,7 @@ public class Game extends Thread {
         glfwShowWindow(glfwGetCurrentContext());
         stateManager.init(guiManager);
         ResourcePack pack = stateManager.getPack();
-        gameFont = new FontType(pack.getTextureByName().get("candara").getTextureID(), "candara");
+        gameFont = new FontType(ResourcePack.getTextureByName().get("candara").getID(), "candara");
     }
 
 
@@ -137,8 +137,8 @@ public class Game extends Thread {
     }
 
     private void render() {
-        if (currentScreen instanceof World) {
-            ((World) currentScreen).render();
+        if (currentScreen instanceof WorldState) {
+            ((WorldState) currentScreen).render();
         } else {
             OpenGlUtils.clearGL();
         }

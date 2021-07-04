@@ -19,8 +19,8 @@ public class Button extends Component {
         float mY = (float) Input.getMouseY();
 
 
-        pressed = mX >= this.x && mY >= this.y + height / 2 &&
-                mX < (this.x + this.width) && mY < (this.y + this.height + height / 2) && Input.keysMouse[GLFW.GLFW_MOUSE_BUTTON_1];
+        pressed = mX >= this.x && mY >= this.y &&
+                mX < (this.x + this.width) && mY < (this.y + this.height) && Input.keysMouse[GLFW.GLFW_MOUSE_BUTTON_1];
         this.texture.hasLayer(isPressed());
     }
 

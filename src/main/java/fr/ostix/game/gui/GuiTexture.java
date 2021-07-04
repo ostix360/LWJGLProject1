@@ -18,7 +18,7 @@ public class GuiTexture {
     }
 
     private Vector2f convertPos(Vector2f pos, Vector2f scale) {
-        return convertCoordinates(new Vector2f(pos.x() + scale.x() / 2, pos.y() + scale.y()));
+        return convertCoordinates(new Vector2f(pos.x() + scale.x() / 2, pos.y() + scale.y() / 2));
     }
 
     private Vector2f convertCoordinates(Vector2f value) {

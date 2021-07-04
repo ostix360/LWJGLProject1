@@ -4,24 +4,25 @@ import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.toolBox.Logger;
-import fr.ostix.game.world.World;
 
 
 public class StateManager {
 
     private final Screen[] screens;
     private final Loader loader;
-    ResourcePack pack;
-    private World world;
+    private final WorldState world;
+    private ResourcePack pack;
+    private MasterGui masterGui;
     private MainMenu mainMenu;
 
     public StateManager(Loader loader) {
         this.loader = loader;
         screens = new Screen[2];
-        world = new World();
+        world = new WorldState();
     }
 
     public void init(MasterGui masterGui) {
+        this.masterGui = masterGui;
         LoaderMenu loaderMenu = new LoaderMenu();
         loaderMenu.init(loader, masterGui);
         loaderMenu.cleanUp();
@@ -32,9 +33,8 @@ public class StateManager {
     }
 
     public int update() {
-        if (!world.isInit()) {
-            world = new World();
-            world.initWorld(loader, pack);
+        if (!world.isWorldInitialized()) {
+            world.init(loader, masterGui, pack);
             screens[1] = world;
             Logger.log("World is Loaded");
         }

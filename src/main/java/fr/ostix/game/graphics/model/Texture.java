@@ -56,7 +56,7 @@ public class Texture {
         return properties.getReflectivity();
     }
 
-    public int getTextureID() {
+    public int getID() {
         return textureID;
     }
 

@@ -28,6 +28,7 @@ public class TextureLoader {
         try {
             image = ImageIO.read(new File(RES_FOLDER + "/textures/" + file + ".png"));
         } catch (IOException e) {
+            Logger.err("impossible de lire " + RES_FOLDER + "/textures/" + file + ".png");
             e.printStackTrace();
         }
         assert image != null;

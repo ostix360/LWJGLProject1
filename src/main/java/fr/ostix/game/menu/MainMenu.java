@@ -20,7 +20,7 @@ public class MainMenu extends Screen {
         super.init(loader, masterGui, pack);
 
         start = new Button((float) DisplayManager.getWidth() / 2 - 75,
-                (float) DisplayManager.getHeight() / 2 - 200, 150, 75, pack.getTextureByName().get("startButton").getTextureID());
+                (float) DisplayManager.getHeight() / 2 - 200, 150, 75, ResourcePack.getTextureByName().get("startButton").getID());
         this.addComponent(start);
 
     }

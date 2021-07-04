@@ -18,7 +18,6 @@ import fr.ostix.game.graphics.particles.MasterParticle;
 import fr.ostix.game.graphics.particles.ParticleSystem;
 import fr.ostix.game.graphics.particles.ParticleTexture;
 import fr.ostix.game.graphics.render.MasterRenderer;
-import fr.ostix.game.menu.Screen;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.world.interaction.CollisionSystem;
 import fr.ostix.game.world.texture.TerrainTexture;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class World extends Screen {
+public class World {
 
     private MasterRenderer renderer;
 
@@ -56,13 +55,12 @@ public class World extends Screen {
     Camera cam;
 
     public World() {
-        super("World");
     }
 
 
 
     public void initWorld(Loader loader, ResourcePack pack) {
-        this.textures = pack.getTextureByName();
+        this.textures = ResourcePack.getTextureByName();
         this.sounds = pack.getSoundByName();
         this.models = pack.getModelByName();
 
@@ -72,7 +70,7 @@ public class World extends Screen {
 
         AnimatedModel an = pack.getAnimatedModelByName().get("player");
         player = new Player(an, new Vector3f(55, 5, 55), new Vector3f(0), 1);
-        ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getTextureID(), 8, true),
+        ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getID(), 8, true),
                 60, 1.5f, 0, 60 * 2.2f, 12);
         system.randomizeRotation();
         system.setLifeError(0.2f);
@@ -141,13 +139,13 @@ public class World extends Screen {
     }
 
     private void initTerrain(Loader loader) {
-        TerrainTexture backgroundTexture = new TerrainTexture(textures.get("grassy2").getTextureID());
-        TerrainTexture rTexture = new TerrainTexture(textures.get("mud").getTextureID());
-        TerrainTexture gTexture = new TerrainTexture(textures.get("grassFlowers").getTextureID());
-        TerrainTexture bTexture = new TerrainTexture(textures.get("path").getTextureID());
+        TerrainTexture backgroundTexture = new TerrainTexture(textures.get("grassy2").getID());
+        TerrainTexture rTexture = new TerrainTexture(textures.get("mud").getID());
+        TerrainTexture gTexture = new TerrainTexture(textures.get("grassFlowers").getID());
+        TerrainTexture bTexture = new TerrainTexture(textures.get("path").getID());
 
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(textures.get("blendMap").getTextureID());
+        TerrainTexture blendMap = new TerrainTexture(textures.get("blendMap").getID());
 
         worldIndex = new int[2][2];
         int index = 0;
@@ -161,7 +159,6 @@ public class World extends Screen {
 
     }
 
-    @Override
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
 
@@ -197,7 +194,6 @@ public class World extends Screen {
 
     }
 
-    @Override
     public void cleanUp() {
         collision.finish();
         renderer.cleanUp();
