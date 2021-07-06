@@ -4,6 +4,7 @@ import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.component.Component;
 import fr.ostix.game.entity.component.ComponentType;
 import fr.ostix.game.graphics.particles.ParticleSystem;
+import fr.ostix.game.graphics.particles.ParticleTarget;
 import org.joml.Vector3f;
 
 public class ParticleComponent extends Component {
@@ -18,7 +19,8 @@ public class ParticleComponent extends Component {
 
     @Override
     public void update() {
-        system.update(new Vector3f(e.getPosition()).add(offset));
+        system.update(e.getPosition(), e.getRotation(), e.getScale());
+        ParticleTarget target = system.getTarget();
     }
 
     public void setOffset(Vector3f offset) {

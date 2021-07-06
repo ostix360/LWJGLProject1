@@ -4,10 +4,10 @@ import com.flowpowered.math.imaginary.Quaternionf;
 import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.entity.camera.Camera;
 import org.joml.Math;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import org.joml.*;
 import org.lwjgl.assimp.AIMatrix4x4;
+
+import java.util.Random;
 
 public class Maths {
 
@@ -65,6 +65,47 @@ public class Maths {
         float l3 = 1.0f - l1 - l2;
         return l1 * p1.y + l2 * p2.y + l3 * p3.y;
     }
+
+
+    /*
+     *
+     *
+     * Math for the particle spawn
+     *
+     *
+     */
+
+    public static Vector3f rotateVector(Vector3f direction, float rotX, float rotY, float rotZ) {
+
+        Matrix4f matrix = createTransformationMatrix(new Vector3f(0.0F, 0.0F, 0.0F),
+                new Vector3f(rotX, rotY, rotZ), 1.0F);
+        /* 118 */
+        Vector4f direction4 = new Vector4f(direction.x, direction.y, direction.z, 1.0F);
+        /* 119 */
+        matrix.transform(direction4, direction4);
+        /* 120 */
+        return new Vector3f(direction4.x, direction4.y, direction4.z);
+        /*     */
+    }
+
+    public static Vector3f generateRandomUnitVector() {
+        /*  72 */
+        java.util.Random random = new Random();
+        /*  73 */
+        float theta = (float) (random.nextFloat() * 2.0F * java.lang.Math.PI);
+        /*  74 */
+        float z = random.nextFloat() * 2.0F - 1.0F;
+        /*  75 */
+        float rootOneMinusZSquared = (float) java.lang.Math.sqrt(1.0F - z * z);
+        /*  76 */
+        float x = (float) (rootOneMinusZSquared * java.lang.Math.cos(theta));
+        /*  77 */
+        float y = (float) (rootOneMinusZSquared * java.lang.Math.sin(theta));
+        /*  78 */
+        return new Vector3f(x, y, z);
+        /*     */
+    }
+
 
     public static Vector3f toVector3f(Vector3 value) {
         return new Vector3f(value.getX(), value.getY(), value.getZ());

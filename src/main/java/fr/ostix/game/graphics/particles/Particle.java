@@ -1,6 +1,5 @@
 package fr.ostix.game.graphics.particles;
 
-import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.camera.Camera;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -12,6 +11,7 @@ public class Particle {
     private final float gravityEffect;
     private final float rotation;
     private final float scale;
+    private final ParticleTarget target;
 
     private final ParticleTexture texture;
     private final Vector2f offsets1 = new Vector2f();
@@ -24,7 +24,7 @@ public class Particle {
 
     private final Vector3f reusableChange = new Vector3f();
 
-    public Particle(Vector3f position, Vector3f velocity, ParticleTexture texture, float lifeLenght, float gravityEffect, float rotation, float scale) {
+    public Particle(Vector3f position, Vector3f velocity, ParticleTexture texture, float lifeLenght, float gravityEffect, float rotation, float scale, ParticleTarget target) {
         this.position = position;
         this.velocity = velocity;
         this.texture = texture;
@@ -32,11 +32,18 @@ public class Particle {
         this.gravityEffect = gravityEffect;
         this.rotation = rotation;
         this.scale = scale;
+        this.target = target;
         MasterParticle.addParticle(this);
     }
 
     protected boolean isInLife(Camera cam) {
-        velocity.y += Player.GRAVITY * gravityEffect * 0.1f;
+        velocity.y += gravityEffect * 0.1f;
+        if (target != null) {
+            Vector3f magnet = target.getForce(this.position);
+            if (magnet != null) {
+                velocity.add(magnet);
+            }
+        }
         reusableChange.set(velocity);
         reusableChange.mul(0.1f);
         position.add(reusableChange);

@@ -1,6 +1,7 @@
 package fr.ostix.game.graphics.particles;
 
 
+import fr.ostix.game.graphics.particles.particleSpawn.ParticleSpawn;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -14,6 +15,10 @@ public class ParticleSystem {
     private final float gravity;
     private final float averageLifeLength;
     private final float averageScale;
+    private ParticleSpawn spawn = SpawnParticleType.POINT.getSpawn();
+    private Vector3f positionOffset = new Vector3f(0, 0, 0);
+    private ParticleTarget target = null;
+
 
     private final ParticleTexture texture;
     private final Random random = new Random();
@@ -51,11 +56,16 @@ public class ParticleSystem {
         } else if (coneDirection.z == -1) {
             direction.z *= -1;
         }
-        return new Vector3f(direction.x(),direction.y(),direction.z());
+        return new Vector3f(direction.x(), direction.y(), direction.z());
     }
 
-    public void update(Vector3f spawnCenter){
-        generateParticles(spawnCenter);
+    public void update(Vector3f pos, Vector3f rot, float scale) {
+        generateParticles(spawn.getParticleSpawnPosition(pos.x(), pos.y(), pos.z(),
+                rot.x(), rot.y(), rot.z(), scale));
+    }
+
+    public void setSpawn(ParticleSpawn spawn) {
+        this.spawn = spawn;
     }
 
     public void generateParticles(Vector3f systemCenter) {
@@ -82,7 +92,25 @@ public class ParticleSystem {
         velocity.mul(generateValue(averageSpeed, speedError));
         float scale = generateValue(averageScale, scaleError);
         float lifeLength = generateValue(averageLifeLength, lifeError);
-        new Particle(new Vector3f(center), velocity, texture, lifeLength, gravity, generateRotation(), scale);
+        Vector3f particlePos = new Vector3f(positionOffset).add(center);
+        if (target != null) {
+            target.updatePosition();
+            Vector3f magnet = target.getForce(particlePos);
+            if (magnet == null) {
+                return;
+            } else {
+                velocity.add(magnet.mul(5));
+            }
+        }
+        new Particle(particlePos, velocity, texture, lifeLength, gravity, generateRotation(), scale, target);
+    }
+
+    public ParticleTarget getTarget() {
+        return target;
+    }
+
+    public void setTarget(ParticleTarget target) {
+        this.target = target;
     }
 
     private float generateValue(float average, float errorMargin) {
@@ -115,6 +143,10 @@ public class ParticleSystem {
     public void setDirection(Vector3f direction, float deviation) {
         this.direction = new Vector3f(direction);
         this.directionDeviation = (float) (deviation * Math.PI);
+    }
+
+    public void setPositionOffset(Vector3f positionOffset) {
+        this.positionOffset = positionOffset;
     }
 
     public void randomizeRotation() {
