@@ -79,31 +79,19 @@ public class Maths {
 
         Matrix4f matrix = createTransformationMatrix(new Vector3f(0.0F, 0.0F, 0.0F),
                 new Vector3f(rotX, rotY, rotZ), 1.0F);
-        /* 118 */
         Vector4f direction4 = new Vector4f(direction.x, direction.y, direction.z, 1.0F);
-        /* 119 */
         matrix.transform(direction4, direction4);
-        /* 120 */
         return new Vector3f(direction4.x, direction4.y, direction4.z);
-        /*     */
     }
 
     public static Vector3f generateRandomUnitVector() {
-        /*  72 */
         java.util.Random random = new Random();
-        /*  73 */
         float theta = (float) (random.nextFloat() * 2.0F * java.lang.Math.PI);
-        /*  74 */
         float z = random.nextFloat() * 2.0F - 1.0F;
-        /*  75 */
         float rootOneMinusZSquared = (float) java.lang.Math.sqrt(1.0F - z * z);
-        /*  76 */
         float x = (float) (rootOneMinusZSquared * java.lang.Math.cos(theta));
-        /*  77 */
         float y = (float) (rootOneMinusZSquared * java.lang.Math.sin(theta));
-        /*  78 */
         return new Vector3f(x, y, z);
-        /*     */
     }
 
 

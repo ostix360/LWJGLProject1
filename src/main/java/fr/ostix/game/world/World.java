@@ -9,6 +9,7 @@ import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.ai.AIComponent;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
 import fr.ostix.game.entity.component.particle.ParticleComponent;
@@ -81,8 +82,8 @@ public class World {
         system.setScaleError(0.1f);
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
-        //player.addComponent(new AIComponent(player, ai));
-        player.addComponent(new ParticleComponent(system, player));
+       // player.addComponent(new AIComponent(player, ai));
+       // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, pack.getAnimationByName().get(an)));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());

@@ -19,9 +19,7 @@ public class Item {
         this.texture = ResourcePack.getTextureByName().get(textureName).getID();
     }
 
-    public void onClickEvent() {
-
-    }
+    public void onItemUSe() {}
 
 
     public int getId() {

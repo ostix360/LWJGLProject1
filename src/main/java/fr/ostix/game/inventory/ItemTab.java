@@ -1,6 +1,7 @@
 package fr.ostix.game.inventory;
 
 import fr.ostix.game.gui.MasterGui;
+import fr.ostix.game.items.Items;
 
 public class ItemTab {
     private final String name;
@@ -29,6 +30,7 @@ public class ItemTab {
     }
 
     public void update() {
+        slots[1].getStack().addItems(Items.potion,2);
         for (Slot slot : slots) {
             slot.update();
         }

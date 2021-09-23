@@ -1,4 +1,4 @@
-package fr.ostix.game.entity.animated.animation.renderer;
+package fr.ostix.game.graphics.shader;
 
 import fr.ostix.game.graphics.render.AnimatedModelRenderer;
 import fr.ostix.game.graphics.shader.ShaderProgram;

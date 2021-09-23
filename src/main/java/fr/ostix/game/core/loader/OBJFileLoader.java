@@ -14,7 +14,7 @@ import java.util.Objects;
 public class OBJFileLoader {
     public static MeshModel loadModel(String objFileName, Loader loader) {
         InputStreamReader isr;
-        isr = new InputStreamReader(Objects.requireNonNull(OBJFileLoader.class.getResourceAsStream("/model/" + objFileName + ".obj")));
+        isr = new InputStreamReader(Objects.requireNonNull(OBJFileLoader.class.getResourceAsStream("/models/" + objFileName + ".obj")));
         BufferedReader reader = new BufferedReader(isr);
         String line;
         List<Vertex> vertices = new ArrayList<>();

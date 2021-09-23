@@ -140,7 +140,7 @@ public class ResourcePackLoader {
     }
 
     private void loadAllModels() {
-        File modelFolder = new File(ToolDirectory.RES_FOLDER + "/model/", DATA);
+        File modelFolder = new File(ToolDirectory.RES_FOLDER + "/models/", DATA);
         ProgressManager.ProgressBar modelBar = ProgressManager.addProgressBar("Loading All Models", Objects.requireNonNull(modelFolder.listFiles()).length);
 
         for (File currentFile : Objects.requireNonNull(modelFolder.listFiles())) {
