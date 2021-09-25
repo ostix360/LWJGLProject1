@@ -13,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 public class WorldState extends Screen {
     private final World world;
     private final Inventory inventory;
+    private final InGameMenu hotBar;
     private boolean worldInitialized = false;
 
     private boolean worldCanBeUpdated = true;
@@ -23,6 +24,7 @@ public class WorldState extends Screen {
         super("World");
         world = new World();
         inventory = new Inventory("Player Inventory");
+        hotBar = new InGameMenu();
     }
 
     public boolean isWorldInitialized() {
@@ -34,6 +36,7 @@ public class WorldState extends Screen {
         super.init(loader, masterGui, pack);
         world.initWorld(loader, pack);
         inventory.init(loader, pack, masterGui);
+        hotBar.init(loader, masterGui, pack, world.getPlayer());
         worldInitialized = world.isInit();
     }
 
@@ -58,6 +61,9 @@ public class WorldState extends Screen {
 
     public void render() {
         world.render();
+        if (!inventory.isOpen()) {
+            hotBar.render();
+        }
     }
 
 
@@ -81,6 +87,7 @@ public class WorldState extends Screen {
             worldCanBeUpdated = true;
         }
     }
+
 
     @Override
     public void cleanUp() {

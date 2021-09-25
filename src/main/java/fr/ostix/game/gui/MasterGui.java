@@ -8,6 +8,7 @@ import java.util.List;
 
 public class MasterGui {
     private static final List<GuiTexture> guis = new ArrayList<>();
+    private static final List<GuiTexture> tempGuis = new ArrayList<>();
     private final GuiRenderer renderer;
 
 
@@ -19,12 +20,19 @@ public class MasterGui {
         guis.addAll(Arrays.asList(gui));
     }
 
+    public static void addTempGui(GuiTexture... gui) {
+        tempGuis.addAll(Arrays.asList(gui));
+        guis.addAll(Arrays.asList(gui));
+    }
+
     public static void removeGui(GuiTexture... gui) {
         guis.removeAll(Arrays.asList(gui));
     }
 
     public void render() {
         renderer.render(guis);
+        guis.removeAll(tempGuis);
+        tempGuis.clear();
     }
 
     public void removeAllGui() {

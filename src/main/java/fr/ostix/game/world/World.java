@@ -9,10 +9,8 @@ import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.entity.component.ai.AIComponent;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
-import fr.ostix.game.entity.component.particle.ParticleComponent;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.*;
@@ -51,7 +49,7 @@ public class World {
     private static int[][] worldIndex;
 
     SoundListener listener;
-    Player player;
+    private Player player;
     Camera cam;
 
     public World() {
@@ -195,7 +193,10 @@ public class World {
             // Logger.err("World doesn't exist in this coordinates xIndex : " + x + " ZIndex : " + z);
         }
         return 0;
+    }
 
+    public Player getPlayer() {
+        return player;
     }
 
     public void cleanUp() {

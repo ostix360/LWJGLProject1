@@ -23,11 +23,17 @@ public class ItemStack {
     }
 
     public void increaseItemCount() {
-        count++;
+        if (item != null) {
+            count++;
+        }
     }
 
     public void decreaseItemCount() {
         count--;
+        if (count < 1) {
+            count = 0;
+            this.item = null;
+        }
     }
 
     public boolean isEmpty() {

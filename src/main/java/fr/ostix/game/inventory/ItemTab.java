@@ -30,7 +30,7 @@ public class ItemTab {
     }
 
     public void update() {
-        slots[1].getStack().addItems(Items.potion,2);
+        slots[0].getStack().addItems(Items.potion, 2);
         for (Slot slot : slots) {
             slot.update();
         }

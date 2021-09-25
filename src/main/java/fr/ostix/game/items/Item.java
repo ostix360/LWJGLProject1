@@ -19,7 +19,8 @@ public class Item {
         this.texture = ResourcePack.getTextureByName().get(textureName).getID();
     }
 
-    public void onItemUSe() {}
+    public void onItemUse() {
+    }
 
 
     public int getId() {
