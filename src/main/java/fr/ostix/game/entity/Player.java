@@ -9,8 +9,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends Entity {
 
-
-
     private static final float RUN_SPEED = 160;
     private static final float TURN_SPEED = 780;
     public static final float GRAVITY = 100f;
@@ -23,7 +21,7 @@ public class Player extends Entity {
     public boolean canJump = true;
 
     private final int health = 10;
-    private final int sprintTime = 60;
+    private int sprintTime = 60;
     private final boolean isSprinting = false;
 
 
@@ -38,6 +36,14 @@ public class Player extends Entity {
     @Override
     public void update() {
         this.move();
+        if (this.getMovement() == MovementType.FORWARD) {
+            this.sprintTime--;
+        } else {
+            this.sprintTime++;
+            if (this.sprintTime > 60) {
+                sprintTime = 60;
+            }
+        }
         super.update();
     }
 
