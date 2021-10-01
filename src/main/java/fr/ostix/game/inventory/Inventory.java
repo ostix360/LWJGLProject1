@@ -7,7 +7,6 @@ import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.menu.component.Button;
 import fr.ostix.game.toolBox.Logger;
-import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import org.joml.Vector2f;
 
 public class Inventory extends Screen {
@@ -27,11 +26,11 @@ public class Inventory extends Screen {
         this.pack = pack;
         this.masterGui = masterGui;
         this.backGround = new GuiTexture(ResourcePack.getTextureByName().get("inventory").getID(),
-                new Vector2f(0), new Vector2f(DisplayManager.getWidth(),
-                DisplayManager.getHeight()));
-        this.right_button = new Button(1030, 85, 50, 610,
+                new Vector2f(0), new Vector2f(1920,
+                1080));
+        this.right_button = new Button(1830, 125, 90, 950,
                 ResourcePack.getTextureByName().get("right_button").getID());
-        recipeTab = ItemTab.newEmptyTab("RecipeTab", 20);
+        recipeTab = ItemTab.newEmptyTab("RecipeTab", 35);
         super.init(loader, masterGui, pack);
     }
 
@@ -44,6 +43,10 @@ public class Inventory extends Screen {
         this.addComponent(right_button);
         recipeTab.startRendering(this.masterGui);
         isOpen = true;
+    }
+
+    public void render() {
+        recipeTab.render();
     }
 
 

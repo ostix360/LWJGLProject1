@@ -5,7 +5,6 @@ import fr.ostix.game.core.loader.ResourcePackLoader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import org.joml.Vector2f;
 
 public class LoaderMenu extends Screen {
@@ -21,8 +20,8 @@ public class LoaderMenu extends Screen {
     public void init(Loader loader, MasterGui masterGui) {
         super.init(loader, masterGui, null);
         bar = new GuiTexture(loader.loadTexture("menu/loader/progressBar").getId(),
-                new Vector2f(90, DisplayManager.getHeight() - 150),
-                new Vector2f(DisplayManager.getWidth() - 180, 50));
+                new Vector2f(150, 1080 - 150),
+                new Vector2f(1920 - 180, 80));
         MasterGui.addGui(bar);
 
         pack = new ResourcePackLoader(loader);

@@ -7,6 +7,8 @@ import fr.ostix.game.toolBox.Color;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.util.Objects;
+
 
 public class GUIText {
 
@@ -26,10 +28,9 @@ public class GUIText {
         this.textString = text;
         this.fontSize = fontSize;
         this.font = font;
-        this.position = position;
-        this.lineMaxSize = maxLineLength;
+        this.position = position.div(1920, 1080);
+        this.lineMaxSize = maxLineLength / 1920f;
         this.centerText = centered;
-        MasterFont.add(this);
     }
 
     public void remove() {
@@ -69,6 +70,15 @@ public class GUIText {
         this.textMeshVao = vao;
         this.vertexCount = verticesCount;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GUIText guiText = (GUIText) o;
+        return Float.compare(guiText.fontSize, fontSize) == 0 && centerText == guiText.centerText && Float.compare(guiText.lineMaxSize, lineMaxSize) == 0 && numberOfLines == guiText.numberOfLines && Objects.equals(textString, guiText.textString) && Objects.equals(position, guiText.position) && Objects.equals(font, guiText.font) && Objects.equals(colour, guiText.colour);
+    }
+
 
     public int getVertexCount() {
         return this.vertexCount;

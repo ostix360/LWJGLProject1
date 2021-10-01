@@ -21,7 +21,7 @@ public class Player extends Entity {
     public boolean canJump = true;
 
     private final int health = 10;
-    private int sprintTime = 60;
+    private int sprintTime = 60 * 5;
     private final boolean isSprinting = false;
 
 
@@ -38,10 +38,13 @@ public class Player extends Entity {
         this.move();
         if (this.getMovement() == MovementType.FORWARD) {
             this.sprintTime--;
+            if (this.sprintTime < 0) {
+                sprintTime = 0;
+            }
         } else {
             this.sprintTime++;
-            if (this.sprintTime > 60) {
-                sprintTime = 60;
+            if (this.sprintTime > 60 * 5) {
+                sprintTime = 60 * 5;
             }
         }
         super.update();
@@ -100,7 +103,7 @@ public class Player extends Entity {
             this.movement = MovementType.JUMP;
             this.jump();
         }
-        if (Input.keys[GLFW_KEY_LEFT_SHIFT]){
+        if (Input.keys[GLFW_KEY_LEFT_SHIFT]) {
             this.upwardsSpeed -= RUN_SPEED;
         }
     }
@@ -110,8 +113,8 @@ public class Player extends Entity {
         return health;
     }
 
-    public int getSprintTime() {
-        return sprintTime;
+    public float getSprintTime() {
+        return (float) sprintTime / 5;
     }
 
 

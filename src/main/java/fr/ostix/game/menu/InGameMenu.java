@@ -21,7 +21,7 @@ public class InGameMenu extends Screen {
         super.init(loader, masterGui, pack);
         this.player = player;
         heartTexture = ResourcePack.getTextureByName().get("food").getID();
-        enduranceBar = new GuiTexture(ResourcePack.getTextureByName().get("enduranceBar").getID(), new Vector2f(580, 650), new Vector2f(350, 85));
+        enduranceBar = new GuiTexture(ResourcePack.getTextureByName().get("enduranceBar").getID(), new Vector2f(975, 955), new Vector2f(590, 135));
         enduranceTexture = ResourcePack.getTextureByName().get("endurance").getID();
     }
 
@@ -33,11 +33,11 @@ public class InGameMenu extends Screen {
 
     public void render() {
         for (int i = 0; i < player.getHealth(); i++) {
-            MasterGui.addTempGui(new GuiTexture(heartTexture, new Vector2f(150 + i * 35, 670), new Vector2f(50f)));
+            MasterGui.addTempGui(new GuiTexture(heartTexture, new Vector2f(250 + i * 60, 970), new Vector2f(100f)));
         }
-        float percent = ((float) player.getSprintTime()
-                / 60) * 265;
-        MasterGui.addTempGui(new GuiTexture(enduranceTexture, new Vector2f(660, 670), new Vector2f(percent, 35)));
+        float percent = (player.getSprintTime()
+                / (60)) * 450;
+        MasterGui.addTempGui(new GuiTexture(enduranceTexture, new Vector2f(1110, 985), new Vector2f(percent, 60)));
         MasterGui.addTempGui(enduranceBar);
     }
 

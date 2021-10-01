@@ -16,7 +16,7 @@ public class FontShader extends ShaderProgram {
     public FontShader() {
         super("font");
         super.getAllUniformLocations(color, translation);
-
+        super.validateProgram();
     }
 
     @Override

@@ -2,6 +2,7 @@ package fr.ostix.game.world;
 
 import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
+import fr.ostix.game.core.Game;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.entity.Entity;
@@ -11,6 +12,8 @@ import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
+import fr.ostix.game.graphics.font.meshCreator.GUIText;
+import fr.ostix.game.graphics.font.rendering.MasterFont;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.*;
@@ -20,6 +23,7 @@ import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.world.interaction.CollisionSystem;
 import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL10;
 
@@ -92,9 +96,12 @@ public class World {
 
         initTerrain(loader);
         initEntity();
+        GUIText text1 = new GUIText("Bienvenu dans ce jeu magique", 1f, Game.gameFont, new Vector2f(0, 1080f / 2f), 1920f, true);
+        text1.setColour(Color.RED);
+        MasterFont.add(text1);
 
 
-        collision.init(1/60f,entities);
+        collision.init(1 / 60f, entities);
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
@@ -105,7 +112,7 @@ public class World {
         back.setPosition(new Vector3f(0, 0, 0));
         back.setLooping(true);
         back.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
-  //      back.play();
+        //back.play();
 //        back2.setGain(0.2f);
 //        back2.setPosition(new Vector3f(0,0,0));
 //        back2.setLooping(true);

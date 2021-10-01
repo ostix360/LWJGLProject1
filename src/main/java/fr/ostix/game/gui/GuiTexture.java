@@ -11,10 +11,21 @@ public class GuiTexture {
     private Color layer = new Color(0, 0, 0, 0);
     private boolean hasLayer = false;
 
+    /**
+     * @param position correspond a une pourcentage au niveau de la fenetre sur 1000
+     */
     public GuiTexture(int texture, Vector2f position, Vector2f scale) {
-        this.position = convertPos(position, scale);
+        this.position = convertPercentToPos(position, scale);
         this.scale = convertScale(scale);
         this.texture = texture;
+    }
+
+    private Vector2f convertPercentToPos(Vector2f position, Vector2f scale) {
+        Vector2f newPos = new Vector2f(position.x() * DisplayManager.getWidth() / 1920,
+                position.y() * DisplayManager.getHeight() / 1080);
+        Vector2f newScale = new Vector2f(scale.x() * DisplayManager.getWidth() / 1920,
+                scale.y() * DisplayManager.getHeight() / 1080);
+        return convertPos(newPos, newScale);
     }
 
     private Vector2f convertPos(Vector2f pos, Vector2f scale) {
@@ -26,7 +37,7 @@ public class GuiTexture {
     }
 
     private Vector2f convertScale(Vector2f value) {
-        return new Vector2f(value.x() / DisplayManager.getWidth(), value.y() / DisplayManager.getHeight());
+        return new Vector2f(value.x() / 1920, value.y() / 1080);
     }
 
     public void setScale(Vector2f scale) {

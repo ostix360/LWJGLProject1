@@ -63,6 +63,8 @@ public class WorldState extends Screen {
         world.render();
         if (!inventory.isOpen()) {
             hotBar.render();
+        } else {
+            inventory.render();
         }
     }
 

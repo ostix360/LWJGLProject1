@@ -3,6 +3,7 @@ package fr.ostix.game.graphics.font.rendering;
 
 import fr.ostix.game.graphics.font.meshCreator.FontType;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
+import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.lwjgl.opengl.GL13;
 
@@ -36,9 +37,8 @@ public class FontRenderer {
     }
 
     private void prepare() {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDisable(GL_DEPTH_TEST);
+        OpenGlUtils.enableAlphaBlending();
+        OpenGlUtils.enableDepthTesting(false);
         shader.bind();
     }
 
@@ -52,8 +52,8 @@ public class FontRenderer {
 
     private void unBind() {
         shader.unBind();
-        glDisable(GL_BLEND);
-        glEnable(GL_DEPTH_TEST);
+        OpenGlUtils.disableBlending();
+        OpenGlUtils.enableDepthTesting(true);
     }
 
 }

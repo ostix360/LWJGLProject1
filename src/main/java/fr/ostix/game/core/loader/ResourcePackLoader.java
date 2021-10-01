@@ -42,7 +42,7 @@ public class ResourcePackLoader {
 
     public void loadAllResource(MasterGui masterGui) {
         TextureLoader progress = loader.loadTexture("menu/loader/progress");
-        Vector2f pos = new Vector2f(90, DisplayManager.getHeight() - 150);
+        Vector2f pos = new Vector2f(150, 1080 - 150);
 
 
         ProgressManager.ProgressBar resourcesBar = ProgressManager.addProgressBar("Loading All Resource", 4);
@@ -54,7 +54,7 @@ public class ResourcePackLoader {
 
 
         GuiTexture bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.25 * (DisplayManager.getWidth() - 180)), 50));
+                new Vector2f((float) (0.25 * (1920 - 180)), 80));
         MasterGui.addGui(bar);
         clearGL();
         masterGui.render();
@@ -65,7 +65,7 @@ public class ResourcePackLoader {
 
 
         bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.5 * (DisplayManager.getWidth() - 180)), 50));
+                new Vector2f((float) (0.5 * (1920 - 180)), 80));
         MasterGui.addGui(bar);
         clearGL();
 
@@ -75,7 +75,7 @@ public class ResourcePackLoader {
         DisplayManager.updateDisplay();
 
         bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.75 * (DisplayManager.getWidth() - 180)), 50));
+                new Vector2f((float) (0.75 * (1920 - 180)), 80));
         MasterGui.addGui(bar);
         clearGL();
 
@@ -85,7 +85,7 @@ public class ResourcePackLoader {
         DisplayManager.updateDisplay();
 
         bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (DisplayManager.getWidth() - 180), 50));
+                new Vector2f((float) (1920 - 180), 80));
         MasterGui.addGui(bar);
         clearGL();
 

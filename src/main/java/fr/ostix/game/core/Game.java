@@ -4,6 +4,7 @@ import fr.ostix.game.audio.AudioManager;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.graphics.font.meshCreator.FontType;
+import fr.ostix.game.graphics.font.rendering.MasterFont;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.menu.Screen;
 import fr.ostix.game.menu.StateManager;
@@ -17,8 +18,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 
 public class Game extends Thread {
-
-
     public static FontType gameFont;
 
     private boolean running = false;
@@ -30,6 +29,7 @@ public class Game extends Thread {
     private Screen currentScreen;
 
     private MasterGui guiManager;
+    private MasterFont masterFont;
 
     public Game() {
         super("Game");
@@ -69,6 +69,7 @@ public class Game extends Thread {
         AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
 
         guiManager = new MasterGui(loader);
+        masterFont = new MasterFont(loader);
 
         glfwShowWindow(glfwGetCurrentContext());
         stateManager.init(guiManager);
@@ -143,10 +144,11 @@ public class Game extends Thread {
             OpenGlUtils.clearGL();
         }
         guiManager.render();
-
+        masterFont.render();
     }
 
     private void exit() {
+        masterFont.cleanUp();
         guiManager.cleanUp();
         stateManager.cleanUp();
         running = false;

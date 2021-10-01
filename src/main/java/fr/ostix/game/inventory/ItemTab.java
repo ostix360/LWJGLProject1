@@ -20,10 +20,10 @@ public class ItemTab {
     private static Slot[] generate(int slotCount) {
         Slot[] slots = new Slot[slotCount];
         int index = 0;
-        for (int x = 0; x < slotCount / 4; x++) {
-            for (int y = 0; y < slotCount / 5; y++) {
-                slots[index] = new Slot(270 + x * 140 + x * 8, 107 + y * 140 + y * 5, 140);
-                index++;
+        int size = 140;
+        for (int x = 0; x < slotCount / 5; x++) {
+            for (int y = 0; y < slotCount / 7; y++) {
+                slots[index++] = new Slot(495 + x * size + x * 48, 240 + y * size + y * 17, size);
             }
         }
         return slots;
@@ -39,6 +39,12 @@ public class ItemTab {
     public void startRendering(MasterGui master) {
         for (Slot slot : slots) {
             slot.startRendering(master);
+        }
+    }
+
+    public void render() {
+        for (Slot slot : slots) {
+            slot.render();
         }
     }
 

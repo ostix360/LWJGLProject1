@@ -2,6 +2,7 @@ package fr.ostix.game.menu.component;
 
 import fr.ostix.game.core.Input;
 import fr.ostix.game.toolBox.Color;
+import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import org.lwjgl.glfw.GLFW;
 
 public class Button extends Component {
@@ -15,8 +16,8 @@ public class Button extends Component {
 
     @Override
     public void update() {
-        float mX = (float) Input.getMouseX();
-        float mY = (float) Input.getMouseY();
+        float mX = (float) Input.getMouseX() / DisplayManager.getWidth() * 1920;
+        float mY = (float) Input.getMouseY() / DisplayManager.getHeight() * 1080;
 
 
         pressed = mX >= this.x && mY >= this.y &&

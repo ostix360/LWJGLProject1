@@ -62,7 +62,7 @@ public class Loader {
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
         vao.bind();
-        vao.storeDataInAttributeList(0, 3, pos);
+        vao.storeDataInAttributeList(0, 2, pos);
         vao.storeDataInAttributeList(1, 2, texturesCoords);
         VAO.unbind();
         return new MeshModel(vao);
