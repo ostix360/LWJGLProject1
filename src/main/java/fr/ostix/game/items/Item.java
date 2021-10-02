@@ -5,6 +5,7 @@ import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
+import fr.ostix.game.toolBox.Color;
 import org.joml.Vector2f;
 
 public class Item {
@@ -22,6 +23,7 @@ public class Item {
         this.texture = ResourcePack.getTextureByName().get(textureName).getID();
         this.itemDescription = new GUIText(description, 1f, Game.gameFont,
                 new Vector2f(570, 260f), 300f, false);
+        this.itemDescription.setColour(Color.MAGENTA);
     }
 
     public void onItemUse() {

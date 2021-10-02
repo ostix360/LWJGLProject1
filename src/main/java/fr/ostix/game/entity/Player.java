@@ -3,6 +3,7 @@ package fr.ostix.game.entity;
 import fr.ostix.game.core.Input;
 import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.graphics.model.Model;
+import fr.ostix.game.world.World;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -11,8 +12,8 @@ public class Player extends Entity {
 
     private static final float RUN_SPEED = 160;
     private static final float TURN_SPEED = 780;
-    public static final float GRAVITY = 100f;
-    private static final float JUMP_POWER = 1;
+    public static final float GRAVITY = 0.12f;
+    private static final float JUMP_POWER = 2;
 
     private float currentSpeed = 0;
     private float currentTurnSpeed = 0;
@@ -53,30 +54,34 @@ public class Player extends Entity {
     public void move() {
         checkInputs();
         super.increaseRotation(new Vector3f(0, this.currentTurnSpeed * 0.0023f, 0));
-        torque.set(new Vector3(0,this.currentTurnSpeed,0));
+        torque.set(new Vector3(0, this.currentTurnSpeed, 0));
         float distance = currentSpeed * 0.006f;
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
         forceToCenter.set(new Vector3(dx, 0, dz));
         //    upwardsSpeed += GRAVITY;
-        if (upwardsSpeed <= 0f) {
-            canJump = true;
-            upwardsSpeed = 0f;
+        if (upwardsSpeed <= -9.18f) {
+            upwardsSpeed = -9.18f;
         }
         forceToCenter.add(new Vector3(0, upwardsSpeed, 0));
 
         super.increasePosition(new Vector3f(dx, upwardsSpeed, dz));
-        if (!canJump) {
-            this.upwardsSpeed -= GRAVITY;
+        //if (!canJump) {
+        this.upwardsSpeed = 0;
+        //  }
+        float terrainHeight = World.getTerrainHeight(this.getPosition().x(), this.getPosition().z());
+        if (this.getPosition().y() <= terrainHeight) {
+            canJump = true;
+            position.set(this.getPosition().x(), terrainHeight, this.getPosition().z());
         }
 
     }
 
     private void jump() {
-        if (canJump) {
-            this.upwardsSpeed = JUMP_POWER;
-            canJump = false;
-        }
+        //if (canJump) {
+        this.upwardsSpeed = 2;
+        canJump = false;
+        // }
     }
 
     private void checkInputs() {
@@ -104,7 +109,7 @@ public class Player extends Entity {
             this.jump();
         }
         if (Input.keys[GLFW_KEY_LEFT_SHIFT]) {
-            this.upwardsSpeed -= RUN_SPEED;
+            this.upwardsSpeed = -2;
         }
     }
 

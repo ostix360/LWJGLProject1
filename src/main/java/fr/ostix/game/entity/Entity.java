@@ -104,7 +104,7 @@ public class Entity {
     }
 
     public Vector3 getForceToCenter() {
-        return forceToCenter;
+            return forceToCenter;
     }
 
 

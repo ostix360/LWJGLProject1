@@ -112,7 +112,7 @@ public class World {
         back.setPosition(new Vector3f(0, 0, 0));
         back.setLooping(true);
         back.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
-        //back.play();
+        back.play();
 //        back2.setGain(0.2f);
 //        back2.setPosition(new Vector3f(0,0,0));
 //        back2.setLooping(true);

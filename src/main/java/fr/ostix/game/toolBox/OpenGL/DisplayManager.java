@@ -24,7 +24,7 @@ public class DisplayManager {
 
     private static long window;
 
-    public static void createDisplay() {
+    public static long createDisplay() {
         glfwSetErrorCallback(GLFWErrorCallback.createPrint(System.err));
 
         if (!glfwInit()) throw new RuntimeException("Unable/Failed to Initialize GLFW");
@@ -71,6 +71,7 @@ public class DisplayManager {
             GL11.glViewport(0, 0, width, height);
 
         glfwSwapInterval(1);
+        return window;
     }
 
     public static void updateDisplay() {

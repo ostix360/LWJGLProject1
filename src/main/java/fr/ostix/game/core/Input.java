@@ -24,10 +24,32 @@ public class Input {
     private static float beforePositionX;
     private static float beforePositionY;
 
+    public static void init(long window) {
+        GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
+            @Override
+            public void invoke(long window, int key, int scancode, int action, int mods) {
+                if (key == -1) {
+                    Logger.err("Error this key is unknown");
+                    return;
+                }
+                keys[key] = action != GLFW_RELEASE;
+            }
+        });
+
+        glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
+            @Override
+            public void invoke(long window, int button, int action, int mods) {
+                keysMouse[button] = action != GLFW_RELEASE;
+            }
+        });
+
+        glfwSetScrollCallback(window, (w, xoffset, yoffset) -> mouseDWhell = (float) (yoffset - xoffset));
+    }
+
     public static void updateInput(long window) {
         mouseDY = 0;
         mouseDX = 0;
-        // mouseDWhell = 0;
+        mouseDWhell = 0;
 
         glfwGetCursorPos(window, MOUSE_X, MOUSE_Y);
         mouseX = MOUSE_X.get();
@@ -36,38 +58,15 @@ public class Input {
         mouseDY = (float) mouseY - beforePositionY;
 
 
-        try {
-            GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
-                @Override
-                public void invoke(long window, int key, int scancode, int action, int mods) {
-                    if (key == -1) {
-                        Logger.err("Error this key is unknown");
-                        return;
-                    }
-                    keys[key] = action != GLFW_RELEASE;
-                }
-            });
+        MOUSE_X.flip();
+        MOUSE_Y.flip();
 
-            glfwSetMouseButtonCallback(window, new GLFWMouseButtonCallback() {
-                @Override
-                public void invoke(long window, int button, int action, int mods) {
-                    keysMouse[button] = action != GLFW_RELEASE;
-                }
-            });
+        beforePositionX = (float) MOUSE_X.get();
+        beforePositionY = (float) MOUSE_Y.get();
 
-            glfwSetScrollCallback(window, (w, xoffset, yoffset) -> mouseDWhell = (float) (yoffset - xoffset));
+        MOUSE_X.flip();
+        MOUSE_Y.flip();
 
-            MOUSE_X.flip();
-            MOUSE_Y.flip();
-
-            beforePositionX = (float) MOUSE_X.get();
-            beforePositionY = (float) MOUSE_Y.get();
-
-            MOUSE_X.flip();
-            MOUSE_Y.flip();
-        } catch (Exception e) {
-            Logger.err("Error this key is not available : " + e.getMessage());
-        }
     }
 
     public static double getMouseX() {

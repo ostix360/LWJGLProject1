@@ -131,8 +131,7 @@ public class CollisionSystem {
         for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
             RigidBody body = entry.getKey();
             Entity shape = entry.getValue();
-            body.applyForceToCenter(new Vector3(0, shape.getForceToCenter().getY(), 0).multiply(700));
-            body.setLinearVelocity(new Vector3(shape.getForceToCenter().multiply(30).getX(), -9.81f, shape.getForceToCenter().getZ()));
+            body.setLinearVelocity(new Vector3(shape.getForceToCenter().multiply(30).getX(), shape.getForceToCenter().getY(), shape.getForceToCenter().getZ()));
             body.setAngularVelocity(shape.getTorque().multiply(30));
         }
     }

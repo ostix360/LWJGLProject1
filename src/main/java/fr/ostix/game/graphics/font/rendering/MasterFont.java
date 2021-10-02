@@ -50,23 +50,25 @@ public class MasterFont {
     }
 
     private void addTempText() {
-        guisTexts.putAll(tempGuisTexts);
+        for (FontType Tfont : tempGuisTexts.keySet()) {
+            List<GUIText> textBatch = tempGuisTexts.get(Tfont);
+            if (guisTexts.containsKey(Tfont)) {
+                guisTexts.get(Tfont).addAll(textBatch);
+            } else {
+                guisTexts.put(Tfont, textBatch);
+            }
+        }
     }
 
     private void removeTempGuis() {
-        for (FontType font : tempGuisTexts.keySet()) {
-            List<GUIText> tempTexts = tempGuisTexts.get(font);
-            for (GUIText text : tempTexts) {
-                List<GUIText> texts = guisTexts.get(text.getFont());
-                texts.remove(text);
-                tempTexts.remove(text);
-                if (texts.isEmpty()) {
-                    guisTexts.remove(text.getFont());
-                }
-                if (tempTexts.isEmpty()) {
-                    tempGuisTexts.remove(text.getFont());
-                    break;
-                }
+        for (FontType Tfont : tempGuisTexts.keySet()) {
+            List<GUIText> texts = guisTexts.get(Tfont);
+            List<GUIText> tTexts = tempGuisTexts.get(Tfont);
+            texts.removeAll(tTexts);
+            tTexts.clear();
+            if (texts.isEmpty()) {
+                guisTexts.remove(Tfont);
+                tempGuisTexts.remove(Tfont);
             }
         }
     }
@@ -81,13 +83,6 @@ public class MasterFont {
     }
 
     public void cleanUp() {
-        for (FontType font : guisTexts.keySet()) {
-            List<GUIText> texts = guisTexts.get(font);
-            for (GUIText text : texts) {
-                text.remove();
-            }
-            texts.clear();
-        }
         tempGuisTexts.clear();
         guisTexts.clear();
         renderer.cleanUp();

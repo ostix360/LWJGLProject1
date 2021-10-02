@@ -31,6 +31,8 @@ public class Game extends Thread {
     private MasterGui guiManager;
     private MasterFont masterFont;
 
+    private long window;
+
     public Game() {
         super("Game");
         loader = new Loader();
@@ -65,15 +67,15 @@ public class Game extends Thread {
     };
 
     private void init() {
-        DisplayManager.createDisplay();
-        AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
+        window = DisplayManager.createDisplay();
 
+        AudioManager.init(AL11.AL_EXPONENT_DISTANCE);
+        Input.init(window);
         guiManager = new MasterGui(loader);
         masterFont = new MasterFont(loader);
 
-        glfwShowWindow(glfwGetCurrentContext());
+        glfwShowWindow(window);
         stateManager.init(guiManager);
-        ResourcePack pack = stateManager.getPack();
         gameFont = new FontType(ResourcePack.getTextureByName().get("candara").getID(), "candara");
     }
 
@@ -81,7 +83,7 @@ public class Game extends Thread {
     public void run() {
         init();
         while (running) {
-            if (glfwWindowShouldClose(glfwGetCurrentContext())) {
+            if (glfwWindowShouldClose(window)) {
                 exit();
                 return;
             }
@@ -123,14 +125,14 @@ public class Game extends Thread {
 
         if (System.currentTimeMillis() - timer > 1000) {
             timer += 1000;
-            glfwSetWindowTitle(glfwGetCurrentContext(), currentScreen.getTitle() + "  ||  " + ticks + " ticks " + frames + " fps");
+            glfwSetWindowTitle(window, currentScreen.getTitle() + "  ||  " + ticks + " ticks " + frames + " fps");
             ticks = 0;
             frames = 0;
         }
     }
 
     private void update() {
-        Input.updateInput(glfwGetCurrentContext());
+        Input.updateInput(window);
 
         currentScreen = stateManager.getCurrentState(stateManager.update());
         currentScreen.update();
@@ -148,14 +150,14 @@ public class Game extends Thread {
     }
 
     private void exit() {
+        Logger.log("Exiting");
+        AudioManager.cleanUp();
         masterFont.cleanUp();
         guiManager.cleanUp();
         stateManager.cleanUp();
         running = false;
-        AudioManager.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
-        Logger.log("Exiting");
     }
 
 }
