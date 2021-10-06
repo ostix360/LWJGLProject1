@@ -29,11 +29,12 @@ package fr.ostix.game.core.collision.react.shape;
 import fr.ostix.game.core.collision.react.maths.Matrix3x3;
 import fr.ostix.game.core.collision.react.maths.Transform;
 import fr.ostix.game.core.collision.react.maths.Vector3;
+import fr.ostix.game.entity.BoundingModel;
 
 /**
  * Represents the collision shape associated with a body that is used during the narrow-phase collision detection.
  */
-public abstract class CollisionShape {
+public abstract class CollisionShape extends BoundingModel {
     protected final CollisionShapeType mType;
     private int mNbSimilarCreatedShapes;
     protected final float mMargin;
@@ -44,6 +45,7 @@ public abstract class CollisionShape {
      * @param type The type of the collision shape
      */
     protected CollisionShape(CollisionShapeType type, float margin) {
+        super(null);
         mType = type;
         mNbSimilarCreatedShapes = 0;
         mMargin = margin;
@@ -55,6 +57,7 @@ public abstract class CollisionShape {
      * @param shape The shape to copy
      */
     protected CollisionShape(CollisionShape shape) {
+        super(null);
         mType = shape.mType;
         mNbSimilarCreatedShapes = shape.mNbSimilarCreatedShapes;
         mMargin = shape.mMargin;
@@ -201,11 +204,22 @@ public abstract class CollisionShape {
      * An enumeration of the possible collision shape (box, sphere, cone and cylinder).
      */
     public enum CollisionShapeType {
-        BOX,
-        SPHERE,
-        CONE,
-        CYLINDER,
-        CAPSULE,
-        CONVEX_MESH
+        BOX("Box"),
+        SPHERE("Sphere"),
+        CONE("Cone"),
+        CYLINDER("Cylinder"),
+        CAPSULE("Capsule"),
+        CONVEX_MESH("Convex");
+
+        private final String name;
+
+        CollisionShapeType(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

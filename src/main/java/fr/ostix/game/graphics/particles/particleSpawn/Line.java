@@ -19,6 +19,12 @@ public class Line implements ParticleSpawn {
         return actualAxis;
     }
 
+    @Override
+    public void load(String[] values) {
+        this.length = Float.parseFloat(values[1]);
+        this.axis = new Vector3f(Float.parseFloat(values[2]), Float.parseFloat(values[3]), Float.parseFloat(values[4]));
+    }
+
     public Line setAxis(Vector3f axis) {
         this.axis = axis;
         return this;

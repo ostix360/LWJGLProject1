@@ -109,6 +109,12 @@ public class SphereShape extends CollisionShape {
         aabb.setMax(Vector3.add(transform.getPosition(), extents));
     }
 
+
+    public static SphereShape load(String content) {
+        float radius = Float.parseFloat(content);
+        return new SphereShape(radius);
+    }
+
     @Override
     public SphereShape clone() {
         return new SphereShape(this);

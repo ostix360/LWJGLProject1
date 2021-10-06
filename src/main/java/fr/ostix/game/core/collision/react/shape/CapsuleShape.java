@@ -143,6 +143,13 @@ public class CapsuleShape extends CollisionShape {
                 0, 0, IxxAndzz);
     }
 
+    public static CapsuleShape load(String content) {
+        String[] values = content.split(";");
+        float radius = Float.parseFloat(values[0]);
+        float height = Float.parseFloat(values[1]);
+        return new CapsuleShape(radius, height);
+    }
+
     @Override
     public CollisionShape clone() {
         return new CapsuleShape(this);

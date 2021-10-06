@@ -33,6 +33,7 @@ public class ResourcePackLoader {
     private final HashMap<String, Model> modelByName = new HashMap<>();
     private final HashMap<String, AnimatedModel> animatedModelByName = new HashMap<>();
     private final HashMap<AnimatedModel, HashMap<String, Animation>> animationByName = new HashMap<>();
+    private final HashMap<Integer, String> componentsByID = new HashMap<>();
 
     private boolean isLoaded = false;
 
@@ -45,54 +46,66 @@ public class ResourcePackLoader {
         Vector2f pos = new Vector2f(150, 1080 - 150);
 
 
-        ProgressManager.ProgressBar resourcesBar = ProgressManager.addProgressBar("Loading All Resource", 4);
-        clearGL();
-        masterGui.render();
+        ProgressManager.ProgressBar resourcesBar = ProgressManager.addProgressBar("Loading All Resource", 5);
+
         resourcesBar.update("Loading Textures... ");
-        loadAllTextures();
-        DisplayManager.updateDisplay();
-
-
         GuiTexture bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.25 * (1920 - 180)), 80));
-        MasterGui.addGui(bar);
-        clearGL();
-        masterGui.render();
-        MasterGui.removeGui(bar);
+                new Vector2f((float) (0.2 * (1920 - 180)), 80));
+        prepareScreen(masterGui, bar);
+        loadAllTextures();
+
+
         resourcesBar.update("Loading Sounds... ");
+        bar = new GuiTexture(progress.getId(), pos,
+                new Vector2f((float) (0.4 * (1920 - 180)), 80));
+        prepareScreen(masterGui, bar);
         loadAllSounds();
-        DisplayManager.updateDisplay();
 
 
-        bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.5 * (1920 - 180)), 80));
-        MasterGui.addGui(bar);
-        clearGL();
-
-        masterGui.render();
         resourcesBar.update("Loading Models... ");
-        loadAllModels();
-        DisplayManager.updateDisplay();
-
         bar = new GuiTexture(progress.getId(), pos,
-                new Vector2f((float) (0.75 * (1920 - 180)), 80));
-        MasterGui.addGui(bar);
-        clearGL();
+                new Vector2f((float) (0.6 * (1920 - 180)), 80));
+        prepareScreen(masterGui, bar);
+        loadAllModels();
 
-        masterGui.render();
+
         resourcesBar.update("Loading Animations... ");
+        bar = new GuiTexture(progress.getId(), pos,
+                new Vector2f((float) (0.8 * (1920 - 180)), 80));
+        prepareScreen(masterGui, bar);
         loadAllAnimations();
-        DisplayManager.updateDisplay();
 
+
+        resourcesBar.update("Loading Components... ");
         bar = new GuiTexture(progress.getId(), pos,
                 new Vector2f((float) (1920 - 180), 80));
-        MasterGui.addGui(bar);
-        clearGL();
+        prepareScreen(masterGui, bar);
+        loadAllComponents();
 
-        masterGui.render();
-        DisplayManager.updateDisplay();
         ProgressManager.remove(resourcesBar);
         isLoaded = true;
+    }
+
+    private void prepareScreen(MasterGui masterGui, GuiTexture bar) {
+        clearGL();
+        MasterGui.addTempGui(bar);
+        masterGui.render();
+        DisplayManager.updateDisplay();
+    }
+
+    private void loadAllComponents() {
+        final File components = new File(ToolDirectory.RES_FOLDER, "/component/");
+        ProgressManager.ProgressBar componentsBar = ProgressManager.addProgressBar("Loading All Components", Objects.requireNonNull(components.listFiles()).length);
+        for (File currentFile : Objects.requireNonNull(components.listFiles())) {
+            String name = currentFile.getName();
+            componentsBar.update(name);
+            String fileContent = JsonUtils.loadJson(currentFile.getAbsolutePath());
+            if (fileContent.isEmpty()) {
+                new Exception("a json a texture is empty... " + currentFile.getAbsolutePath());
+            }
+            componentsByID.put(Integer.parseInt(name), fileContent);
+        }
+        ProgressManager.remove(componentsBar);
     }
 
     private void loadAllTextures() {
@@ -102,7 +115,7 @@ public class ResourcePackLoader {
 
             String json = JsonUtils.loadJson(currentFile.getAbsolutePath());
             if (json.isEmpty()) {
-                new Exception("a json a texture is empty...");
+                new Exception("a json a texture is empty... " + currentFile.getAbsolutePath());
             }
             TextureResources current = JsonUtils.gsonInstance().fromJson(json, TextureResources.class);
             if (current == null) {
@@ -124,7 +137,7 @@ public class ResourcePackLoader {
         for (File currentFile : Objects.requireNonNull(soundFolder.listFiles())) {
             String json = JsonUtils.loadJson(currentFile.getAbsolutePath());
             if (json.isEmpty()) {
-                new Exception("a json a sound is empty...");
+                new Exception("a json a sound is empty... " + currentFile.getAbsolutePath());
             }
             SoundResources current = JsonUtils.gsonInstance().fromJson(json, SoundResources.class);
             if (current == null) {
@@ -146,7 +159,7 @@ public class ResourcePackLoader {
         for (File currentFile : Objects.requireNonNull(modelFolder.listFiles())) {
             String json = JsonUtils.loadJson(currentFile.getAbsolutePath());
             if (json.isEmpty()) {
-                new Exception("a json a model is empty...");
+                new Exception("a json a model is empty... " + currentFile.getAbsolutePath());
             }
             ModelResources current = JsonUtils.gsonInstance().fromJson(json, ModelResources.class);
             if (current == null) {
@@ -158,9 +171,10 @@ public class ResourcePackLoader {
             if (current.canAnimated()) {
                 AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
                 animatedModelByName.put(name, model);
+            } else {
+                Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
+                modelByName.put(name, model);
             }
-//            Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
-//            modelByName.put(name, model);
         }
         ProgressManager.remove(modelBar);
     }
@@ -172,7 +186,7 @@ public class ResourcePackLoader {
         for (File currentFile : Objects.requireNonNull(modelFolder.listFiles())) {
             String json = JsonUtils.loadJson(currentFile.getAbsolutePath());
             if (json.isEmpty()) {
-                new Exception("a json a model is empty...");
+                new Exception("a json a model is empty... " + currentFile.getAbsolutePath());
             }
             AnimationResources current = JsonUtils.gsonInstance().fromJson(json, AnimationResources.class);
             if (current == null) {
@@ -222,5 +236,9 @@ public class ResourcePackLoader {
 
     public HashMap<AnimatedModel, HashMap<String, Animation>> getAnimationByName() {
         return animationByName;
+    }
+
+    public HashMap<Integer, String> getComponentsByID() {
+        return componentsByID;
     }
 }

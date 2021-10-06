@@ -118,23 +118,11 @@ public class ConeShape extends CollisionShape {
         return supportPoint;
     }
 
-    @Override
-    public Vector3 getLocalSupportPointWithoutMargin(Vector3 direction) {
-        final Vector3 v = direction;
-        final float sinThetaTimesLengthV = mSinTheta * v.length();
-        final Vector3 supportPoint;
-        if (v.getY() > sinThetaTimesLengthV) {
-            supportPoint = new Vector3(0, mHalfHeight, 0);
-        } else {
-            final float projectedLength = (float) Math.sqrt(v.getX() * v.getX() + v.getZ() * v.getZ());
-            if (projectedLength > ReactDefaults.MACHINE_EPSILON) {
-                final float d = mRadius / projectedLength;
-                supportPoint = new Vector3(v.getX() * d, -mHalfHeight, v.getZ() * d);
-            } else {
-                supportPoint = new Vector3(0, -mHalfHeight, 0);
-            }
-        }
-        return supportPoint;
+    public static ConeShape load(String content) {
+        String[] values = content.split(";");
+        float radius = Float.parseFloat(values[0]);
+        float height = Float.parseFloat(values[1]);
+        return new ConeShape(radius, height);
     }
 
     @Override
@@ -155,6 +143,24 @@ public class ConeShape extends CollisionShape {
                 diagXZ, 0, 0,
                 0, 0.3f * mass * rSquare, 0,
                 0, 0, diagXZ);
+    }
+
+    @Override
+    public Vector3 getLocalSupportPointWithoutMargin(Vector3 direction) {
+        final float sinThetaTimesLengthV = mSinTheta * direction.length();
+        final Vector3 supportPoint;
+        if (direction.getY() > sinThetaTimesLengthV) {
+            supportPoint = new Vector3(0, mHalfHeight, 0);
+        } else {
+            final float projectedLength = (float) Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ());
+            if (projectedLength > ReactDefaults.MACHINE_EPSILON) {
+                final float d = mRadius / projectedLength;
+                supportPoint = new Vector3(direction.getX() * d, -mHalfHeight, direction.getZ() * d);
+            } else {
+                supportPoint = new Vector3(0, -mHalfHeight, 0);
+            }
+        }
+        return supportPoint;
     }
 
     @Override

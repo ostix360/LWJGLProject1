@@ -24,8 +24,8 @@ public class AnimatedModelLoader {
      * @return The animated entity (no animation applied though)
      */
     public static AnimatedModel loadEntity(String modelFile, Texture texture, int maxWeights,Loader loader) {
-        AnimatedModelData entityData = ColladaLoader.loadColladaModel(ToolDirectory.RES_FOLDER + "/models/"+modelFile + ".dae",maxWeights);
-        MeshModel model = createVao(entityData.getMeshData(),loader);
+        AnimatedModelData entityData = ColladaLoader.loadColladaModel(ToolDirectory.RES_FOLDER + "/models/entities/" + modelFile + ".dae", maxWeights);
+        MeshModel model = createVao(entityData.getMeshData(), loader);
         SkeletonData skeletonData = entityData.getJointsData();
         Joint headJoint = createJoints(skeletonData.headJoint);
         return new AnimatedModel(model, texture, headJoint, skeletonData.jointCount);

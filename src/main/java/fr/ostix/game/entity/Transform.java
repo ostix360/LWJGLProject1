@@ -12,10 +12,21 @@ public class Transform {
     private float scale;
     private Matrix3f rotationMatrix;
 
-    public Transform(Vector3f position, Vector3f rotation,float scale) {
+    public Transform(Vector3f position, Vector3f rotation, float scale) {
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
+    }
+
+    public static Transform load(String values) {
+        String[] value = values.split(";");
+        int index = 0;
+        Vector3f pos = new Vector3f(Float.parseFloat(value[index]), Float.parseFloat(value[index++]),
+                Float.parseFloat(value[index++]));
+        Vector3f rot = new Vector3f(Float.parseFloat(value[index++]), Float.parseFloat(value[index++]),
+                Float.parseFloat(value[index++]));
+        float scale = Float.parseFloat(value[index]);
+        return new Transform(pos, rot, scale);
     }
 
     public void setRotation(Vector3f rotation) {

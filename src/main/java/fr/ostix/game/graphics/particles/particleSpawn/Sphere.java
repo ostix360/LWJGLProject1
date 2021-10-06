@@ -26,6 +26,11 @@ public class Sphere implements ParticleSpawn {
         return spherePoint;
     }
 
+    @Override
+    public void load(String[] values) {
+        this.radius = Float.parseFloat(values[1]);
+    }
+
     public Sphere setRadius(float radius) {
         this.radius = radius;
         return this;

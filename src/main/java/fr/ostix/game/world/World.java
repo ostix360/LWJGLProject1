@@ -86,7 +86,7 @@ public class World {
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
        // player.addComponent(new AIComponent(player, ai));
        // player.addComponent(new ParticleComponent(system, player));
-        player.addComponent(new AnimationComponent(player, pack.getAnimationByName().get(an)));
+        player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);

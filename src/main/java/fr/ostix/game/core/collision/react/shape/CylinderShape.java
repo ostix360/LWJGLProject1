@@ -157,6 +157,13 @@ public class CylinderShape extends CollisionShape {
                 0, 0, diag);
     }
 
+    public static CylinderShape load(String content) {
+        String[] values = content.split(";");
+        float radius = Float.parseFloat(values[0]);
+        float height = Float.parseFloat(values[1]);
+        return new CylinderShape(radius, height);
+    }
+
     @Override
     public CylinderShape clone() {
         return new CylinderShape(this);

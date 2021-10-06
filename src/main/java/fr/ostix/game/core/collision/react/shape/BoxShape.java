@@ -139,6 +139,15 @@ public class BoxShape extends CollisionShape {
                 0, 0, factor * (xSquare + ySquare));
     }
 
+    public static BoxShape load(String content) {
+        String[] values = content.split(";");
+        Vector3 mExtent = new Vector3();
+        mExtent.setX(Float.parseFloat(values[0]));
+        mExtent.setY(Float.parseFloat(values[1]));
+        mExtent.setZ(Float.parseFloat(values[2]));
+        return new BoxShape(mExtent);
+    }
+
     @Override
     public BoxShape clone() {
         return new BoxShape(this);

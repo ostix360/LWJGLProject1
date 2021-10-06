@@ -13,9 +13,7 @@ public class ResourceLoader {
             new IllegalArgumentException("texture for the model " + path + "is not available ");
         }
         assert texture != null;
-//        return new Model(LoadMeshModel.loadModel(path, loader),
-//                texture);
-        return null;
+        return new Model(LoadMeshModel.loadModel(path, loader), texture);
     }
 
     public static AnimatedModel loadTexturedAnimatedModel(String path, Texture texture, Loader loader) {

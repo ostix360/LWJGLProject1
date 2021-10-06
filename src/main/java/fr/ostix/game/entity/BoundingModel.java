@@ -1,36 +1,37 @@
 package fr.ostix.game.entity;
 
-import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.model.Model;
-import org.joml.Vector3f;
+import fr.ostix.game.core.collision.react.shape.CollisionModel;
 
 public class BoundingModel {
 
-    private final MeshModel m;
-    private final Vector3f pos;
-    private final Vector3f rot;
-    private final float scale;
+    private final CollisionModel m;
+    private Transform transform;
 
-    public BoundingModel(MeshModel m, Vector3f pos, Vector3f rot, float scale) {
+    public BoundingModel(CollisionModel m) {
         this.m = m;
-        this.pos = pos;
-        this.rot = rot;
-        this.scale = scale;
     }
 
-    public MeshModel getModel() {
+    public static BoundingModel load(String content) {
+        String[] lines = content.split("\n");
+        Transform transform = Transform.load(lines[0]);
+        CollisionModel cm = loadModel(lines[1]);
+        return new BoundingModel(cm).setTransform(transform);
+    }
+
+    private static CollisionModel loadModel(String name) {
+        return null;
+    }
+
+    public CollisionModel getModel() {
         return m;
     }
 
-    public Vector3f getPos() {
-        return pos;
+    public Transform getTransform() {
+        return transform;
     }
 
-    public Vector3f getRot() {
-        return rot;
-    }
-
-    public float getScale() {
-        return scale;
+    public BoundingModel setTransform(Transform transform) {
+        this.transform = transform;
+        return this;
     }
 }

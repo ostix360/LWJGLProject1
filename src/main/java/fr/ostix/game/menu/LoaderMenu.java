@@ -35,7 +35,7 @@ public class LoaderMenu extends Screen {
     public ResourcePack getPack() {
         return new ResourcePack(pack.getTextureByName(),
                 pack.getSoundByName(), pack.getModelByName(),
-                pack.getAnimatedModelByName(),pack.getAnimationByName());
+                pack.getAnimatedModelByName(), pack.getAnimationByName(), pack.getComponentsByID());
     }
 
 }

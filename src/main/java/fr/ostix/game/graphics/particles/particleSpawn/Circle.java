@@ -36,6 +36,12 @@ public class Circle implements ParticleSpawn {
         return randomPerpendicular;
     }
 
+    @Override
+    public void load(String[] values) {
+        this.radius = Float.parseFloat(values[1]);
+        this.center = new Vector3f(Float.parseFloat(values[2]), Float.parseFloat(values[3]), Float.parseFloat(values[4]));
+    }
+
     public Circle setCenter(Vector3f center) {
         this.center = center.normalize();
         return this;

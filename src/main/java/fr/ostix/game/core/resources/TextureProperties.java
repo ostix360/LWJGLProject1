@@ -2,6 +2,9 @@ package fr.ostix.game.core.resources;
 
 public class TextureProperties {
 
+    private final boolean additive;
+    private final boolean affectedByLighting;
+
     private final int normalMapID;
     private final int specularMap;
 
@@ -14,7 +17,9 @@ public class TextureProperties {
     private final boolean useFakeLighting;
     private final boolean isInverseNormal;
 
-    public TextureProperties(int normalMapID, int specularMap, float shineDamper, float reflectivity, int numbersOfRows, boolean isTransparency, boolean useFakeLighting, boolean isInverseNormal) {
+    public TextureProperties(boolean additive, boolean affectedByLighting, int normalMapID, int specularMap, float shineDamper, float reflectivity, int numbersOfRows, boolean isTransparency, boolean useFakeLighting, boolean isInverseNormal) {
+        this.additive = additive;
+        this.affectedByLighting = affectedByLighting;
         this.normalMapID = normalMapID;
         this.specularMap = specularMap;
         this.shineDamper = shineDamper;
@@ -24,6 +29,15 @@ public class TextureProperties {
         this.useFakeLighting = useFakeLighting;
         this.isInverseNormal = isInverseNormal;
     }
+
+    public boolean isAdditive() {
+        return additive;
+    }
+
+    public boolean isAffectedByLighting() {
+        return affectedByLighting;
+    }
+
 
     public int getNormalMapID() {
         return normalMapID;

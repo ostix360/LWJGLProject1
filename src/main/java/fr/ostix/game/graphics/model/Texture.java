@@ -36,6 +36,14 @@ public class Texture {
         return properties.getNormalMapID();
     }
 
+    public boolean isAdditive() {
+        return properties.isAdditive();
+    }
+
+    public boolean isAffectedByLighting() {
+        return properties.isAffectedByLighting();
+    }
+
     public int getNumbersOfRows() {
         return properties.getNumbersOfRows();
     }
