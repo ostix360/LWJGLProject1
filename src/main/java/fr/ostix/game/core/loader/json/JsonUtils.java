@@ -25,6 +25,7 @@ public class JsonUtils {
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
+                sb.append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

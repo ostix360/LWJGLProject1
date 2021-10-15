@@ -98,12 +98,13 @@ public class ResourcePackLoader {
         ProgressManager.ProgressBar componentsBar = ProgressManager.addProgressBar("Loading All Components", Objects.requireNonNull(components.listFiles()).length);
         for (File currentFile : Objects.requireNonNull(components.listFiles())) {
             String name = currentFile.getName();
+
             componentsBar.update(name);
             String fileContent = JsonUtils.loadJson(currentFile.getAbsolutePath());
             if (fileContent.isEmpty()) {
                 new Exception("a json a texture is empty... " + currentFile.getAbsolutePath());
             }
-            componentsByID.put(Integer.parseInt(name), fileContent);
+            componentsByID.put(Integer.parseInt(name.replaceAll(".component", "")), fileContent);
         }
         ProgressManager.remove(componentsBar);
     }
@@ -172,7 +173,7 @@ public class ResourcePackLoader {
                 AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
                 animatedModelByName.put(name, model);
             } else {
-                Model model = ResourceLoader.loadTexturedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
+                Model model = ResourceLoader.loadTexturedModel(current.getPath() + File.separator + name, textureByName.get(current.getTexture()), loader);
                 modelByName.put(name, model);
             }
         }

@@ -23,6 +23,10 @@ public enum ComponentType {
         return this.creator.createComponent(e);
     }
 
+    public Component loadComponent(Entity e, String component) {
+        return this.creator.loadComponent(component, e);
+    }
+
     @Override
     public String toString() {
         return this.name;

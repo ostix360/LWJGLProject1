@@ -49,7 +49,7 @@ public class Texture {
     }
 
     public int getSpecularMap() {
-        return properties.getSpecularMap();
+        return properties.getSpecularMapID();
     }
 
     public boolean hasSpecularMap() {

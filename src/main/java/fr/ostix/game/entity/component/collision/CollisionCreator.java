@@ -1,7 +1,7 @@
 package fr.ostix.game.entity.component.collision;
 
-import fr.ostix.game.core.collision.react.shape.*;
-import fr.ostix.game.core.collision.react.shape.CollisionShape.CollisionShapeType;
+import com.flowpowered.react.collision.shape.*;
+import com.flowpowered.react.collision.shape.CollisionShape.CollisionShapeType;
 import fr.ostix.game.entity.BoundingModel;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.Transform;
@@ -24,28 +24,31 @@ public class CollisionCreator implements ComponentCreator {
         CollisionProperties prop = new CollisionProperties();
         List<BoundingModel> bounds = new ArrayList<>();
         String[] lines = component.split("\n");
-        for (int i = 0; i < lines.length; i++) {
+        if (!lines[0].equalsIgnoreCase("Collision Component")) {
+            return null;
+        }
+        for (int i = 1; i < lines.length - 1; i++) {
             String line = lines[i];
             CollisionShapeType type = isType(line);
             if (type != null) {
                 BoundingModel model;
                 switch (type) {
                     case BOX:
-                        model = BoxShape.load(lines[i++]);
+                        model = BoxShape.load(lines[++i]);
                         break;
                     case CAPSULE:
-                        model = CapsuleShape.load(lines[i++]);
+                        model = CapsuleShape.load(lines[++i]);
                         break;
                     case CONE:
-                        model = ConeShape.load(lines[i++]);
+                        model = ConeShape.load(lines[++i]);
                         break;
                     case CYLINDER:
-                        model = CylinderShape.load(lines[i++]);
+                        model = CylinderShape.load(lines[++i]);
                         break;
                     default:
-                        model = SphereShape.load(lines[i++]);
+                        model = SphereShape.load(lines[++i]);
                 }
-                Transform t = Transform.load(lines[i++]);
+                Transform t = Transform.load(lines[++i]);
                 model.setTransform(t);
                 bounds.add(model);
             } else {
@@ -54,7 +57,9 @@ public class CollisionCreator implements ComponentCreator {
                 bounds.add(BoundingModel.load(sb));
             }
         }
+        prop.setCanMove(Boolean.parseBoolean(lines[lines.length - 1]));
         prop.setBoundingModels(bounds);
+
         return new CollisionComponent(entity, prop);
     }
 

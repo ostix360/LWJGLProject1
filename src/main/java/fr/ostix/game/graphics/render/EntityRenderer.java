@@ -67,7 +67,7 @@ public class EntityRenderer implements IRenderer {
     public void prepareTexturedModel(Model model) {
         MeshModel meshModel = model.getMeshModel();
         meshModel.getVAO().bind(0, 1, 2);
-
+        shader.isAnimated.loadBooleanToUniform(false);
         Texture texture = model.getTexture();
         shader.loadSpecular(texture.getReflectivity(), texture.getShineDamper());
 

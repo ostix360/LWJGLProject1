@@ -1,6 +1,7 @@
 package fr.ostix.game.entity;
 
-import fr.ostix.game.core.collision.react.shape.CollisionModel;
+
+import com.flowpowered.react.collision.shape.CollisionModel;
 
 public class BoundingModel {
 

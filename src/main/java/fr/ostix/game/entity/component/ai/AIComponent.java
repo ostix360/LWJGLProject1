@@ -1,6 +1,6 @@
 package fr.ostix.game.entity.component.ai;
 
-import fr.ostix.game.core.collision.react.maths.Vector3;
+import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.component.Component;
 import fr.ostix.game.entity.component.ComponentType;

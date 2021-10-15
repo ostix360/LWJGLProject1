@@ -1,7 +1,7 @@
 package fr.ostix.game.entity;
 
+import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.core.Input;
-import fr.ostix.game.core.collision.react.maths.Vector3;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.world.World;
 import org.joml.Vector3f;
@@ -59,7 +59,7 @@ public class Player extends Entity {
         float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
         forceToCenter.set(new Vector3(dx, 0, dz));
-        //    upwardsSpeed += GRAVITY;
+        upwardsSpeed -= GRAVITY;
         if (upwardsSpeed <= -9.18f) {
             upwardsSpeed = -9.18f;
         }

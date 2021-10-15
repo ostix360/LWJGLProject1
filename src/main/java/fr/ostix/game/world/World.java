@@ -10,8 +10,10 @@ import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.ComponentType;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
+import fr.ostix.game.entity.component.collision.CollisionComponent;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
 import fr.ostix.game.graphics.font.rendering.MasterFont;
 import fr.ostix.game.graphics.model.Model;
@@ -84,13 +86,22 @@ public class World {
         system.setScaleError(0.1f);
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
-       // player.addComponent(new AIComponent(player, ai));
-       // player.addComponent(new ParticleComponent(system, player));
+        // player.addComponent(new AIComponent(player, ai));
+        // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
-        Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
+        CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(1705233732));
+        player.setCollision(cp);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
         entities.add(player);
+
+        Model box = models.get("box");
+        Entity boxE = new Entity(box, new Vector3f(0, 10, 0), new Vector3f(0), 10);
+        CollisionComponent cc = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(boxE, pack.getComponents().get(2026772471));
+        boxE.setCollision(cc);
+
+        entities.add(boxE);
+        Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
         lights.add(sun);
         //  lights.add(sunc);
 
@@ -101,7 +112,7 @@ public class World {
         MasterFont.add(text1);
 
 
-        collision.init(1 / 60f, entities);
+        collision.init(1 / 75f, entities);
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
@@ -122,6 +133,7 @@ public class World {
     }
 
     private void initEntity() {
+
 
         // Model treeModel = new Model(LoadModel.loadModel("tree",".dae", loader), new TextureModel(loader.loadTexture("tree")).setTransparency(true));
 //        Model grassModel = new Model(LoadModel.loadModel("grassModel", loader),
@@ -174,6 +186,7 @@ public class World {
         for (Entity e : entities) {
             e.update();
         }
+        System.out.println("----------player pos--------- " + player.getPosition());
         collision.update();
 
 

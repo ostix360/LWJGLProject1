@@ -1,7 +1,7 @@
 package fr.ostix.game.core.resources;
 
-import fr.ostix.game.core.collision.react.maths.Vector3;
-import fr.ostix.game.core.collision.react.shape.*;
+import com.flowpowered.react.collision.shape.*;
+import com.flowpowered.react.math.Vector3;
 
 public class CollisionShapeResource {
     private final String type;

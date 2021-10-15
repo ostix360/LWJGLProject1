@@ -1,12 +1,19 @@
 package fr.ostix.game.core.resources;
 
+import com.google.gson.annotations.SerializedName;
+
 public class TextureProperties {
 
     private final boolean additive;
     private final boolean affectedByLighting;
 
+    private final int specularMapID;
+    @SerializedName("specularMap")
+    private String specularMapName;
+
     private final int normalMapID;
-    private final int specularMap;
+    @SerializedName("normalMap")
+    private String normalMapName;
 
     private final float shineDamper;
     private final float reflectivity;
@@ -21,7 +28,7 @@ public class TextureProperties {
         this.additive = additive;
         this.affectedByLighting = affectedByLighting;
         this.normalMapID = normalMapID;
-        this.specularMap = specularMap;
+        this.specularMapID = specularMap;
         this.shineDamper = shineDamper;
         this.reflectivity = reflectivity;
         this.numbersOfRows = numbersOfRows;
@@ -43,8 +50,8 @@ public class TextureProperties {
         return normalMapID;
     }
 
-    public int getSpecularMap() {
-        return specularMap;
+    public int getSpecularMapID() {
+        return specularMapID;
     }
 
     public float getShineDamper() {
@@ -72,6 +79,6 @@ public class TextureProperties {
     }
 
     public boolean hasSpecularMap() {
-        return specularMap != 0;
+        return specularMapID != 0;
     }
 }

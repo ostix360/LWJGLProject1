@@ -21,7 +21,7 @@ public class Transform {
     public static Transform load(String values) {
         String[] value = values.split(";");
         int index = 0;
-        Vector3f pos = new Vector3f(Float.parseFloat(value[index]), Float.parseFloat(value[index++]),
+        Vector3f pos = new Vector3f(Float.parseFloat(value[index++]), Float.parseFloat(value[index++]),
                 Float.parseFloat(value[index++]));
         Vector3f rot = new Vector3f(Float.parseFloat(value[index++]), Float.parseFloat(value[index++]),
                 Float.parseFloat(value[index++]));
@@ -38,9 +38,17 @@ public class Transform {
         rotationMatrix.rotate(q);
     }
 
-    public Matrix4f getTransformation(){
-        Matrix4f m = Maths.createTransformationMatrix(this.position,this.rotation,this.scale);
-        if (rotationMatrix != null)m.mul(rotationMatrix.get(new Matrix4f()));
+    public Vector3f getPosition() {
+        return position;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public Matrix4f getTransformation() {
+        Matrix4f m = Maths.createTransformationMatrix(this.position, this.rotation, this.scale);
+        if (rotationMatrix != null) m.mul(rotationMatrix.get(new Matrix4f()));
         return m;
     }
 
