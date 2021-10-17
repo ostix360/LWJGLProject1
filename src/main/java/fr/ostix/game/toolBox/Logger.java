@@ -52,8 +52,8 @@ public class Logger {
     }
 
     public static void err(String msg) {
-//        String log = getTime() + "[ERROR]" + getThread() + msg;
-//        System.err.println(log);
+        String log = getTime() + "[ERROR]" + getThread() + msg;
+        System.err.println(log);
 //        logLines.add(log);
 //        BufferedWriter bw = null;
 //        try {

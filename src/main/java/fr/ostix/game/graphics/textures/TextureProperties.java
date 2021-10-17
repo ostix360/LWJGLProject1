@@ -1,4 +1,4 @@
-package fr.ostix.game.core.resources;
+package fr.ostix.game.graphics.textures;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -7,11 +7,11 @@ public class TextureProperties {
     private final boolean additive;
     private final boolean affectedByLighting;
 
-    private final int specularMapID;
+    private int specularMapID;
     @SerializedName("specularMap")
     private String specularMapName;
 
-    private final int normalMapID;
+    private int normalMapID;
     @SerializedName("normalMap")
     private String normalMapName;
 
@@ -45,6 +45,21 @@ public class TextureProperties {
         return affectedByLighting;
     }
 
+    public String getSpecularMapName() {
+        return specularMapName;
+    }
+
+    public String getNormalMapName() {
+        return normalMapName;
+    }
+
+    public void setSpecularMapID(int specularMapID) {
+        this.specularMapID = specularMapID;
+    }
+
+    public void setNormalMapID(int normalMapID) {
+        this.normalMapID = normalMapID;
+    }
 
     public int getNormalMapID() {
         return normalMapID;

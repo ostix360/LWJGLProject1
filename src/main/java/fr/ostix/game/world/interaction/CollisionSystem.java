@@ -103,8 +103,9 @@ public class CollisionSystem {
     }
 
     public void update() {
-        dynamicsWorld.update();
+
         updatePlayer();
+        dynamicsWorld.update();
         for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
             final CollisionBody body = entry.getKey();
             Entity shape = null;
@@ -140,7 +141,7 @@ public class CollisionSystem {
         for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
             RigidBody body = entry.getKey();
             Entity shape = entry.getValue();
-            body.setLinearVelocity(shape.getForceToCenter().multiply(10));//new Vector3(shape.getForceToCenter().getX(), shape.getForceToCenter().getY(), shape.getForceToCenter().getZ()));
+            body.setLinearVelocity(shape.getForceToCenter().multiply(30));//new Vector3(shape.getForceToCenter().getX(), shape.getForceToCenter().getY(), shape.getForceToCenter().getZ()));
             body.setAngularVelocity(shape.getTorque().multiply(30));
         }
     }
@@ -151,7 +152,7 @@ public class CollisionSystem {
     }
 
     private void addBody(CollisionShape shape) {
-        RigidBody body = dynamicsWorld.createRigidBody(new Transform(new Vector3(50, 00, 0),
+        RigidBody body = dynamicsWorld.createRigidBody(new Transform(new Vector3(50, 0, 0),
                         Quaternion.identity()),
                 (float) 100, shape);
 

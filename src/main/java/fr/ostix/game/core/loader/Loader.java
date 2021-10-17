@@ -5,7 +5,6 @@ import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.textures.TextureData;
 import fr.ostix.game.graphics.textures.TextureLoader;
 import fr.ostix.game.graphics.textures.TextureUtils;
-import fr.ostix.game.toolBox.Logger;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import fr.ostix.game.toolBox.OpenGL.VBO;
 import org.lwjgl.opengl.GL11;
@@ -22,7 +21,8 @@ import java.util.List;
 
 import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 
 public class Loader {
 
@@ -81,12 +81,12 @@ public class Loader {
     }
 
 
-    public MeshModel loadToVAO(float[] vertices) {
+    public MeshModel loadToVAO(float[] vertices, int dimension) {
         VAO vao = VAO.createVAO();
         VAOs.add(vao);
         vao.bind();
-        vao.storeDataInAttributeList(0, 2, vertices);
-        vao.setVertexCount(vertices.length / 2);
+        vao.storeDataInAttributeList(0, dimension, vertices);
+        vao.setVertexCount(vertices.length / dimension);
         VAO.unbind();
         return new MeshModel(vao);
     }
@@ -96,7 +96,7 @@ public class Loader {
 
     public int loadCubMap(String[] fileNames) {
         int texID = glGenTextures();
-        glActiveTexture(GL_TEXTURE0);
+        //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
 
         for (int i = 0; i < fileNames.length; i++) {
@@ -105,7 +105,8 @@ public class Loader {
         }
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        textureLoaders.add(new TextureLoader(texID, 500));
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+        textureLoaders.add(new TextureLoader(texID, 0));
         return texID;
     }
 
@@ -124,7 +125,6 @@ public class Loader {
             buffer.flip();
             fis.close();
         } catch (IOException e) {
-            Logger.err("Tried to load " + fileName + " , didn't work", e);
             System.exit(-1);
         }
         return new TextureData(width, height, buffer);

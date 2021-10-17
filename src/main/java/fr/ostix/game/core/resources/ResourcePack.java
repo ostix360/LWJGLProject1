@@ -4,7 +4,7 @@ import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.graphics.textures.Texture;
 
 import java.util.HashMap;
 

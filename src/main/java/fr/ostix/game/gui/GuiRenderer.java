@@ -2,7 +2,7 @@ package fr.ostix.game.gui;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.joml.Matrix4f;
@@ -20,7 +20,7 @@ public class GuiRenderer {
 
     public GuiRenderer(Loader loader) {
         float[] positions = {-1, 1, -1, -1, 1, 1, 1, -1};
-        quadModel = loader.loadToVAO(positions);
+        quadModel = loader.loadToVAO(positions, 2);
         shader = new GuiShader();
     }
 

@@ -35,7 +35,7 @@ public class ParticleRenderer {
 
     protected ParticleRenderer(Loader loader, Matrix4f projectionMatrix) {
         this.loader = loader;
-        quad = loader.loadToVAO(VERTICES);
+        quad = loader.loadToVAO(VERTICES, 2);
         this.vbo = quad.getVAO().createEmptyVBO(INSTANCE_DATA_LENGTH * MAX_INSTANCES);
         loader.addInstance(quad.getVAO(), this.vbo, 1, 4, INSTANCE_DATA_LENGTH, 0);
         loader.addInstance(quad.getVAO(), this.vbo, 2, 4, INSTANCE_DATA_LENGTH, 4);

@@ -4,11 +4,13 @@ import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.ClassicShader;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class EntityRenderer implements IRenderer {
         this.shader = shader;
         this.shader.bind();
         this.shader.loadProjectionMatrix(projectionMatrix);
+        this.shader.connectTextureUnits();
         this.shader.unBind();
     }
 
@@ -56,11 +59,18 @@ public class EntityRenderer implements IRenderer {
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         texture.bindTexture();
+        shader.useSpecularMap.loadBooleanToUniform(texture.hasSpecularMap());
+        shader.numberOfRows.loadFloatToUniform(texture.getNumbersOfRows());
+        if (texture.hasSpecularMap()) {
+            GL13.glActiveTexture(GL13.GL_TEXTURE1);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getSpecularMap());
+        }
     }
 
     @Override
     public void prepareInstance(Entity entity) {
         shader.loadTransformationMatrix(entity.getTransform().getTransformation());
+        shader.offset.loadVector2fToUniform(new Vector2f(entity.getTextureXOffset(), entity.getTextureYOffset()));
     }
 
     @Override
@@ -68,11 +78,17 @@ public class EntityRenderer implements IRenderer {
         MeshModel meshModel = model.getMeshModel();
         meshModel.getVAO().bind(0, 1, 2);
         shader.isAnimated.loadBooleanToUniform(false);
+
         Texture texture = model.getTexture();
         shader.loadSpecular(texture.getReflectivity(), texture.getShineDamper());
-
+        shader.numberOfRows.loadFloatToUniform(texture.getNumbersOfRows());
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         texture.bindTexture();
+        shader.useSpecularMap.loadBooleanToUniform(texture.hasSpecularMap());
+        if (texture.hasSpecularMap()) {
+            GL13.glActiveTexture(GL13.GL_TEXTURE1);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getSpecularMap());
+        }
     }
 
 

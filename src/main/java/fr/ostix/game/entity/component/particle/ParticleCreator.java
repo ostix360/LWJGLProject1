@@ -5,12 +5,12 @@ import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.entity.Entity;
 import fr.ostix.game.entity.component.Component;
 import fr.ostix.game.entity.component.ComponentCreator;
-import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.ParticleSystem;
 import fr.ostix.game.graphics.particles.ParticleTarget;
 import fr.ostix.game.graphics.particles.ParticleTargetProperties;
 import fr.ostix.game.graphics.particles.ParticleTexture;
 import fr.ostix.game.graphics.particles.particleSpawn.*;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.Logger;
 import org.joml.Vector3f;
 

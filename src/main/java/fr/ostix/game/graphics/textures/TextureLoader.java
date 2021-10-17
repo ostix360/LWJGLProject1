@@ -31,7 +31,7 @@ public class TextureLoader {
             Logger.err("impossible de lire " + RES_FOLDER + "/textures/" + file + ".png");
             e.printStackTrace();
         }
-        assert image != null;
+        assert image != null : "impossible de lire " + RES_FOLDER + "/textures/" + file + ".png";
         int w = image.getWidth();
         int h = image.getHeight();
 
@@ -71,7 +71,7 @@ public class TextureLoader {
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
             GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
             if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
-                float amount = Math.min(0.6f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+                float amount = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
                 GL11.glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
             } else {
                 Logger.warn("Anisotropic filtering is not supported by your graphic card");

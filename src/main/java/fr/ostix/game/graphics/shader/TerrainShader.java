@@ -1,8 +1,8 @@
 package fr.ostix.game.graphics.shader;
 
 
-import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.light.Light;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.toolBox.OpenGL.uniform.*;
@@ -21,10 +21,10 @@ public class TerrainShader extends ShaderProgram {
     private final MatrixUniform transformationMatrix = new MatrixUniform("transformationMatrix");
     private final MatrixUniform projectionMatrix = new MatrixUniform("projectionMatrix");
     private final MatrixUniform viewMatrix = new MatrixUniform("viewMatrix");
-    private final Vector3fUniform[] lightPos = new Vector3fUniform[MAX_LIGHTS];
-    private final Vector3fUniform[] lightColor = new Vector3fUniform[MAX_LIGHTS];
-    private final Vector3fUniform[] lightAttenuation = new Vector3fUniform[MAX_LIGHTS];
-    private final FloatUniform[] lightPower = new FloatUniform[MAX_LIGHTS];
+    private final Vector3fUniformArray lightPos = new Vector3fUniformArray("lightPos", MAX_LIGHTS);
+    private final Vector3fUniformArray lightColor = new Vector3fUniformArray("lightColor", MAX_LIGHTS);
+    private final Vector3fUniformArray lightAttenuation = new Vector3fUniformArray("attenuation", MAX_LIGHTS);
+    private final FloatUniformArray lightPower = new FloatUniformArray("lightPower", MAX_LIGHTS);
     private final FloatUniform shine = new FloatUniform("shine");
     private final FloatUniform reflectivity = new FloatUniform("reflectivity");
     private final Vector3fUniform skyColour = new Vector3fUniform("skyColor");
@@ -39,13 +39,9 @@ public class TerrainShader extends ShaderProgram {
 
     public TerrainShader() {
         super("terrainShader");
-        initLightsUniform();
-        super.getAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix
-                , reflectivity, shine, backgroundTexture, rTexture, gTexture, bTexture, blendMap, skyColour);
-        super.getAllUniformLocations(lightPos);
-        super.getAllUniformLocations(lightColor);
-        super.getAllUniformLocations(lightAttenuation);
-        super.getAllUniformLocations(lightPower);
+        super.getAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix,
+                reflectivity, shine, backgroundTexture, rTexture, gTexture, bTexture, blendMap, skyColour,
+                lightPos, lightColor, lightAttenuation, lightPower);
         super.validateProgram();
     }
 
@@ -55,16 +51,6 @@ public class TerrainShader extends ShaderProgram {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
         super.bindAttribute(2, "normal");
-    }
-
-
-    protected void initLightsUniform() {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            lightPos[i] = new Vector3fUniform("lightPosition[" + i + "]");
-            lightColor[i] = new Vector3fUniform("lightColour[" + i + "]");
-            lightAttenuation[i] = new Vector3fUniform("attenuation[" + i + "]");
-            lightPower[i] = new FloatUniform("lightPower[" + i + "]");
-        }
     }
 
 
@@ -95,21 +81,30 @@ public class TerrainShader extends ShaderProgram {
         this.shine.loadFloatToUniform(shineDamper);
     }
 
-    public void loadLights(List<Light> lights) {
+    public void loadLight(List<Light> lights) {
+        Vector3f[] pos = new Vector3f[MAX_LIGHTS];
+        Vector3f[] color = new Vector3f[MAX_LIGHTS];
+        Vector3f[] attenuation = new Vector3f[MAX_LIGHTS];
+        float[] power = new float[MAX_LIGHTS];
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (i < lights.size()) {
                 Light light = lights.get(i);
-                lightPos[i].loadVector3fToUniform(light.getPosition());
-                lightColor[i].loadVector3fToUniform(light.getColourVec3f());
-                lightAttenuation[i].loadVector3fToUniform(light.getAttenuation());
-                lightPower[i].loadFloatToUniform(light.getPower());
+                pos[i] = light.getPosition();
+                color[i] = light.getColourVec3f();
+                attenuation[i] = light.getAttenuation();
+                power[i] = light.getPower();
             } else {
-                lightPos[i].loadVector3fToUniform(new Vector3f(0, 0, 0));
-                lightColor[i].loadVector3fToUniform(new Vector3f(0, 0, 0));
-                lightAttenuation[i].loadVector3fToUniform(new Vector3f(1, 0, 0));
-                lightPower[i].loadFloatToUniform(0F);
+                pos[i] = new Vector3f(0, 0, 0);
+                color[i] = new Vector3f(0, 0, 0);
+                attenuation[i] = new Vector3f(1, 0, 0);
+                power[i] = 0F;
             }
         }
+        lightPos.loadVector3fToUniform(pos);
+        lightColor.loadVector3fToUniform(color);
+        lightAttenuation.loadVector3fToUniform(attenuation);
+        lightPower.loadFloatToUniform(power);
+
     }
     // Projection Transformation View Matrix
 

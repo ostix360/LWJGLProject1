@@ -14,13 +14,13 @@ out vec4 shadowCoords;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[2];
+uniform vec3 lightPos[2];
 uniform vec4 plane;
 
 uniform mat4 toShadowMapSpace;
 
-const float density = 0.00265;
-const float gradient = 3.8;
+const float density = 0.00095;
+const float gradient = 10.8;
 
 const float shadowDistance = 2000.0;
 const float transitionDistance = 1.0;
@@ -39,7 +39,7 @@ void main() {
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     for (int i = 0; i < 2; i++){
-        toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+        toLightVector[i] = lightPos[i] - worldPosition.xyz;
     }
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz -worldPosition.xyz;
 

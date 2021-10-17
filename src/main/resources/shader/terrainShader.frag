@@ -16,7 +16,7 @@ uniform sampler2D bTexture;
 uniform sampler2D blendMap;
 uniform sampler2D shadowMap;
 
-uniform vec3 lightColour[2];
+uniform vec3 lightColor[2];
 uniform vec3 attenuation[2];
 uniform float lightPower[2];
 uniform float shine;
@@ -61,7 +61,7 @@ void main() {
     vec3 unitNormal = normalize(surfaceNormal);
     vec3 unitVectorToCamera = normalize(toCameraVector);
 
-    vec3 totalDiffuse = vec3(0.0);
+    vec3 totalDiffuse = vec3(0.2);
     vec3 totalSpeculare= vec3(0.0);
 
     for (int i = 0;i<2;i++){
@@ -78,10 +78,10 @@ void main() {
         float specularFactor = dot(reflectedLightDirection, unitVectorToCamera);
         specularFactor = max(specularFactor, 0.0);
         float dampedFactor = pow(specularFactor, shine);
-        totalDiffuse = totalDiffuse + (brightness * lightColour[i] * lightPower[i])/attenuationFactor;
-        totalSpeculare = totalSpeculare + max(vec3(0.), (dampedFactor * lightColour[i] * reflectivity))/attenuationFactor;
+        totalDiffuse = totalDiffuse + (brightness * lightColor[i] * lightPower[i])/attenuationFactor;
+        totalSpeculare = totalSpeculare + max(vec3(0.), (dampedFactor * lightColor[i] * reflectivity))/attenuationFactor;
     }
-    totalDiffuse = clamp(totalDiffuse,0.2,0.9);
+    //totalDiffuse = clamp(totalDiffuse,0.2,1.0);
     //totalDiffuse = max(totalDiffuse * lightFactor, 0.001);
 
 

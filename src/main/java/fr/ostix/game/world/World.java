@@ -6,21 +6,22 @@ import fr.ostix.game.core.Game;
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.core.resources.ResourcePack;
 import fr.ostix.game.entity.Entity;
-import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.Player;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.entity.component.ComponentType;
+import fr.ostix.game.entity.component.LoadComponents;
 import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
 import fr.ostix.game.entity.component.collision.CollisionComponent;
+import fr.ostix.game.entity.component.light.Light;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
 import fr.ostix.game.graphics.font.rendering.MasterFont;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.particles.*;
 import fr.ostix.game.graphics.particles.particleSpawn.Sphere;
 import fr.ostix.game.graphics.render.MasterRenderer;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.world.interaction.CollisionSystem;
 import fr.ostix.game.world.texture.TerrainTexture;
@@ -49,7 +50,7 @@ public class World {
     private HashMap<String, Model> models;
 
     private final List<Entity> entities = new ArrayList<>();
-    private final List<Light> lights = new ArrayList<>();
+    private static final List<Light> lights = new ArrayList<>();
     private static final List<Terrain> terrains = new ArrayList<>();
 
     private static int[][] worldIndex;
@@ -61,7 +62,9 @@ public class World {
     public World() {
     }
 
-
+    public static void addLight(Light light) {
+        lights.add(light);
+    }
 
     public void initWorld(Loader loader, ResourcePack pack) {
         this.textures = ResourcePack.getTextureByName();
@@ -87,7 +90,7 @@ public class World {
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
         // player.addComponent(new AIComponent(player, ai));
-        // player.addComponent(new ParticleComponent(system, player));
+        //player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
         CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(1705233732));
         player.setCollision(cp);
@@ -95,14 +98,15 @@ public class World {
         cam = new Camera(player);
         entities.add(player);
 
-        Model box = models.get("box");
-        Entity boxE = new Entity(box, new Vector3f(0, 10, 0), new Vector3f(0), 10);
-        CollisionComponent cc = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(boxE, pack.getComponents().get(2026772471));
-        boxE.setCollision(cc);
+        Model lamp = models.get("lamp");
+        Entity lampE = new Entity(lamp, new Vector3f(10, 0, 10), new Vector3f(), 1);
+        LoadComponents.loadComponents(pack.getComponents().get(-1850784592), lampE);
 
-        entities.add(boxE);
-        Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN);
-        lights.add(sun);
+        entities.add(lampE);
+
+
+        Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN, 0.5f, null);
+        //lights.add(sun);
         //  lights.add(sunc);
 
         initTerrain(loader);
@@ -186,7 +190,6 @@ public class World {
         for (Entity e : entities) {
             e.update();
         }
-        System.out.println("----------player pos--------- " + player.getPosition());
         collision.update();
 
 

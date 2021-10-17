@@ -1,5 +1,7 @@
 package fr.ostix.game.graphics.model;
 
+import fr.ostix.game.graphics.textures.Texture;
+
 public class Model {
 
     private final MeshModel meshModel;

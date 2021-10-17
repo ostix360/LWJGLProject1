@@ -2,16 +2,16 @@ package fr.ostix.game.graphics.render;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.entity.Entity;
-import fr.ostix.game.entity.Light;
 import fr.ostix.game.entity.camera.Camera;
+import fr.ostix.game.entity.component.light.Light;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.shader.ClassicShader;
 import fr.ostix.game.graphics.shader.TerrainShader;
+import fr.ostix.game.graphics.skybox.SkyboxRenderer;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.OpenGL.DisplayManager;
 import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.world.Terrain;
-import fr.ostix.game.world.skybox.SkyboxRenderer;
 import org.joml.Matrix4f;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class MasterRenderer {
 
     public static final float FOV = (float) Math.toRadians(70f);
     public static final float NEAR = 0.1f;
-    public static final float FAR = 500f;
+    public static final float FAR = 1250;
 
     public static Color skyColor = new Color(0.5444f, 0.62f, 0.69f);
 
@@ -81,6 +81,10 @@ public class MasterRenderer {
 
     private void render(List<Light> lights, Camera cam) {
         this.initFrame();
+
+        skyboxRenderer.render(cam, skyColor);
+        skyboxRenderer.update();
+
         shader.bind();
         shader.loadLight(lights);
         shader.loadSkyColor(skyColor);
@@ -92,16 +96,16 @@ public class MasterRenderer {
         //terrainShader.loadClipPlane(clipPlane);
 
         terrainShader.loadSkyColour(skyColor);
-        terrainShader.loadLights(lights);
+        terrainShader.loadLight(lights);
         terrainShader.loadViewMatrix(cam);
         terrainRenderer.render(terrains);
         terrainShader.unBind();
-        skyboxRenderer.render(cam, skyColor);
 
         entities.clear();
     }
 
     public void cleanUp() {
+        // this.skyboxRenderer.cleanUp();
         this.terrainShader.cleanUp();
         this.shader.cleanUp();
         glDisable(GL_BLEND);

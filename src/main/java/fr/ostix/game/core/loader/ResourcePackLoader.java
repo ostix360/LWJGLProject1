@@ -10,8 +10,9 @@ import fr.ostix.game.core.resources.TextureResources;
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.animated.animation.animation.Animation;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.graphics.textures.TextureLoader;
+import fr.ostix.game.graphics.textures.TextureProperties;
 import fr.ostix.game.gui.GuiTexture;
 import fr.ostix.game.gui.MasterGui;
 import fr.ostix.game.toolBox.OpenGL.DisplayManager;
@@ -125,7 +126,16 @@ public class ResourcePackLoader {
             assert current != null;
             String name = current.getName();
             texturesBar.update(name);
-            Texture tex = new Texture(loader.loadTexture(current.getPath()), current.getTextureProperties());
+            TextureProperties prop = current.getTextureProperties();
+            if (prop.getNormalMapName() != null) {
+                TextureLoader normalMap = loader.loadTexture("entities/normal/" + prop.getNormalMapName());
+                prop.setNormalMapID(normalMap.getId());
+            }
+            if (prop.getSpecularMapName() != null) {
+                TextureLoader normalMap = loader.loadTexture("entities/specularMap/" + prop.getSpecularMapName());
+                prop.setSpecularMapID(normalMap.getId());
+            }
+            Texture tex = new Texture(loader.loadTexture(current.getPath()), prop);
             textureByName.put(name, tex);
         }
         ProgressManager.remove(texturesBar);

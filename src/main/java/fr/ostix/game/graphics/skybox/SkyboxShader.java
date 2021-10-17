@@ -1,4 +1,4 @@
-package fr.ostix.game.world.skybox;
+package fr.ostix.game.graphics.skybox;
 
 
 import fr.ostix.game.entity.camera.Camera;
@@ -14,19 +14,20 @@ import org.joml.Vector3f;
 
 public class SkyboxShader extends ShaderProgram {
 
-    private static final float ROTATE_SPEED = 3f;
+    private static final float ROTATE_SPEED = 1f;
 
     private final MatrixUniform projectionMatrix = new MatrixUniform("projectionMatrix");
     private final MatrixUniform viewMatrix = new MatrixUniform("viewMatrix");
     private final Vector3fUniform fogColor = new Vector3fUniform("fogColor");
     private final IntUniform texture1 = new IntUniform("cubeMap");
+    private final IntUniform texture2 = new IntUniform("cubeMap2");
     private final FloatUniform blendFactor = new FloatUniform("blendFactor");
 
     private float rotate;
 
     public SkyboxShader() {
         super("skyboxShader");
-        super.getAllUniformLocations(projectionMatrix, viewMatrix, fogColor, texture1, blendFactor);
+        super.getAllUniformLocations(projectionMatrix, viewMatrix, fogColor, texture1, texture2, blendFactor);
         super.validateProgram();
     }
 
@@ -34,7 +35,8 @@ public class SkyboxShader extends ShaderProgram {
         projectionMatrix.loadMatrixToUniform(matrix);
     }
 
-    public void loadViewMatrix(Camera camera, float rotate) {
+    public void loadViewMatrix(Camera camera) {
+        rotate += ROTATE_SPEED * 1 / 60f;
         Matrix4f matrix = Maths.createViewMatrix(camera);
         matrix.m30(0);
         matrix.m31(0);
@@ -45,6 +47,7 @@ public class SkyboxShader extends ShaderProgram {
 
     public void connectTextureUnits() {
         texture1.loadIntToUniform(0);
+        texture2.loadIntToUniform(1);
     }
 
     public void loadBlendFactor(float factor) {

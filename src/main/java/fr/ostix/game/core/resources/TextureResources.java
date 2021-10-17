@@ -1,5 +1,7 @@
 package fr.ostix.game.core.resources;
 
+import fr.ostix.game.graphics.textures.TextureProperties;
+
 public class TextureResources {
     private final String name;
     private final String path;

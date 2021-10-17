@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
@@ -15,8 +16,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class DisplayManager {
 
-    private static int width = 1080;
-    private static int height = 720;
+    private static int width = 1480;
+    private static int height = 920;
     private static final String title = "Projet 1";
     private static float delta;
     private static float lastFrameTime;
@@ -31,11 +32,9 @@ public class DisplayManager {
 
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
-        glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_TRUE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, 8);
 
         window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -65,11 +64,9 @@ public class DisplayManager {
         glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
-
-        if (GL.getCapabilities().OpenGL46) //LOGGER.info("OpenGL 46 is available");
-
-            GL11.glViewport(0, 0, width, height);
-
+        if (GL.getCapabilities().OpenGL46) ; //LOGGER.info("OpenGL 46 is available");
+        GL11.glViewport(0, 0, width, height);
+        GL11.glEnable(GL13.GL_MULTISAMPLE);
         glfwSwapInterval(1);
         return window;
     }

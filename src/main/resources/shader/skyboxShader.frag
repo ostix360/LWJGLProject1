@@ -7,16 +7,16 @@ layout(location = 1) out vec4 out_BrightColor;
 
 uniform samplerCube cubeMap;
 uniform samplerCube cubeMap2;
-uniform float bendFactor;
+uniform float blendFactor;
 uniform vec3 fogColor;
 
-const float lowerLimit = 0.0;
-const float upperLimit = 30.0;
+const float lowerLimit = -10.0;
+const float upperLimit = 40.0;
 
 void main(void){
     vec4 texture1 = texture(cubeMap, textureCoords);
     vec4 texture2 = texture(cubeMap2, textureCoords);
-    vec4 finalColor = mix(texture1, texture2, bendFactor);
+    vec4 finalColor = mix(texture1, texture2, blendFactor);
 
     float fogFactor = (textureCoords.y+lowerLimit)/(upperLimit-lowerLimit);
     fogFactor = clamp(fogFactor, 0.0, 1.0);

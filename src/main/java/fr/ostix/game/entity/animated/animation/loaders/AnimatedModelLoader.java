@@ -10,7 +10,7 @@ import fr.ostix.game.entity.animated.colladaParser.dataStructures.JointData;
 import fr.ostix.game.entity.animated.colladaParser.dataStructures.MeshData;
 import fr.ostix.game.entity.animated.colladaParser.dataStructures.SkeletonData;
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.model.Texture;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.ToolDirectory;
 
 public class AnimatedModelLoader {

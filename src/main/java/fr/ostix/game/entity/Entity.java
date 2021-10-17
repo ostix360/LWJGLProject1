@@ -23,6 +23,7 @@ public class Entity {
     private final Transform transform;
     protected MovementType movement;
     private CollisionComponent collision;
+    private int textureIndex = 1;
 
     private final List<Component> components = new ArrayList<>();
 
@@ -93,6 +94,26 @@ public class Entity {
         transform.setPosition(position);
         transform.setScale(scale);
         return transform;
+    }
+
+    public void setTextureIndex(int textureIndex) {
+        this.textureIndex = textureIndex;
+    }
+
+    public float getTextureXOffset() {
+        if (model != null && model.getTexture() != null) {
+            float column = textureIndex % model.getTexture().getNumbersOfRows();
+            return column / model.getTexture().getNumbersOfRows();
+        }
+        return 1;
+    }
+
+    public float getTextureYOffset() {
+        if (model != null && model.getTexture() != null) {
+            float row = textureIndex / (float) model.getTexture().getNumbersOfRows();
+            return row / model.getTexture().getNumbersOfRows();
+        }
+        return 1;
     }
 
     public MovementType getMovement() {

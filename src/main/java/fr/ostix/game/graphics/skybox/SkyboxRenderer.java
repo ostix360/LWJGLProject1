@@ -1,9 +1,10 @@
-package fr.ostix.game.world.skybox;
+package fr.ostix.game.graphics.skybox;
 
 import fr.ostix.game.core.loader.Loader;
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.graphics.model.MeshModel;
 import fr.ostix.game.toolBox.Color;
+import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL13;
@@ -12,8 +13,13 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class SkyboxRenderer {
 
-    private static final float SIZE = 600f;
+    private static final String[] FILES_DAY = {"day/right", "day/left", "day/top", "day/bottom", "day/back", "day/front"};
+    private static final String[] FILES_NIGHT = {"night/right", "night/left", "night/top", "night/bottom", "night/back", "night/front"};
 
+    private final MeshModel model;
+    private final int dayTexture;
+    private final int nightTexture;
+    private static final float SIZE = 400f;
     private static final float[] VERTICES = {
             -SIZE, SIZE, -SIZE,
             -SIZE, -SIZE, -SIZE,
@@ -57,19 +63,14 @@ public class SkyboxRenderer {
             -SIZE, -SIZE, SIZE,
             SIZE, -SIZE, SIZE
     };
-
-    private static final String[] FILES_DAY = {"day/right", "day/left", "day/top", "day/bottom", "day/back", "day/front"};
-    private static final String[] FILES_NIGHT = {"night/right", "night/left", "night/top", "night/bottom", "night/back", "night/front"};
-
-    private final MeshModel model;
-    private final int dayTexture;
-    private final int nightTexture;
+    private int texture1;
     private final SkyboxShader shader;
-    private float time = 5000;
-    private float rotate = 0;
+    private int texture2;
+    private float blendFactor;
+    private float time = 0;
 
     public SkyboxRenderer(Loader loader, Matrix4f projectionMatrix) {
-        model = loader.loadToVAO(VERTICES);
+        model = loader.loadToVAO(VERTICES, 3);
         dayTexture = loader.loadCubMap(FILES_DAY);
         nightTexture = loader.loadCubMap(FILES_NIGHT);
         shader = new SkyboxShader();
@@ -79,32 +80,29 @@ public class SkyboxRenderer {
         shader.unBind();
     }
 
-    public void update(){
-        rotate++;
-        //bindTextures();
-    }
-
-    public void render(Camera cam, Color fog) {
-        shader.bind();
-        shader.loadViewMatrix(cam,rotate);
-        shader.loadFogColor(fog);
-        model.getVAO().bind(0);
-
-        glDrawArrays(GL_TRIANGLES, 0, model.getVertexCount());
-        VAO.unbind(0);
-        shader.unBind();
-    }
-
     private void bindTextures() {
-        time ++;
-        //time  *;
-        int texture1;
-        int texture2;
-        float blendFactor;
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
+        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
+        shader.loadBlendFactor(blendFactor);
+    }
+
+//    private void bindTextures() {
+//        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+//        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
+//        GL13.glActiveTexture(GL13.GL_TEXTURE1);
+//        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
+//        shader.loadBlendFactor(blendFactor);
+//    }
+
+    public void update() {
+        time += 1 / 60f * 500;
+        time %= 24000;
         if (time >= 0 && time < 5000) {
             texture1 = nightTexture;
             texture2 = nightTexture;
-            blendFactor = (time) / (5000);
+            blendFactor = (time - 0) / (5000 - 0);
         } else if (time >= 5000 && time < 8000) {
             texture1 = nightTexture;
             texture2 = dayTexture;
@@ -118,10 +116,24 @@ public class SkyboxRenderer {
             texture2 = nightTexture;
             blendFactor = (time - 21000) / (24000 - 21000);
         }
-        GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture1);
-        GL13.glActiveTexture(GL13.GL_TEXTURE1);
-        glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texture2);
-        shader.loadBlendFactor(blendFactor);
+    }
+
+    public void render(Camera cam, Color fog) {
+        OpenGlUtils.enableDepthTesting(false);
+        glDepthMask(false);
+        shader.bind();
+        shader.loadViewMatrix(cam);
+        shader.loadFogColor(fog);
+        model.getVAO().bind(0);
+        bindTextures();
+        glDrawArrays(GL_TRIANGLES, 0, model.getVertexCount());
+        VAO.unbind(0);
+        shader.unBind();
+        glDepthMask(true);
+        OpenGlUtils.enableDepthTesting(true);
+    }
+
+    public void cleanUp() {
+        this.shader.cleanUp();
     }
 }

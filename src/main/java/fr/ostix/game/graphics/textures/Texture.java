@@ -1,7 +1,5 @@
-package fr.ostix.game.graphics.model;
+package fr.ostix.game.graphics.textures;
 
-import fr.ostix.game.core.resources.TextureProperties;
-import fr.ostix.game.graphics.textures.TextureLoader;
 import org.lwjgl.opengl.GL11;
 
 public class Texture {

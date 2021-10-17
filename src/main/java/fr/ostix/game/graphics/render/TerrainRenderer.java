@@ -1,8 +1,8 @@
 package fr.ostix.game.graphics.render;
 
 import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.model.Texture;
 import fr.ostix.game.graphics.shader.TerrainShader;
+import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.toolBox.OpenGL.VAO;
 import fr.ostix.game.world.Terrain;
