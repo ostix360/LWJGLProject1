@@ -33,6 +33,7 @@ import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.set.TIntSet;
 import gnu.trove.set.hash.TIntHashSet;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -329,5 +330,10 @@ public class ConvexMeshShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final ConvexMeshShape otherShape = (ConvexMeshShape) otherCollisionShape;
         return mNbVertices == otherShape.mNbVertices && !mIsEdgesInformationUsed && mVertices.equals(otherShape.mVertices) && mEdgesAdjacencyList.equals(otherShape.mVertices);
+    }
+
+    @Override
+    public void scale(Vector3f scale) {
+
     }
 }

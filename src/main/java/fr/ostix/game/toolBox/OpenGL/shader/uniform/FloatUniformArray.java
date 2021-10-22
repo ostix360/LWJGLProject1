@@ -1,4 +1,4 @@
-package fr.ostix.game.toolBox.OpenGL.uniform;
+package fr.ostix.game.toolBox.OpenGL.shader.uniform;
 
 public class FloatUniformArray extends Uniform {
     private final FloatUniform[] floatUniforms;

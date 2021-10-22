@@ -1,9 +1,9 @@
 package fr.ostix.game.graphics.font.rendering;
 
 
-import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.toolBox.OpenGL.uniform.Vector2fUniform;
-import fr.ostix.game.toolBox.OpenGL.uniform.Vector3fUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.Vector2fUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.Vector3fUniform;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -15,8 +15,7 @@ public class FontShader extends ShaderProgram {
 
     public FontShader() {
         super("font");
-        super.getAllUniformLocations(color, translation);
-        super.validateProgram();
+        super.storeAllUniformsLocations(color, translation);
     }
 
     @Override

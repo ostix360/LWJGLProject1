@@ -9,13 +9,13 @@ import org.joml.Vector3f;
 public class Transform {
     private Vector3f position;
     private Vector3f rotation;
-    private float scale;
+    private Vector3f scale;
     private Matrix3f rotationMatrix;
 
     public Transform(Vector3f position, Vector3f rotation, float scale) {
         this.position = position;
         this.rotation = rotation;
-        this.scale = scale;
+        this.scale = new Vector3f(scale);
     }
 
     public static Transform load(String values) {
@@ -42,21 +42,25 @@ public class Transform {
         return position;
     }
 
-    public float getScale() {
-        return scale;
-    }
-
     public Matrix4f getTransformation() {
         Matrix4f m = Maths.createTransformationMatrix(this.position, this.rotation, this.scale);
         if (rotationMatrix != null) m.mul(rotationMatrix.get(new Matrix4f()));
         return m;
     }
 
+    public Vector3f getRotation() {
+        return rotation;
+    }
+
+    public Vector3f getScale() {
+        return scale;
+    }
+
     public void setPosition(Vector3f position) {
         this.position = position;
     }
 
-    public void setScale(float scale) {
+    public void setScale(Vector3f scale) {
         this.scale = scale;
     }
 }

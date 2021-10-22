@@ -29,13 +29,14 @@ import com.flowpowered.react.ReactDefaults;
 import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Transform;
 import com.flowpowered.react.math.Vector3;
+import org.joml.Vector3f;
 
 /**
  * Represents a sphere collision shape that is centered at the origin and defined by its radius. This collision shape does not have an explicit object margin distance. The margin is implicitly the
  * radius of the sphere. Therefore, there is no need to specify an object margin for a sphere shape.
  */
 public class SphereShape extends CollisionShape {
-    private final float mRadius;
+    private float mRadius;
 
     /**
      * Constructs a new sphere from the radius.
@@ -106,6 +107,12 @@ public class SphereShape extends CollisionShape {
         final Vector3 extents = new Vector3(mRadius, mRadius, mRadius);
         aabb.setMin(Vector3.subtract(transform.getPosition(), extents));
         aabb.setMax(Vector3.add(transform.getPosition(), extents));
+    }
+
+    @Override
+    public void scale(Vector3f scale) {
+        mRadius *= scale.y();
+
     }
 
     public static SphereShape load(String content) {

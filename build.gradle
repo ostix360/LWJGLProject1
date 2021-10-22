@@ -67,8 +67,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.flowpowered/caustic-api
     implementation group: 'com.flowpowered', name: 'caustic-api', version: '1.0.0'
+    // https://mvnrepository.com/artifact/com.flowpowered/caustic-lwjgl
+    implementation group: 'com.flowpowered', name: 'caustic-lwjgl', version: '1.0.0'
 
-// https://mvnrepository.com/artifact/org.yaml/snakeyaml
+    // https://mvnrepository.com/artifact/org.yaml/snakeyaml
     implementation group: 'org.yaml', name: 'snakeyaml', version: '1.28'
 
     // https://mvnrepository.com/artifact/com.google.code.gson/gson

@@ -3,7 +3,6 @@ package fr.ostix.game.entity;
 import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.core.Input;
 import fr.ostix.game.graphics.model.Model;
-import fr.ostix.game.world.World;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -30,9 +29,9 @@ public class Player extends Entity {
         super(model, position, rotation, scale);
     }
 
-    public Player(Entity e) {
-        super(e.getModel(), e.getPosition(), e.getRotation(), e.getScale());
-    }
+//    public Player(Entity e) {
+//        super(e.getModel(), e.getPosition(), e.getRotation(), e.getScale());
+//    }
 
     @Override
     public void update() {
@@ -51,7 +50,7 @@ public class Player extends Entity {
         super.update();
     }
 
-    public void move() {
+    private void move() {
         checkInputs();
         super.increaseRotation(new Vector3f(0, this.currentTurnSpeed * 0.0023f, 0));
         torque.set(new Vector3(0, this.currentTurnSpeed, 0));
@@ -60,20 +59,21 @@ public class Player extends Entity {
         float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
         forceToCenter.set(new Vector3(dx, 0, dz));
         upwardsSpeed -= GRAVITY;
+
         if (upwardsSpeed <= -9.18f) {
             upwardsSpeed = -9.18f;
         }
         forceToCenter.add(new Vector3(0, upwardsSpeed, 0));
 
-        super.increasePosition(new Vector3f(dx, upwardsSpeed, dz));
-        //if (!canJump) {
         this.upwardsSpeed = 0;
+        //super.increasePosition(new Vector3f(dx, upwardsSpeed, dz));
+        //if (!canJump) {
         //  }
-        float terrainHeight = World.getTerrainHeight(this.getPosition().x(), this.getPosition().z());
-        if (this.getPosition().y() <= terrainHeight) {
-            canJump = true;
-            position.set(this.getPosition().x(), terrainHeight, this.getPosition().z());
-        }
+//        float terrainHeight = World.getTerrainHeight(this.getPosition().x(), this.getPosition().z())+2.4f;
+//        if (this.getPosition().y() <= terrainHeight) {
+//            canJump = true;
+//            position.set(this.getPosition().x(), terrainHeight, this.getPosition().z());
+//        }
 
     }
 

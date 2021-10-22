@@ -13,7 +13,7 @@ public class ParticleTarget {
     public ParticleTarget(ParticleTargetProperties properties, Entity entity) {
         this.properties = properties;
         this.entity = entity;
-        float scale = entity.getScale();
+        float scale = entity.getScale().y();
         Vector3f offset = Maths.rotateVector(new Vector3f(properties.getxOffset() * scale,
                         properties.getyOffset() * scale, properties.getzOffset() * scale),
                 entity.getRotation().x(), entity.getRotation().y(), entity.getRotation().z());
@@ -22,7 +22,7 @@ public class ParticleTarget {
     }
 
     public void updatePosition() {
-        float scale = entity.getScale();
+        float scale = entity.getScale().y();
         Vector3f offset = Maths.rotateVector(new Vector3f(properties.getxOffset() * scale,
                         properties.getyOffset() * scale, properties.getzOffset() * scale),
                 entity.getRotation().x(), entity.getRotation().y(), entity.getRotation().z());

@@ -284,6 +284,12 @@ public class Vector3 {
         return x * vector.getX() + y * vector.getY() + z * vector.getZ();
     }
 
+    public void multiply(Vector3 vector) {
+        this.x *= vector.getX();
+        this.y *= vector.getY();
+        this.z *= vector.getZ();
+    }
+
     /**
      * Crosses a vector3 with this vector. Creates a new vector.
      *

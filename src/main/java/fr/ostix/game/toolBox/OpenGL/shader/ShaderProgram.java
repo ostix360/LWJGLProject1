@@ -1,7 +1,7 @@
-package fr.ostix.game.graphics.shader;
+package fr.ostix.game.toolBox.OpenGL.shader;
 
 import fr.ostix.game.toolBox.Logger;
-import fr.ostix.game.toolBox.OpenGL.uniform.Uniform;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.Uniform;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,13 +24,14 @@ public abstract class ShaderProgram {
 
     protected abstract void bindAllAttributes();
 
-    protected void getAllUniformLocations(Uniform... uniforms) {
+    protected void storeAllUniformsLocations(Uniform... uniforms) {
         for (Uniform uniform : uniforms) {
             uniform.storeUniform(programID);
         }
+        this.validateProgram();
     }
 
-    protected void validateProgram() {
+    private void validateProgram() {
         glValidateProgram(programID);
         if (glGetProgrami(programID, GL_VALIDATE_STATUS) == GL_FALSE) {
             Logger.err("Failed to validate shader program : " + glGetProgramInfoLog(programID),
@@ -56,9 +57,9 @@ public abstract class ShaderProgram {
         StringBuilder fragmentSource = readShader(shadersName + ".frag");
         vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShaderID, vertexSource);
+        processShader(vertexShaderID);
         fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShaderID, fragmentSource);
-        processShader(vertexShaderID);
         processShader(fragmentShaderID);
     }
 
@@ -110,7 +111,7 @@ public abstract class ShaderProgram {
         glDeleteShader(vertexShaderID);
         glDeleteShader(fragmentShaderID);
 
-        getAllUniformLocations();
+        //storeAllUniformsLocations();
 
 
     }

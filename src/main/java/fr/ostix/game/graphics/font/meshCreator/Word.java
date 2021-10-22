@@ -23,6 +23,7 @@ public class Word {
         this.fontSize = fontSize;
     }
 
+
     /**
      * Adds a character to the end of the current word and increases the screen-space width of the word.
      *

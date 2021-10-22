@@ -1,10 +1,9 @@
-package fr.ostix.game.graphics.shader;
+package fr.ostix.game.graphics.entity;
 
-import fr.ostix.game.graphics.render.AnimatedModelRenderer;
-import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniform;
-import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniformArray;
-import fr.ostix.game.toolBox.OpenGL.uniform.Vector3fUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.MatrixUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.MatrixUniformArray;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.Vector3fUniform;
 
 public class AnimatedModelShader extends ShaderProgram {
 
@@ -24,8 +23,7 @@ public class AnimatedModelShader extends ShaderProgram {
      */
     public AnimatedModelShader() {
         super("animation");
-        super.getAllUniformLocations(projectionViewMatrix, transformation, lightDirection, jointTransforms);
-        super.validateProgram();
+        super.storeAllUniformsLocations(projectionViewMatrix, transformation, lightDirection, jointTransforms);
     }
 
 

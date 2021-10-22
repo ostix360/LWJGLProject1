@@ -12,6 +12,7 @@ public class LoadComponents {
             if (type != null) {
                 if (type.equals(ComponentType.COLLISION_COMPONENT)) {
                     StringBuilder sb = new StringBuilder();
+                    sb.append("Collision Component").append("\n");
                     for (int i1 = i + 1; i1 < lines.length; i1++) {
                         ComponentType tType = getComponentType(lines[i1]);
                         if (tType == null) {

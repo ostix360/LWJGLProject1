@@ -22,7 +22,7 @@ uniform float useFakeLighting;
 uniform mat4 jointTransforms[MAX_JOINTS];
 uniform float numberOfRows;
 uniform vec2 offset;
-
+uniform vec4 clipPlane;
 
 out vec2 passTextureCoords;
 out vec3 unitNormal;
@@ -56,6 +56,9 @@ void main(){
     }
 
     vec4 worldPosition = transformationMatrix * totalLocalPos;
+
+    gl_ClipDistance[0] = dot(worldPosition, clipPlane);
+
     vec4 relativePositionToCamera =  viewMatrix * worldPosition;
     gl_Position = projectionMatrix * relativePositionToCamera;
     passTextureCoords = (textureCoords/numberOfRows)+offset;

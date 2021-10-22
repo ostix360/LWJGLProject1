@@ -28,6 +28,8 @@ package com.flowpowered.react.collision.shape;
 import com.flowpowered.react.ReactDefaults;
 import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Vector3;
+import fr.ostix.game.toolBox.Maths;
+import org.joml.Vector3f;
 
 /**
  * Represents a 3D box shape. Those axis are unit length. The three extents are half-lengths of the box along the three x, y, z local axes. The "transform" of the corresponding rigid body will give an
@@ -156,5 +158,10 @@ public class BoxShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final BoxShape otherShape = (BoxShape) otherCollisionShape;
         return mExtent.equals(otherShape.mExtent);
+    }
+
+    @Override
+    public void scale(Vector3f scale) {
+        mExtent.multiply(Maths.toVector3(scale));
     }
 }

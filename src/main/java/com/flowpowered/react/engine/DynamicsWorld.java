@@ -31,6 +31,7 @@ import com.flowpowered.react.Utilities.IntPair;
 import com.flowpowered.react.body.CollisionBody;
 import com.flowpowered.react.body.RigidBody;
 import com.flowpowered.react.collision.BroadPhasePair;
+import com.flowpowered.react.collision.shape.BoxShape;
 import com.flowpowered.react.collision.shape.CollisionShape;
 import com.flowpowered.react.constraint.*;
 import com.flowpowered.react.constraint.BallAndSocketJoint.BallAndSocketJointInfo;
@@ -564,6 +565,9 @@ public class DynamicsWorld extends CollisionWorld {
      */
     public RigidBody createRigidBody(Transform transform, float mass, CollisionShape collisionShape) {
         final Matrix3x3 inertiaTensor = new Matrix3x3();
+        if (collisionShape instanceof BoxShape) {
+            System.out.println(((BoxShape) collisionShape).getExtent());
+        }
         collisionShape.computeLocalInertiaTensor(inertiaTensor, mass);
         return createRigidBody(transform, mass, inertiaTensor, collisionShape);
     }

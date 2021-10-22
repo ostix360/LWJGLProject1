@@ -2,7 +2,7 @@ package fr.ostix.game.entity.camera;
 
 import fr.ostix.game.core.Input;
 import fr.ostix.game.entity.Player;
-import fr.ostix.game.graphics.render.MasterRenderer;
+import fr.ostix.game.graphics.MasterRenderer;
 import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.world.World;
 import org.joml.Matrix4f;
@@ -134,5 +134,10 @@ public class Camera implements ICamera {
 
     public float getRoll() {
         return roll;
+    }
+
+    public void reflect(float height) {
+        this.invertPitch();
+        this.position.y = position.y - 2 * (position.y - height);
     }
 }

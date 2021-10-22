@@ -34,6 +34,7 @@ import gnu.trove.map.TObjectIntMap;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Represents the contact solver that is used to solve rigid bodies contacts. The constraint solver is based on the "Sequential Impulse" technique described by Erin Catto in his GDC slides
@@ -471,9 +472,11 @@ public class ContactSolver {
     /**
      * Solves the contact constraints by applying sequential impulses.
      */
+    Logger log = Logger.getAnonymousLogger();
     public void solve() {
         float deltaLambda;
         float lambdaTemp;
+
         for (int c = 0; c < mNbContactManifolds; c++) {
             ContactManifoldSolver contactManifold = mContactConstraints[c];
             float sumPenetrationImpulse = 0;
@@ -503,6 +506,7 @@ public class ContactSolver {
                 lambdaTemp = contactPoint.penetrationImpulse;
                 contactPoint.penetrationImpulse = Math.max(contactPoint.penetrationImpulse + deltaLambda, 0);
                 deltaLambda = contactPoint.penetrationImpulse - lambdaTemp;
+                //log.log(Level.INFO,"lambda 511: " + deltaLambda);
                 final Impulse impulsePenetration = computePenetrationImpulse(deltaLambda, contactPoint);
                 applyImpulse(impulsePenetration, contactManifold);
                 sumPenetrationImpulse += contactPoint.penetrationImpulse;
@@ -519,6 +523,7 @@ public class ContactSolver {
                     final float lambdaTempSplit = contactPoint.penetrationSplitImpulse;
                     contactPoint.penetrationSplitImpulse = Math.max(contactPoint.penetrationSplitImpulse + deltaLambdaSplit, 0);
                     deltaLambda = contactPoint.penetrationSplitImpulse - lambdaTempSplit;
+                    //log.log(Level.INFO,"lambda 528: " + deltaLambda);
                     final Impulse splitImpulsePenetration = computePenetrationImpulse(deltaLambdaSplit, contactPoint);
                     applySplitImpulse(splitImpulsePenetration, contactManifold);
                 }
@@ -536,6 +541,7 @@ public class ContactSolver {
                             Math.min(contactPoint.friction1Impulse + deltaLambda, frictionLimit));
                     deltaLambda = contactPoint.friction1Impulse - lambdaTemp;
                     final Impulse impulseFriction1 = computeFriction1Impulse(deltaLambda, contactPoint);
+                    //log.log(Level.INFO,"lambda 546: " + deltaLambda);
                     applyImpulse(impulseFriction1, contactManifold);
                     // --------- Friction 2 --------- //
                     deltaV = Vector3.subtract(
@@ -550,6 +556,7 @@ public class ContactSolver {
                             Math.min(contactPoint.friction2Impulse + deltaLambda, frictionLimit));
                     deltaLambda = contactPoint.friction2Impulse - lambdaTemp;
                     final Impulse impulseFriction2 = computeFriction2Impulse(deltaLambda, contactPoint);
+                    //log.log(Level.INFO,"lambda 561: " + deltaLambda);
                     applyImpulse(impulseFriction2, contactManifold);
                 }
             }
@@ -569,6 +576,7 @@ public class ContactSolver {
                 Vector3 angularImpulseBody1 = Vector3.multiply(Vector3.negate(contactManifold.r1CrossT1), deltaLambda);
                 Vector3 linearImpulseBody2 = Vector3.multiply(contactManifold.frictionVector1, deltaLambda);
                 Vector3 angularImpulseBody2 = Vector3.multiply(contactManifold.r2CrossT1, deltaLambda);
+                //log.log(Level.INFO,"lambda 581: " + deltaLambda);
                 final Impulse impulseFriction1 = new Impulse(
                         linearImpulseBody1, angularImpulseBody1,
                         linearImpulseBody2, angularImpulseBody2);
@@ -588,6 +596,8 @@ public class ContactSolver {
                 angularImpulseBody1 = Vector3.multiply(Vector3.negate(contactManifold.r1CrossT2), deltaLambda);
                 linearImpulseBody2 = Vector3.multiply(contactManifold.frictionVector2, deltaLambda);
                 angularImpulseBody2 = Vector3.multiply(contactManifold.r2CrossT2, deltaLambda);
+                //log.log(Level.INFO,"lambda 601: " + deltaLambda);
+
                 final Impulse impulseFriction2 = new Impulse(
                         linearImpulseBody1, angularImpulseBody1,
                         linearImpulseBody2, angularImpulseBody2);
@@ -605,6 +615,7 @@ public class ContactSolver {
                 angularImpulseBody1 = Vector3.multiply(Vector3.negate(contactManifold.normal), deltaLambda);
                 linearImpulseBody2 = new Vector3(0, 0, 0);
                 angularImpulseBody2 = Vector3.multiply(contactManifold.normal, deltaLambda);
+                //log.log(Level.INFO,"lambda 619: " + deltaLambda);
                 final Impulse impulseTwistFriction = new Impulse(
                         linearImpulseBody1, angularImpulseBody1,
                         linearImpulseBody2, angularImpulseBody2);

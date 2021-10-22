@@ -29,6 +29,7 @@ import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Transform;
 import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.entity.BoundingModel;
+import org.joml.Vector3f;
 
 /**
  * Represents the collision shape associated with a body that is used during the narrow-phase collision detection.
@@ -198,6 +199,8 @@ public abstract class CollisionShape extends BoundingModel {
             super.finalize();
         }
     }
+
+    public abstract void scale(Vector3f scale);
 
     /**
      * An enumeration of the possible collision shape (box, sphere, cone and cylinder).

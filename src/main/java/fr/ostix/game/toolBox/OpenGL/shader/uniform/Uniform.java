@@ -1,4 +1,4 @@
-package fr.ostix.game.toolBox.OpenGL.uniform;
+package fr.ostix.game.toolBox.OpenGL.shader.uniform;
 
 import fr.ostix.game.toolBox.Logger;
 import org.lwjgl.opengl.GL20;
@@ -14,7 +14,7 @@ public class Uniform {
     public void storeUniform(int programID) {
         location = GL20.glGetUniformLocation(programID, name);
         if (location == -1) {
-            Logger.err("No uniform variable called " + name + " found!");
+            Logger.err("No uniform variable called " + name + " found for the program " + programID + " !");
         }
     }
 

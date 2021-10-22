@@ -179,11 +179,17 @@ public class ResourcePackLoader {
             assert current != null;
             String name = current.getName();
             modelBar.update(name);
+            Texture texture;
+            if (current.getTexture() != null) {
+                texture = textureByName.get(current.getTexture());
+            } else {
+                texture = null;
+            }
             if (current.canAnimated()) {
-                AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(), textureByName.get(current.getTexture()), loader);
+                AnimatedModel model = ResourceLoader.loadTexturedAnimatedModel(current.getPath(), texture, loader);
                 animatedModelByName.put(name, model);
             } else {
-                Model model = ResourceLoader.loadTexturedModel(current.getPath() + File.separator + name, textureByName.get(current.getTexture()), loader);
+                Model model = ResourceLoader.loadTexturedModel(current.getPath() + File.separator + name, texture, loader);
                 modelByName.put(name, model);
             }
         }

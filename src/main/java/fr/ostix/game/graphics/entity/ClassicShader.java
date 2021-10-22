@@ -1,85 +1,67 @@
-package fr.ostix.game.graphics.shader;
-
+package fr.ostix.game.graphics.entity;
 
 import fr.ostix.game.entity.camera.Camera;
 import fr.ostix.game.entity.component.light.Light;
 import fr.ostix.game.toolBox.Color;
 import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.toolBox.OpenGL.uniform.*;
+import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.*;
 import fr.ostix.game.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.List;
 
-
-public class TerrainShader extends ShaderProgram {
+public class ClassicShader extends ShaderProgram {
 
     private final int MAX_LIGHTS = World.MAX_LIGHTS;
 
     private final MatrixUniform transformationMatrix = new MatrixUniform("transformationMatrix");
     private final MatrixUniform projectionMatrix = new MatrixUniform("projectionMatrix");
     private final MatrixUniform viewMatrix = new MatrixUniform("viewMatrix");
+    public final BooleanUniform useFakeLighting = new BooleanUniform("useFakeLighting");
+    public final BooleanUniform useSpecularMap = new BooleanUniform("useSpecularMap");
+    public final Vector2fUniform offset = new Vector2fUniform("offset");
+    public final FloatUniform numberOfRows = new FloatUniform("numberOfRows");
+    private final FloatUniform reflectivity = new FloatUniform("reflectivity");
+    private final FloatUniform shine = new FloatUniform("shine");
     private final Vector3fUniformArray lightPos = new Vector3fUniformArray("lightPos", MAX_LIGHTS);
     private final Vector3fUniformArray lightColor = new Vector3fUniformArray("lightColor", MAX_LIGHTS);
     private final Vector3fUniformArray lightAttenuation = new Vector3fUniformArray("attenuation", MAX_LIGHTS);
     private final FloatUniformArray lightPower = new FloatUniformArray("lightPower", MAX_LIGHTS);
-    private final FloatUniform shine = new FloatUniform("shine");
-    private final FloatUniform reflectivity = new FloatUniform("reflectivity");
-    private final Vector3fUniform skyColour = new Vector3fUniform("skyColor");
-    private final IntUniform backgroundTexture = new IntUniform("backgroundTexture");
-    private final IntUniform rTexture = new IntUniform("rTexture");
-    private final IntUniform gTexture = new IntUniform("gTexture");
-    private final IntUniform bTexture = new IntUniform("bTexture");
-    private final IntUniform blendMap = new IntUniform("blendMap");
-    private final Vector4fUniform plane = new Vector4fUniform("plane");
-    private final MatrixUniform toShadowMapSpace = new MatrixUniform("toShadowMapSpace");
-    private final IntUniform shadowMap = new IntUniform("shadowMap");
+    private final IntUniform specularMap = new IntUniform("specularMap");
+    public final MatrixUniformArray jointTransforms = new MatrixUniformArray("jointTransforms", 50);
+    public final BooleanUniform isAnimated = new BooleanUniform("isAnimated");
+    private final Vector3fUniform skyColor = new Vector3fUniform("skyColor");
+    private final IntUniform diffuseMap = new IntUniform("textureSampler");
+    private final IntUniform normalMap = new IntUniform("normalMap");
+    public final Vector4fUniform clipPlane = new Vector4fUniform("clipPlane");
 
-    public TerrainShader() {
-        super("terrainShader");
-        super.getAllUniformLocations(transformationMatrix, projectionMatrix, viewMatrix,
-                reflectivity, shine, backgroundTexture, rTexture, gTexture, bTexture, blendMap, skyColour,
-                lightPos, lightColor, lightAttenuation, lightPower);
-        super.validateProgram();
+    public ClassicShader() {
+        super("shader");
+        super.storeAllUniformsLocations(transformationMatrix, projectionMatrix, viewMatrix,
+                reflectivity, shine, skyColor, jointTransforms, isAnimated, useSpecularMap,
+                specularMap, diffuseMap, normalMap, offset, numberOfRows, useFakeLighting, lightPos, lightColor,
+                lightAttenuation, lightPower, clipPlane);
     }
 
+    public void connectTextureUnits() {
+        diffuseMap.loadIntToUniform(0);
+        specularMap.loadIntToUniform(1);
+        normalMap.loadIntToUniform(2);
+    }
 
     @Override
     protected void bindAllAttributes() {
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
-        super.bindAttribute(2, "normal");
+        super.bindAttribute(2, "normals");
+        super.bindAttribute(3, "jointIndices");
+        super.bindAttribute(4, "weights");
     }
 
 
-    public void connectTerrainUnits() {
-        backgroundTexture.loadIntToUniform(0);
-        rTexture.loadIntToUniform(1);
-        gTexture.loadIntToUniform(2);
-        bTexture.loadIntToUniform(3);
-        blendMap.loadIntToUniform(4);
-        shadowMap.loadIntToUniform(5);
-    }
-
-
-    public void loadShaderMapSpace(Matrix4f matrix) {
-        toShadowMapSpace.loadMatrixToUniform(matrix);
-    }
-
-    public void loadClipPlane(Vector4f value) {
-        plane.loadVec4fToUniform(value);
-    }
-
-    public void loadSkyColour(Color colour) {
-        skyColour.loadVector3fToUniform(colour.getVec3f());
-    }
-
-    public void loadSpecular(float reflectivity, float shineDamper) {
-        this.reflectivity.loadFloatToUniform(reflectivity);
-        this.shine.loadFloatToUniform(shineDamper);
-    }
+    // light
 
     public void loadLight(List<Light> lights) {
         Vector3f[] pos = new Vector3f[MAX_LIGHTS];
@@ -106,6 +88,13 @@ public class TerrainShader extends ShaderProgram {
         lightPower.loadFloatToUniform(power);
 
     }
+
+    public void loadSpecular(float reflectivity, float shineDamper) {
+        this.reflectivity.loadFloatToUniform(reflectivity);
+        this.shine.loadFloatToUniform(shineDamper);
+    }
+
+
     // Projection Transformation View Matrix
 
     public void loadTransformationMatrix(Matrix4f matrix) {
@@ -120,4 +109,8 @@ public class TerrainShader extends ShaderProgram {
         viewMatrix.loadMatrixToUniform(Maths.createViewMatrix(cam));
     }
 
+
+    public void loadSkyColor(Color skyColor) {
+        this.skyColor.loadVector3fToUniform(skyColor.getVec3f());
+    }
 }

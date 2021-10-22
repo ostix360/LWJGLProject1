@@ -28,6 +28,7 @@ package com.flowpowered.react.collision.shape;
 import com.flowpowered.react.ReactDefaults;
 import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Vector3;
+import org.joml.Vector3f;
 
 /**
  * Represents a cone collision shape centered at the origin and aligned with the Y axis. The cone is defined by its height and by the radius of its base. The center of the cone is at the half of the
@@ -37,8 +38,8 @@ import com.flowpowered.react.math.Vector3;
  * "margin" parameter in the constructor.
  */
 public class ConeShape extends CollisionShape {
-    private final float mRadius;
-    private final float mHalfHeight;
+    private float mRadius;
+    private float mHalfHeight;
     private final float mSinTheta;
 
     /**
@@ -172,5 +173,13 @@ public class ConeShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final ConeShape otherShape = (ConeShape) otherCollisionShape;
         return mRadius == otherShape.mRadius && mHalfHeight == otherShape.mHalfHeight;
+    }
+
+    @Override
+    public void scale(Vector3f scale) {
+        mRadius *= scale.x();
+        float tHeight = mHalfHeight * 2;
+        tHeight *= scale.y();
+        mHalfHeight = tHeight / 2;
     }
 }

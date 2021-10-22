@@ -23,7 +23,7 @@ public class LoadMeshModel {
 
 
         if (scene == null) {
-            System.err.println("the imported file does not contain any animations.");
+            System.err.println("the imported file does not contain any scene.");
             //System.exit(0);
         }
 

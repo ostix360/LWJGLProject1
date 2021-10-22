@@ -2,7 +2,7 @@ package fr.ostix.game.world.interaction;
 
 import com.flowpowered.react.body.CollisionBody;
 import com.flowpowered.react.body.RigidBody;
-import com.flowpowered.react.collision.shape.BoxShape;
+import com.flowpowered.react.collision.shape.AABB;
 import com.flowpowered.react.collision.shape.CollisionShape;
 import com.flowpowered.react.engine.DynamicsWorld;
 import com.flowpowered.react.engine.Material;
@@ -29,10 +29,12 @@ import java.util.Map;
 public class CollisionSystem {
 
     private static final Material PHYSICS_MATERIAL = Material.asUnmodifiableMaterial
-            (new Material(0.2f, 0.8f));
+            (new Material(0.0f, 1.0f));
+
     private final Vector3 gravity = new Vector3(0, -9.81f, 0);
     private final Map<CollisionBody, Entity> shapes = new HashMap<>();
     private final Map<RigidBody, Entity> motionShape = new HashMap<>();
+    private static final Map<CollisionBody, Entity> aabbs = new HashMap<>();
     private final TFloatList meshPositions = new TFloatArrayList();
     private final TIntList meshIndices = new TIntArrayList();
     private DynamicsWorld dynamicsWorld;
@@ -41,6 +43,7 @@ public class CollisionSystem {
         dynamicsWorld = new DynamicsWorld(gravity, timeStep);
         //addImmobileBody(entities.get(0), new BoxShape(new Vector3(25, 1, 25)), 100, new Vector3(0, 1.8f, 0), Quaternion.identity()).setMaterial(PHYSICS_MATERIAL);
         addAllEntity(entities);
+        dynamicsWorld.enableSleeping(false);
         // addTerrain(terrains);
         dynamicsWorld.start();
     }
@@ -70,6 +73,7 @@ public class CollisionSystem {
 //                    index++;
 //                }
 //                       } else {
+
             if (e.getCollision() != null) {
                 for (BoundingModel b : e.getCollision().getProperties().getBoundingModels()) {
                     if (b instanceof CollisionShape) {
@@ -98,8 +102,9 @@ public class CollisionSystem {
 //            meshPositions.clear();
 //            meshIndices.clear();
         }
-        BoxShape box = new BoxShape(20, 20, 20);
-        addBody(box);
+//        BoxShape box = new BoxShape(20, 20, 20);
+//        addBody(box);
+        World.doAABBToRender();
     }
 
     public void update() {
@@ -110,6 +115,7 @@ public class CollisionSystem {
             final CollisionBody body = entry.getKey();
             Entity shape = null;
 
+
             if (entry.getValue() != null) shape = entry.getValue();
             Transform transform = body.getInterpolatedTransform();
             Quaternionf q = new Quaternionf(transform.getOrientation().getX(),
@@ -119,14 +125,14 @@ public class CollisionSystem {
             assert shape != null;
             //   q.getEulerAnglesXYZ(shape.getRotation());
             if (entry.getValue() != null) {
-                shape.setPosition(Maths.toVector3f(transform.getPosition()));
+                shape.setPosition(Maths.toVector3f(transform.getPosition()).add(0, -2.4f, 0));
             }
 
-           // if (entry.getValue() != null) shape.getTransform().setQ(q);
-            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ());
+            // if (entry.getValue() != null) shape.getTransform().setQ(q);
+            float terrainHeight = World.getTerrainHeight(transform.getPosition().getX(), transform.getPosition().getZ()) + 2.4f;
             if (transform.getPosition().getY() < terrainHeight) {
                 if (entry.getValue() != null) {
-                    shape.setPosition(new Vector3f(transform.getPosition().getX(), terrainHeight, transform.getPosition().getZ()));
+                    shape.setPosition(new Vector3f(transform.getPosition().getX(), terrainHeight - 2.4f, transform.getPosition().getZ()));
                 }
                 body.setTransform(new Transform(new Vector3(transform.getPosition().getX(), terrainHeight, transform.getPosition().getZ()), transform.getOrientation()));
             }
@@ -142,7 +148,7 @@ public class CollisionSystem {
             RigidBody body = entry.getKey();
             Entity shape = entry.getValue();
             body.setLinearVelocity(shape.getForceToCenter().multiply(30));//new Vector3(shape.getForceToCenter().getX(), shape.getForceToCenter().getY(), shape.getForceToCenter().getZ()));
-            body.setAngularVelocity(shape.getTorque().multiply(30));
+            //body.setAngularVelocity(shape.getTorque().multiply(30));
         }
     }
 
@@ -165,15 +171,16 @@ public class CollisionSystem {
     }
 
     private void addBody(Entity e, CollisionShape shape, Transform transform) {
+        fr.ostix.game.entity.Transform trans = shape.getTransform();
+        shape.scale(e.getScale().mul(1.0f, new Vector3f()));
+        final Vector3 pos = Maths.toVector3(e.getPosition().add(trans.getPosition(), new Vector3f()));//.sub(e.getScale().div(6,new Vector3f())));
         AxisAngle4d angles = new AxisAngle4d();
         e.getTransform().getTransformation().getRotation(angles);
         Quaternionf q = new Quaternionf(angles);
-        Transform tra = new Transform(
-                new Vector3(e.getPosition().x(), e.getPosition().y(), e.getPosition().z()),
-                new Quaternion(q.x(), q.y(), q.z(), q.w()));
-
-        RigidBody body = dynamicsWorld.createRigidBody(Transform.multiply(tra, transform),
+        Transform theTransform = new Transform(pos, new Quaternion(q.x(), q.y(), q.z(), q.w()));
+        RigidBody body = dynamicsWorld.createRigidBody(theTransform,
                 (float) 1, shape);
+
 
         body.enableMotion(e.getCollision().getProperties().canMove());
         //body.enableMotion(true);
@@ -182,11 +189,17 @@ public class CollisionSystem {
         body.setMaterial(PHYSICS_MATERIAL);
         addBody(body, e);
     }
+
     private void addBody(CollisionBody body, Entity e) {
         if (body.isMotionEnabled() && e instanceof Player) {
             motionShape.put((RigidBody) body, e);
         }
         shapes.put(body, e);
+        AABB aabb = body.getAABB();
+        Transform bodyTransform = body.getTransform();
+        Vector3 bodyPosition = bodyTransform.getPosition();
+        Entity aabbModel = World.addAABB(bodyPosition, Vector3.subtract(aabb.getMax(), aabb.getMin()).divide(6));
+        aabbs.put(body, aabbModel);
     }
 
 }

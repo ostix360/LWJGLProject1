@@ -38,8 +38,8 @@ public class Logger {
     }
 
     public static void err(String msg, Exception e) {
-//        String log = getTime() + "[ERROR]" + getThread() + msg + " " + e.getMessage();
-//        System.err.println(log);
+        String log = getTime() + "[ERROR]" + getThread() + msg + " " + e.getMessage();
+        System.err.println(log);
 //        logLines.add(log);
 //        try {
 //            BufferedWriter bw = new BufferedWriter(new FileWriter("D:/Projet LWJGL/3D/Projet_1/log/log.txt"));

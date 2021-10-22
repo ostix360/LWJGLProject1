@@ -119,6 +119,7 @@ public class SkyboxRenderer {
     }
 
     public void render(Camera cam, Color fog) {
+        OpenGlUtils.goWireframe(false);
         OpenGlUtils.enableDepthTesting(false);
         glDepthMask(false);
         shader.bind();

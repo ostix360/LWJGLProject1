@@ -91,6 +91,16 @@ public class Loader {
         return new MeshModel(vao);
     }
 
+    public MeshModel loadToVAO(float[] position, int[] indices) {
+        VAO vao = VAO.createVAO();
+        VAOs.add(vao);
+        vao.bind();
+        vao.storeIndicesInVAO(indices);
+        vao.storePositionInAttributeList(0, 2, position);
+        VAO.unbind();
+        return new MeshModel(vao);
+    }
+
     //TEXTURES
 
 

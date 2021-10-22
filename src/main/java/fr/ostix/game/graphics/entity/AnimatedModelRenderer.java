@@ -1,8 +1,7 @@
-package fr.ostix.game.graphics.render;
+package fr.ostix.game.graphics.entity;
 
 import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
 import fr.ostix.game.entity.camera.ICamera;
-import fr.ostix.game.graphics.shader.AnimatedModelShader;
 import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
 import fr.ostix.game.toolBox.OpenGL.VAO;

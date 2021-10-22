@@ -19,7 +19,7 @@ public class Entity {
     private final Model model;
     protected Vector3f position;
     protected Vector3f rotation;
-    protected float scale;
+    protected Vector3f scale;
     private final Transform transform;
     protected MovementType movement;
     private CollisionComponent collision;
@@ -31,7 +31,7 @@ public class Entity {
         this.model = model;
         this.position = position;
         this.rotation = rotation.add(0, 0, 0);
-        this.scale = scale;
+        this.scale = new Vector3f(scale);
         this.transform = new Transform(position, rotation, scale);
     }
 
@@ -85,7 +85,7 @@ public class Entity {
         return rotation;
     }
 
-    public float getScale() {
+    public Vector3f getScale() {
         return scale;
     }
 
@@ -125,7 +125,7 @@ public class Entity {
     }
 
     public Vector3 getForceToCenter() {
-            return forceToCenter;
+        return forceToCenter;
     }
 
 
@@ -133,6 +133,9 @@ public class Entity {
         return torque.multiply(100);
     }
 
+    public void setScale(Vector3f scale) {
+        this.scale = scale;
+    }
 
     public enum MovementType {
         FORWARD("run"),

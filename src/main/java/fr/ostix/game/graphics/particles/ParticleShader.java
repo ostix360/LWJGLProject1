@@ -1,8 +1,8 @@
 package fr.ostix.game.graphics.particles;
 
-import fr.ostix.game.graphics.shader.ShaderProgram;
-import fr.ostix.game.toolBox.OpenGL.uniform.FloatUniform;
-import fr.ostix.game.toolBox.OpenGL.uniform.MatrixUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.FloatUniform;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.MatrixUniform;
 import org.joml.Matrix4f;
 
 public class ParticleShader extends ShaderProgram {
@@ -12,9 +12,8 @@ public class ParticleShader extends ShaderProgram {
 	private final FloatUniform numberOfRows = new FloatUniform("numberOfRows");
 
 	public ParticleShader() {
-		super("particle");
-		getAllUniformLocations(projectionMatrix,numberOfRows);
-		validateProgram();
+        super("particle");
+        storeAllUniformsLocations(projectionMatrix, numberOfRows);
 	}
 
 

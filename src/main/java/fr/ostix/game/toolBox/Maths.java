@@ -32,7 +32,7 @@ public class Maths {
         return matrix;
     }
 
-    public static Matrix4f createTransformationMatrix(Vector3f position, Vector3f rotation, float scale) {
+    public static Matrix4f createTransformationMatrix(Vector3f position, Vector3f rotation, Vector3f scale) {
         Matrix4f matrix = new Matrix4f();
         matrix.identity();
         matrix.translate(position);
@@ -42,7 +42,7 @@ public class Maths {
         matrix.rotate(Math.toRadians(rotation.x()), new Vector3f(1, 0, 0));
         matrix.rotate(Math.toRadians(rotation.y()), new Vector3f(0, 1, 0));
         matrix.rotate(Math.toRadians(rotation.z()), new Vector3f(0, 0, 1));
-        matrix.scale(new Vector3f(scale, scale, scale));
+        matrix.scale(scale);
         return matrix;
     }
 
@@ -78,7 +78,7 @@ public class Maths {
     public static Vector3f rotateVector(Vector3f direction, float rotX, float rotY, float rotZ) {
 
         Matrix4f matrix = createTransformationMatrix(new Vector3f(0.0F, 0.0F, 0.0F),
-                new Vector3f(rotX, rotY, rotZ), 1.0F);
+                new Vector3f(rotX, rotY, rotZ), new Vector3f(1.0F));
         Vector4f direction4 = new Vector4f(direction.x, direction.y, direction.z, 1.0F);
         matrix.transform(direction4, direction4);
         return new Vector3f(direction4.x, direction4.y, direction4.z);
@@ -161,5 +161,9 @@ public class Maths {
         m.m32(AIm.d3());
         m.m33(AIm.d4());
         return m;
+    }
+
+    public static Vector3 toVector3(Vector3f value) {
+        return new Vector3(value.x(), value.y(), value.z());
     }
 }

@@ -78,6 +78,9 @@ public class TextureProperties {
     }
 
     public int getNumbersOfRows() {
+        if (numbersOfRows == 0) {
+            return 1;
+        }
         return numbersOfRows;
     }
 

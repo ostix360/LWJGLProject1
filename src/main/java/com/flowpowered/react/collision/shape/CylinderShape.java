@@ -28,6 +28,7 @@ package com.flowpowered.react.collision.shape;
 import com.flowpowered.react.ReactDefaults;
 import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Vector3;
+import org.joml.Vector3f;
 
 /**
  * Represents a cylinder collision shape around the Y axis and centered at the origin. The cylinder is defined by its height and the radius of its base. The "transform" of the corresponding rigid body
@@ -36,8 +37,8 @@ import com.flowpowered.react.math.Vector3;
  * "margin" parameter in the constructor of the cylinder shape. Otherwise, it is recommended to use the default margin distance by not using the "margin" parameter in the constructor.
  */
 public class CylinderShape extends CollisionShape {
-    private final float mRadius;
-    private final float mHalfHeight;
+    private float mRadius;
+    private float mHalfHeight;
 
     /**
      * Constructs a new cylinder from the radius of the base and the height.
@@ -172,5 +173,13 @@ public class CylinderShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final CylinderShape otherShape = (CylinderShape) otherCollisionShape;
         return mRadius == otherShape.mRadius && mHalfHeight == otherShape.mHalfHeight;
+    }
+
+    @Override
+    public void scale(Vector3f scale) {
+        mRadius *= scale.x();
+        float tHeight = mHalfHeight * 2.1f;
+        tHeight *= scale.y();
+        mHalfHeight = tHeight / 2;
     }
 }

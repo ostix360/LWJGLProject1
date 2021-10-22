@@ -1,5 +1,6 @@
 package fr.ostix.game.world;
 
+import com.flowpowered.react.math.Vector3;
 import fr.ostix.game.audio.SoundListener;
 import fr.ostix.game.audio.SoundSource;
 import fr.ostix.game.core.Game;
@@ -15,17 +16,19 @@ import fr.ostix.game.entity.component.ai.AIProperties;
 import fr.ostix.game.entity.component.animation.AnimationComponent;
 import fr.ostix.game.entity.component.collision.CollisionComponent;
 import fr.ostix.game.entity.component.light.Light;
+import fr.ostix.game.graphics.MasterRenderer;
 import fr.ostix.game.graphics.font.meshCreator.GUIText;
 import fr.ostix.game.graphics.font.rendering.MasterFont;
 import fr.ostix.game.graphics.model.Model;
 import fr.ostix.game.graphics.particles.*;
 import fr.ostix.game.graphics.particles.particleSpawn.Sphere;
-import fr.ostix.game.graphics.render.MasterRenderer;
 import fr.ostix.game.graphics.textures.Texture;
 import fr.ostix.game.toolBox.Color;
+import fr.ostix.game.toolBox.Maths;
 import fr.ostix.game.world.interaction.CollisionSystem;
 import fr.ostix.game.world.texture.TerrainTexture;
 import fr.ostix.game.world.texture.TerrainTexturePack;
+import fr.ostix.game.world.water.WaterTile;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.openal.AL10;
@@ -49,9 +52,12 @@ public class World {
     private HashMap<String, SoundSource> sounds;
     private HashMap<String, Model> models;
 
-    private final List<Entity> entities = new ArrayList<>();
+    private static final List<Entity> entities = new ArrayList<>();
+    private static final List<Entity> aabbs = new ArrayList<>();
     private static final List<Light> lights = new ArrayList<>();
     private static final List<Terrain> terrains = new ArrayList<>();
+    public static Model CUBE;
+    private final List<WaterTile> waterTiles = new ArrayList<>();
 
     private static int[][] worldIndex;
 
@@ -64,6 +70,17 @@ public class World {
 
     public static void addLight(Light light) {
         lights.add(light);
+    }
+
+    public static Entity addAABB(Vector3 bodyPosition, Vector3 size) {
+        Entity entity = new Entity(CUBE, Maths.toVector3f(bodyPosition), new Vector3f(), 1);
+        entity.setScale(Maths.toVector3f(size));
+        aabbs.add(entity);
+        return entity;
+    }
+
+    public static void doAABBToRender() {
+        //entities.addAll(aabbs);
     }
 
     public void initWorld(Loader loader, ResourcePack pack) {
@@ -92,7 +109,7 @@ public class World {
         // player.addComponent(new AIComponent(player, ai));
         //player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
-        CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(1705233732));
+        CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(628856598));
         player.setCollision(cp);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
@@ -101,9 +118,14 @@ public class World {
         Model lamp = models.get("lamp");
         Entity lampE = new Entity(lamp, new Vector3f(10, 0, 10), new Vector3f(), 1);
         LoadComponents.loadComponents(pack.getComponents().get(-1850784592), lampE);
-
         entities.add(lampE);
 
+        Model cube = models.get("box");
+        Entity cubeE = new Entity(cube, new Vector3f(50, 0, 20), new Vector3f(), 20);
+        LoadComponents.loadComponents(pack.getComponents().get(2026772471), cubeE);
+        entities.add(cubeE);
+
+        CUBE = models.get("cube");
 
         Light sun = new Light(new Vector3f(100000, 100000, -100000), Color.SUN, 0.5f, null);
         //lights.add(sun);
@@ -111,12 +133,13 @@ public class World {
 
         initTerrain(loader);
         initEntity();
+        initWater();
         GUIText text1 = new GUIText("Bienvenu dans ce jeu magique", 1f, Game.gameFont, new Vector2f(0, 1080f / 2f), 1920f, true);
         text1.setColour(Color.RED);
         MasterFont.add(text1);
 
 
-        collision.init(1 / 75f, entities);
+        collision.init(1 / 120f, entities);
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
@@ -134,6 +157,11 @@ public class World {
 //        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
         // back2.play();
         isInit = true;
+    }
+
+    private void initWater() {
+        float waterHeight = -10f;
+        waterTiles.add(new WaterTile(15, 10, waterHeight));
     }
 
     private void initEntity() {
@@ -182,6 +210,7 @@ public class World {
             }
         }
 
+
     }
 
     public void update() {
@@ -203,7 +232,7 @@ public class World {
 
     public void render() {
         cam.move();
-        renderer.renderScene(entities, terrains, lights, cam);
+        renderer.renderScene(entities, waterTiles, terrains, lights, cam);
         MasterParticle.render(cam);
     }
 

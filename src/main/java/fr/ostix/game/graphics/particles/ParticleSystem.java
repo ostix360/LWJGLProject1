@@ -59,9 +59,9 @@ public class ParticleSystem {
         return new Vector3f(direction.x(), direction.y(), direction.z());
     }
 
-    public void update(Vector3f pos, Vector3f rot, float scale) {
+    public void update(Vector3f pos, Vector3f rot, Vector3f scale) {
         generateParticles(spawn.getParticleSpawnPosition(pos.x(), pos.y(), pos.z(),
-                rot.x(), rot.y(), rot.z(), scale));
+                rot.x(), rot.y(), rot.z(), scale.y()));
     }
 
     public void setSpawn(ParticleSpawn spawn) {

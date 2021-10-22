@@ -1,4 +1,4 @@
-package fr.ostix.game.toolBox.OpenGL.uniform;
+package fr.ostix.game.toolBox.OpenGL.shader.uniform;
 
 import org.joml.Vector3f;
 
