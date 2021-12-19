@@ -25,10 +25,11 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Vector3;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import org.joml.*;
+
+import java.lang.Math;
 
 /**
  * Represents a cone collision shape centered at the origin and aligned with the Y axis. The cone is defined by its height and by the radius of its base. The center of the cone is at the half of the
@@ -103,6 +104,11 @@ public class ConeShape extends CollisionShape {
      */
     public float getHeight() {
         return mHalfHeight + mHalfHeight;
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,mHalfHeight,0);
     }
 
     @Override

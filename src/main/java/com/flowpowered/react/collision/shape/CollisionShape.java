@@ -25,11 +25,10 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.math.Matrix3x3;
 import com.flowpowered.react.math.Transform;
-import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.entity.BoundingModel;
-import org.joml.Vector3f;
+import com.flowpowered.react.math.*;
+import fr.ostix.game.entity.*;
+import org.joml.*;
 
 /**
  * Represents the collision shape associated with a body that is used during the narrow-phase collision detection.
@@ -152,6 +151,10 @@ public abstract class CollisionShape extends BoundingModel {
         aabb.setMin(minCoordinates);
         aabb.setMax(maxCoordinates);
     }
+
+    public abstract float getHeight();
+
+    public abstract Vector3f applyCorrection();
 
     /**
      * Returns the number of similar created shapes.

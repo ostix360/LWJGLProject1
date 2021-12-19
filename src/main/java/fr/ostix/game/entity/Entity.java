@@ -1,15 +1,14 @@
 package fr.ostix.game.entity;
 
 
-import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.entity.component.Component;
-import fr.ostix.game.entity.component.collision.CollisionComponent;
-import fr.ostix.game.entity.component.particle.ParticleComponent;
-import fr.ostix.game.graphics.model.Model;
-import org.joml.Vector3f;
+import com.flowpowered.react.math.*;
+import fr.ostix.game.entity.component.*;
+import fr.ostix.game.entity.component.collision.*;
+import fr.ostix.game.entity.component.particle.*;
+import fr.ostix.game.graphics.model.*;
+import org.joml.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class Entity {
@@ -135,6 +134,18 @@ public class Entity {
 
     public void setScale(Vector3f scale) {
         this.scale = scale;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        Entity entity = (Entity) o;
+        return Objects.equals(getModel(), entity.getModel()) && Objects.equals(getPosition(), entity.getPosition()) && Objects.equals(getRotation(), entity.getRotation()) && Objects.equals(getScale(), entity.getScale()) && Objects.equals(components, entity.components);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getModel(), getPosition(), getRotation(), getScale(), components);
     }
 
     public enum MovementType {

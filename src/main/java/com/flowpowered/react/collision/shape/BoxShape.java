@@ -25,11 +25,10 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.toolBox.Maths;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import fr.ostix.game.toolBox.*;
+import org.joml.*;
 
 /**
  * Represents a 3D box shape. Those axis are unit length. The three extents are half-lengths of the box along the three x, y, z local axes. The "transform" of the corresponding rigid body will give an
@@ -158,6 +157,15 @@ public class BoxShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final BoxShape otherShape = (BoxShape) otherCollisionShape;
         return mExtent.equals(otherShape.mExtent);
+    }
+
+    public float getHeight() {
+        return mExtent.getY();
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,this.getHeight(),0);
     }
 
     @Override

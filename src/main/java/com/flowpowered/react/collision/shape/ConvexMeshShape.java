@@ -25,18 +25,16 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Vector3;
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import gnu.trove.iterator.*;
+import gnu.trove.map.*;
+import gnu.trove.map.hash.*;
+import gnu.trove.set.*;
+import gnu.trove.set.hash.*;
+import org.joml.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class represents a convex mesh shape. In order to create a convex mesh shape, you need to indicate the local-space position of the mesh vertices. You do this either by passing a vertices array
@@ -330,6 +328,16 @@ public class ConvexMeshShape extends CollisionShape {
     public boolean isEqualTo(CollisionShape otherCollisionShape) {
         final ConvexMeshShape otherShape = (ConvexMeshShape) otherCollisionShape;
         return mNbVertices == otherShape.mNbVertices && !mIsEdgesInformationUsed && mVertices.equals(otherShape.mVertices) && mEdgesAdjacencyList.equals(otherShape.mVertices);
+    }
+
+    @Override
+    public float getHeight() {
+        return 0;
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,0,0);
     }
 
     @Override

@@ -14,6 +14,15 @@ public class TerrainTexturePack {
         this.bTexture = bTexture;
     }
 
+    public static TerrainTexturePack load(String line) {
+        String[] values = line.split(";");
+        TerrainTexture back = TerrainTexture.load(values[0],false);
+        TerrainTexture r = TerrainTexture.load(values[1],false);
+        TerrainTexture g = TerrainTexture.load(values[2],false);
+        TerrainTexture b = TerrainTexture.load(values[3],false);
+        return new TerrainTexturePack(back,r,g,b);
+    }
+
     public TerrainTexture getBackgroundTexture() {
         return backgroundTexture;
     }

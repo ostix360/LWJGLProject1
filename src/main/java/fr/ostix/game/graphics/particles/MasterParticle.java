@@ -1,8 +1,8 @@
 package fr.ostix.game.graphics.particles;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.entity.camera.Camera;
-import org.joml.Matrix4f;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.entity.camera.*;
+import org.joml.*;
 
 import java.util.*;
 
@@ -15,11 +15,7 @@ public class MasterParticle {
     }
 
     public static void addParticle(Particle p) {
-        List<Particle> list = particles.get(p.getTexture());
-        if (list == null) {
-            list = new ArrayList<>();
-            particles.put(p.getTexture(), list);
-        }
+        List<Particle> list = particles.computeIfAbsent(p.getTexture(), k -> new ArrayList<>());
         list.add(p);
     }
 

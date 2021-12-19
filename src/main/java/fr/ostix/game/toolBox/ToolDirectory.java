@@ -1,8 +1,8 @@
 package fr.ostix.game.toolBox;
 
-import java.io.File;
+import java.io.*;
 
 public class ToolDirectory {
 
-    public static final File RES_FOLDER = new File("D:\\Projet LWJGL\\3D\\Projet_1\\src\\main\\resources");
+    public static final File RES_FOLDER = new File("D:\\Projet LWJGL\\engine creator\\export");
 }

@@ -1,9 +1,9 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.menu.component.Button;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.menu.component.*;
 
 public class MainMenu extends Screen {
 

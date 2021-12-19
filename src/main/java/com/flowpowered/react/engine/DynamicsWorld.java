@@ -25,31 +25,25 @@
  */
 package com.flowpowered.react.engine;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.ReactDefaults.ContactsPositionCorrectionTechnique;
-import com.flowpowered.react.Utilities.IntPair;
-import com.flowpowered.react.body.CollisionBody;
-import com.flowpowered.react.body.RigidBody;
-import com.flowpowered.react.collision.BroadPhasePair;
-import com.flowpowered.react.collision.shape.BoxShape;
-import com.flowpowered.react.collision.shape.CollisionShape;
+import com.flowpowered.react.*;
+import com.flowpowered.react.ReactDefaults.*;
+import com.flowpowered.react.Utilities.*;
+import com.flowpowered.react.body.*;
+import com.flowpowered.react.collision.*;
+import com.flowpowered.react.collision.shape.*;
 import com.flowpowered.react.constraint.*;
-import com.flowpowered.react.constraint.BallAndSocketJoint.BallAndSocketJointInfo;
-import com.flowpowered.react.constraint.ContactPoint.ContactPointInfo;
-import com.flowpowered.react.constraint.FixedJoint.FixedJointInfo;
-import com.flowpowered.react.constraint.HingeJoint.HingeJointInfo;
-import com.flowpowered.react.constraint.Joint.JointInfo;
-import com.flowpowered.react.constraint.Joint.JointListElement;
-import com.flowpowered.react.constraint.SliderJoint.SliderJointInfo;
-import com.flowpowered.react.engine.ContactManifold.ContactManifoldListElement;
+import com.flowpowered.react.constraint.BallAndSocketJoint.*;
+import com.flowpowered.react.constraint.ContactPoint.*;
+import com.flowpowered.react.constraint.FixedJoint.*;
+import com.flowpowered.react.constraint.HingeJoint.*;
+import com.flowpowered.react.constraint.Joint.*;
+import com.flowpowered.react.constraint.SliderJoint.*;
+import com.flowpowered.react.engine.ContactManifold.*;
 import com.flowpowered.react.math.*;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.map.*;
+import gnu.trove.map.hash.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class represents a dynamics world. This class inherits from the CollisionWorld class. In a dynamics world bodies can collide and their movements are simulated using the laws of physics.
@@ -565,9 +559,6 @@ public class DynamicsWorld extends CollisionWorld {
      */
     public RigidBody createRigidBody(Transform transform, float mass, CollisionShape collisionShape) {
         final Matrix3x3 inertiaTensor = new Matrix3x3();
-        if (collisionShape instanceof BoxShape) {
-            System.out.println(((BoxShape) collisionShape).getExtent());
-        }
         collisionShape.computeLocalInertiaTensor(inertiaTensor, mass);
         return createRigidBody(transform, mass, inertiaTensor, collisionShape);
     }
@@ -916,6 +907,7 @@ public class DynamicsWorld extends CollisionWorld {
                 mEventListener.beginContact(contactInfo);
             }
         }
+        //System.out.println("[Dyn World] [919]" + " new contact found" + contactInfo.getFirstBody().getAABB() + contactInfo.getSecondBody().getAABB());
         overlappingPair.addContact(contact);
         mContactManifolds.add(overlappingPair.getContactManifold());
         addContactManifoldToBody(overlappingPair.getContactManifold(), overlappingPair.getFirstBody(), overlappingPair.getSecondBody());

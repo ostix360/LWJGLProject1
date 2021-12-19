@@ -1,16 +1,15 @@
 package fr.ostix.game.graphics.textures;
 
-import fr.ostix.game.toolBox.Logger;
-import org.lwjgl.BufferUtils;
+import fr.ostix.game.toolBox.*;
+import org.lwjgl.*;
 import org.lwjgl.opengl.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
+import javax.imageio.*;
+import java.awt.image.*;
+import java.io.*;
+import java.nio.*;
 
-import static fr.ostix.game.toolBox.ToolDirectory.RES_FOLDER;
+import static fr.ostix.game.toolBox.ToolDirectory.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class TextureLoader {
@@ -69,11 +68,12 @@ public class TextureLoader {
             GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
-            GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
             if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
                 float amount = Math.min(4f, GL11.glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT));
+                GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 0f);
                 GL11.glTexParameterf(GL_TEXTURE_2D, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, amount);
             } else {
+                GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, 3f);
                 Logger.warn("Anisotropic filtering is not supported by your graphic card");
             }
         } else if (mode == TextureUtils.NEAREST_MODE) {

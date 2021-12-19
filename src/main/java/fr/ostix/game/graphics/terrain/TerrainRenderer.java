@@ -1,21 +1,18 @@
 package fr.ostix.game.graphics.terrain;
 
-import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.entity.component.light.Light;
-import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.graphics.textures.Texture;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
-import fr.ostix.game.toolBox.OpenGL.VAO;
-import fr.ostix.game.world.Terrain;
-import fr.ostix.game.world.texture.TerrainTexturePack;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-import org.lwjgl.opengl.GL13;
+import fr.ostix.game.entity.camera.*;
+import fr.ostix.game.entity.component.light.*;
+import fr.ostix.game.graphics.model.*;
+import fr.ostix.game.graphics.textures.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.*;
+import fr.ostix.game.world.*;
+import fr.ostix.game.world.chunk.*;
+import fr.ostix.game.world.texture.*;
+import org.joml.*;
+import org.lwjgl.opengl.*;
 
-import java.util.List;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,11 +27,16 @@ public class TerrainRenderer {
         shader.unBind();
     }
 
-    public void render(List<Terrain> terrains, List<Light> lights, Camera cam, Color skyColor, Vector4f clipPlane) {
+    public void render(Map<Vector2f, Chunk> terrains, List<Light> lights, Camera cam, Color skyColor, Vector4f clipPlane) {
         prepare(lights, skyColor, cam, clipPlane);
         OpenGlUtils.goWireframe(false);
         // shader.loadShaderMapSpace(toShadowSpace);
-        for (Terrain ter : terrains) {
+        for (Chunk chunk : terrains.values()) {
+            Terrain ter = chunk.getTerrain();
+            if (ter.getModel() == null) {
+                ter.setModel();
+                continue;
+            }
             prepareTerrain(ter);
             loadModelMatrix(ter);
             glDrawElements(GL_TRIANGLES, ter.getModel().getVertexCount(), GL_UNSIGNED_INT, 0);

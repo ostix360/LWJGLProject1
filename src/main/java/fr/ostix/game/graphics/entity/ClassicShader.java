@@ -1,16 +1,14 @@
 package fr.ostix.game.graphics.entity;
 
-import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.entity.component.light.Light;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
+import fr.ostix.game.entity.camera.*;
+import fr.ostix.game.entity.component.light.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.shader.*;
 import fr.ostix.game.toolBox.OpenGL.shader.uniform.*;
-import fr.ostix.game.world.World;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import fr.ostix.game.world.*;
+import org.joml.*;
 
-import java.util.List;
+import java.util.*;
 
 public class ClassicShader extends ShaderProgram {
 
@@ -68,7 +66,7 @@ public class ClassicShader extends ShaderProgram {
         Vector3f[] color = new Vector3f[MAX_LIGHTS];
         Vector3f[] attenuation = new Vector3f[MAX_LIGHTS];
         float[] power = new float[MAX_LIGHTS];
-        for (int i = 0; i < MAX_LIGHTS; i++) {
+        for (int i = 0; i < MAX_LIGHTS - 1; i++) {
             if (i < lights.size()) {
                 Light light = lights.get(i);
                 pos[i] = light.getPosition();
@@ -82,6 +80,11 @@ public class ClassicShader extends ShaderProgram {
                 power[i] = 0F;
             }
         }
+        Light sun = lights.get(lights.size() - 1);
+        pos[MAX_LIGHTS-1] = sun.getPosition();
+        color[MAX_LIGHTS-1] = sun.getColourVec3f();
+        attenuation[MAX_LIGHTS-1] = sun.getAttenuation();
+        power[MAX_LIGHTS-1] = sun.getPower();
         lightPos.loadVector3fToUniform(pos);
         lightColor.loadVector3fToUniform(color);
         lightAttenuation.loadVector3fToUniform(attenuation);

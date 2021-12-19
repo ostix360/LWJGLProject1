@@ -1,30 +1,20 @@
 package fr.ostix.game.world.interaction;
 
-import com.flowpowered.react.body.CollisionBody;
-import com.flowpowered.react.body.RigidBody;
-import com.flowpowered.react.collision.shape.AABB;
-import com.flowpowered.react.collision.shape.CollisionShape;
-import com.flowpowered.react.engine.DynamicsWorld;
-import com.flowpowered.react.engine.Material;
+import com.flowpowered.react.body.*;
+import com.flowpowered.react.collision.shape.*;
+import com.flowpowered.react.engine.*;
 import com.flowpowered.react.math.Quaternion;
 import com.flowpowered.react.math.Transform;
-import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.entity.BoundingModel;
-import fr.ostix.game.entity.Entity;
-import fr.ostix.game.entity.Player;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.world.World;
-import gnu.trove.list.TFloatList;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TFloatArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import org.joml.AxisAngle4d;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import com.flowpowered.react.math.*;
+import fr.ostix.game.entity.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.world.*;
+import gnu.trove.list.*;
+import gnu.trove.list.array.*;
+import org.joml.Math;
+import org.joml.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CollisionSystem {
 
@@ -32,8 +22,8 @@ public class CollisionSystem {
             (new Material(0.0f, 1.0f));
 
     private final Vector3 gravity = new Vector3(0, -9.81f, 0);
-    private final Map<CollisionBody, Entity> shapes = new HashMap<>();
     private final Map<RigidBody, Entity> motionShape = new HashMap<>();
+    private final Map<Entity, CollisionBody> shapes = new HashMap<>();
     private static final Map<CollisionBody, Entity> aabbs = new HashMap<>();
     private final TFloatList meshPositions = new TFloatArrayList();
     private final TIntList meshIndices = new TIntArrayList();
@@ -77,8 +67,7 @@ public class CollisionSystem {
             if (e.getCollision() != null) {
                 for (BoundingModel b : e.getCollision().getProperties().getBoundingModels()) {
                     if (b instanceof CollisionShape) {
-                        Transform t = new Transform(b.getTransform());
-                        this.addBody(e, (CollisionShape) b, t);
+                        this.addBody(e, (CollisionShape) b);
                     } else {
                         //...
                     }
@@ -107,16 +96,44 @@ public class CollisionSystem {
         World.doAABBToRender();
     }
 
-    public void update() {
+    public void update(List<Entity> entities) {
+        boolean contain;
+        for (Entity e : entities) {
+            contain = false;
+            for (Entity e1 : shapes.keySet()) {
+                if (e1.equals(e)) {
+                    contain = true;
+                    break;
+                }
+            }
+            if (!contain) {
+                if (e.getCollision() != null) {
+                    for (BoundingModel b : e.getCollision().getProperties().getBoundingModels()) {
+                        if (b instanceof CollisionShape) {
+                            this.addBody(e, (CollisionShape) b);
+                        } else {
+                            //...
+                        }
+                    }
+                }
+            }
 
+        }
+//        for (Entity e : shapes.keySet()) {
+//            if (!entities.contains(e)) {
+//                shapes.remove(e);
+//            }
+//        }
         updatePlayer();
         dynamicsWorld.update();
         for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
             final CollisionBody body = entry.getKey();
+
             Entity shape = null;
 
 
             if (entry.getValue() != null) shape = entry.getValue();
+
             Transform transform = body.getInterpolatedTransform();
             Quaternionf q = new Quaternionf(transform.getOrientation().getX(),
                     transform.getOrientation().getY(),
@@ -154,7 +171,7 @@ public class CollisionSystem {
 
     public void finish() {
         dynamicsWorld.stop();
-        shapes.clear();
+        motionShape.clear();
     }
 
     private void addBody(CollisionShape shape) {
@@ -170,14 +187,19 @@ public class CollisionSystem {
         addBody(body, null);
     }
 
-    private void addBody(Entity e, CollisionShape shape, Transform transform) {
+    private void addBody(Entity e, CollisionShape shape) {
         fr.ostix.game.entity.Transform trans = shape.getTransform();
+
+        final Vector3 pos = Maths.toVector3(e.getPosition().add(trans.getPosition(), new Vector3f()).add(shape.applyCorrection()));//.sub(e.getScale().div(6,new Vector3f())));
         shape.scale(e.getScale().mul(1.0f, new Vector3f()));
-        final Vector3 pos = Maths.toVector3(e.getPosition().add(trans.getPosition(), new Vector3f()));//.sub(e.getScale().div(6,new Vector3f())));
         AxisAngle4d angles = new AxisAngle4d();
-        e.getTransform().getTransformation().getRotation(angles);
-        Quaternionf q = new Quaternionf(angles);
+        Quaternionf q = new Quaternionf();
+        q.rotateLocalY(Math.toRadians(e.getRotation().y() * 2));
+        trans.getTransformation().getRotation(angles);
+        Quaternionf q2 = new Quaternionf(angles);
+        q.add(q2);
         Transform theTransform = new Transform(pos, new Quaternion(q.x(), q.y(), q.z(), q.w()));
+        e.getTransform().getTransformation().getUnnormalizedRotation(q);
         RigidBody body = dynamicsWorld.createRigidBody(theTransform,
                 (float) 1, shape);
 
@@ -194,7 +216,7 @@ public class CollisionSystem {
         if (body.isMotionEnabled() && e instanceof Player) {
             motionShape.put((RigidBody) body, e);
         }
-        shapes.put(body, e);
+        shapes.put(e, body);
         AABB aabb = body.getAABB();
         Transform bodyTransform = body.getTransform();
         Vector3 bodyPosition = bodyTransform.getPosition();

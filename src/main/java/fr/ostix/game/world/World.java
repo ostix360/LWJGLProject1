@@ -1,42 +1,37 @@
 package fr.ostix.game.world;
 
-import com.flowpowered.react.math.Vector3;
-import fr.ostix.game.audio.SoundListener;
-import fr.ostix.game.audio.SoundSource;
-import fr.ostix.game.core.Game;
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.entity.Entity;
-import fr.ostix.game.entity.Player;
-import fr.ostix.game.entity.animated.animation.animatedModel.AnimatedModel;
-import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.entity.component.ComponentType;
-import fr.ostix.game.entity.component.LoadComponents;
-import fr.ostix.game.entity.component.ai.AIProperties;
-import fr.ostix.game.entity.component.animation.AnimationComponent;
-import fr.ostix.game.entity.component.collision.CollisionComponent;
-import fr.ostix.game.entity.component.light.Light;
-import fr.ostix.game.graphics.MasterRenderer;
-import fr.ostix.game.graphics.font.meshCreator.GUIText;
-import fr.ostix.game.graphics.font.rendering.MasterFont;
-import fr.ostix.game.graphics.model.Model;
+import com.flowpowered.react.math.*;
+import fr.ostix.game.audio.*;
+import fr.ostix.game.core.*;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.entity.*;
+import fr.ostix.game.entity.animated.animation.animatedModel.*;
+import fr.ostix.game.entity.camera.*;
+import fr.ostix.game.entity.component.*;
+import fr.ostix.game.entity.component.ai.*;
+import fr.ostix.game.entity.component.animation.*;
+import fr.ostix.game.entity.component.collision.*;
+import fr.ostix.game.entity.component.light.*;
+import fr.ostix.game.graphics.*;
+import fr.ostix.game.graphics.font.meshCreator.*;
+import fr.ostix.game.graphics.font.rendering.*;
+import fr.ostix.game.graphics.model.*;
 import fr.ostix.game.graphics.particles.*;
-import fr.ostix.game.graphics.particles.particleSpawn.Sphere;
-import fr.ostix.game.graphics.textures.Texture;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.world.interaction.CollisionSystem;
-import fr.ostix.game.world.texture.TerrainTexture;
-import fr.ostix.game.world.texture.TerrainTexturePack;
-import fr.ostix.game.world.water.WaterTile;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.lwjgl.openal.AL10;
+import fr.ostix.game.graphics.particles.particleSpawn.*;
+import fr.ostix.game.graphics.textures.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.world.chunk.*;
+import fr.ostix.game.world.interaction.*;
+import fr.ostix.game.world.water.*;
+import fr.ostix.game.world.weather.*;
+import org.joml.*;
+import org.lwjgl.glfw.*;
+import org.lwjgl.openal.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.Math;
 import java.util.Random;
+import java.util.*;
 
 public class World {
 
@@ -44,7 +39,7 @@ public class World {
 
     private boolean isInit = false;
 
-    public static final int MAX_LIGHTS = 2;
+    public static final int MAX_LIGHTS = 11;
 
     private final CollisionSystem collision = new CollisionSystem();
 
@@ -55,17 +50,20 @@ public class World {
     private static final List<Entity> entities = new ArrayList<>();
     private static final List<Entity> aabbs = new ArrayList<>();
     private static final List<Light> lights = new ArrayList<>();
-    private static final List<Terrain> terrains = new ArrayList<>();
+    private static final Map<Vector2f, Chunk> terrains = new HashMap<>();
     public static Model CUBE;
     private final List<WaterTile> waterTiles = new ArrayList<>();
 
-    private static int[][] worldIndex;
+    private ChunkHandler chunkHandler;
 
     SoundListener listener;
     private Player player;
     Camera cam;
+    private Weather weather;
+    private float time = 0000.0F;
 
     public World() {
+
     }
 
     public static void addLight(Light light) {
@@ -80,7 +78,7 @@ public class World {
     }
 
     public static void doAABBToRender() {
-        //entities.addAll(aabbs);
+        entities.addAll(aabbs);
     }
 
     public void initWorld(Loader loader, ResourcePack pack) {
@@ -88,40 +86,45 @@ public class World {
         this.sounds = pack.getSoundByName();
         this.models = pack.getModelByName();
 
-        renderer = new MasterRenderer(loader);
 
-        MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
 
-        AnimatedModel an = pack.getAnimatedModelByName().get("player");
-        player = new Player(an, new Vector3f(55, 5, 55), new Vector3f(0), 1);
+        AnimatedModel an = pack.getAnimatedModelByName().get("player2");
+        player = new Player(an, new Vector3f(2055, 5, 2055), new Vector3f(0), 1);
         ParticleTargetProperties targetProperties = new ParticleTargetProperties(0, 6, 0, 80, 6);
         ParticleSystem system = new ParticleSystem(new ParticleTexture(textures.get("fire").getID(), 8, true),
-                360, 0.1f, -0, 60 * 2.2f, 4);
+                4000, 0.1f, -0, 60 * 2.2f, 4);
         system.randomizeRotation();
         system.setLifeError(0.2f);
         system.setDirection(new Vector3f(0, 0.1f, 0), 0.01f);
         system.setTarget(new ParticleTarget(targetProperties, player));
-        system.setPositionOffset(new Vector3f(0, 4, 50));
+        system.setPositionOffset(new Vector3f(0, 4, 25));
         system.setSpeedError(0.5f);
         system.setScaleError(0.1f);
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
-        // player.addComponent(new AIComponent(player, ai));
-        //player.addComponent(new ParticleComponent(system, player));
+        //player.addComponent(new AIComponent(player, ai));
+        // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
         CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(628856598));
         player.setCollision(cp);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
+        chunkHandler = new ChunkHandler(cam);
+
+        weather = new Weather(cam);
+        renderer = new MasterRenderer(weather);
+
+        MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
+
         entities.add(player);
 
-        Model lamp = models.get("lamp");
-        Entity lampE = new Entity(lamp, new Vector3f(10, 0, 10), new Vector3f(), 1);
-        LoadComponents.loadComponents(pack.getComponents().get(-1850784592), lampE);
+        Model lamp = models.get("lantern");
+        Entity lampE = new Entity(lamp, new Vector3f(100, getTerrainHeight(2100, 2100), 100), new Vector3f(0, 0, 0), 1);
+        LoadComponents.loadComponents(pack.getComponents().get(-1925875992), lampE);
         entities.add(lampE);
 
         Model cube = models.get("box");
-        Entity cubeE = new Entity(cube, new Vector3f(50, 0, 20), new Vector3f(), 20);
+        Entity cubeE = new Entity(cube, new Vector3f(50, 0, 20), new Vector3f(2000, 90, 2000), 20);
         LoadComponents.loadComponents(pack.getComponents().get(2026772471), cubeE);
         entities.add(cubeE);
 
@@ -131,10 +134,9 @@ public class World {
         //lights.add(sun);
         //  lights.add(sunc);
 
-        initTerrain(loader);
         initEntity();
         initWater();
-        GUIText text1 = new GUIText("Bienvenu dans ce jeu magique", 1f, Game.gameFont, new Vector2f(0, 1080f / 2f), 1920f, true);
+        GUIText text1 = new GUIText("Bienvenu dans ce jeu magique", 1f, Game.gameFont, new Vector2f(0, 0), 1920f, true);
         text1.setColour(Color.RED);
         MasterFont.add(text1);
 
@@ -156,6 +158,7 @@ public class World {
 //        back2.setLooping(true);
 //        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
         // back2.play();
+        chunkHandler.start();
         isInit = true;
     }
 
@@ -191,43 +194,33 @@ public class World {
         }
     }
 
-    private void initTerrain(Loader loader) {
-        TerrainTexture backgroundTexture = new TerrainTexture(textures.get("grassy2").getID());
-        TerrainTexture rTexture = new TerrainTexture(textures.get("mud").getID());
-        TerrainTexture gTexture = new TerrainTexture(textures.get("grassFlowers").getID());
-        TerrainTexture bTexture = new TerrainTexture(textures.get("path").getID());
-
-        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
-        TerrainTexture blendMap = new TerrainTexture(textures.get("blendMap").getID());
-
-        worldIndex = new int[2][2];
-        int index = 0;
-        for (int x = 0; x < 2; x++) {
-            for (int z = 0; z < 2; z++) {
-                terrains.add(new Terrain(x, z, loader, texturePack, blendMap, "heightmap"));
-                worldIndex[x][z] = index;
-                index++;
-            }
-        }
-
-
-    }
 
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
 
+        if (Input.keys[GLFW.GLFW_KEY_O]) {
+            updateTime();
+        }
         for (Entity e : entities) {
             e.update();
         }
-        collision.update();
-
+        collision.update(entities);
+        weather.update(time);
 
 
         listener.updateTransform(player.getPosition(), player.getRotation());
         MasterParticle.update(cam);
-
+        terrains.clear();
+        terrains.putAll(chunkHandler.getChunkMap());
+        entities.clear();
+        entities.addAll(chunkHandler.getEntities());
+        entities.add(player);
     }
 
+    private void updateTime() {
+        time += 1 / 60f * 1000;
+        time %= 24000;
+    }
 
 
     public void render() {
@@ -240,9 +233,9 @@ public class World {
         int x = (int) Math.floor(worldX / Terrain.getSIZE());
         int z = (int) Math.floor(worldZ / Terrain.getSIZE());
         try {
-            return terrains.get(worldIndex[x][z]).getHeightOfTerrain(worldX, worldZ);
+            return terrains.get(new Vector2f(x,z)).getTerrain().getHeightOfTerrain(worldX, worldZ);
         } catch (Exception e) {
-            // Logger.err("World doesn't exist in this coordinates xIndex : " + x + " ZIndex : " + z);
+             //Logger.err("World doesn't exist in this coordinates xIndex : " + x + " ZIndex : " + z);
         }
         return 0;
     }
@@ -252,6 +245,7 @@ public class World {
     }
 
     public void cleanUp() {
+        chunkHandler.exit();
         collision.finish();
         renderer.cleanUp();
         MasterParticle.cleanUp();

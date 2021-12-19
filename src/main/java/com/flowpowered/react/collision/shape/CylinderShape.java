@@ -25,10 +25,11 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Vector3;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import org.joml.*;
+
+import java.lang.Math;
 
 /**
  * Represents a cylinder collision shape around the Y axis and centered at the origin. The cylinder is defined by its height and the radius of its base. The "transform" of the corresponding rigid body
@@ -99,6 +100,11 @@ public class CylinderShape extends CollisionShape {
      */
     public float getHeight() {
         return mHalfHeight + mHalfHeight;
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,mHalfHeight,0);
     }
 
     @Override

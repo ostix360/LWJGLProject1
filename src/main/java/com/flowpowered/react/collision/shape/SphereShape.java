@@ -25,11 +25,9 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Transform;
-import com.flowpowered.react.math.Vector3;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import org.joml.*;
 
 /**
  * Represents a sphere collision shape that is centered at the origin and defined by its radius. This collision shape does not have an explicit object margin distance. The margin is implicitly the
@@ -110,9 +108,18 @@ public class SphereShape extends CollisionShape {
     }
 
     @Override
+    public float getHeight() {
+        return mRadius;
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,mRadius/2,0);
+    }
+
+    @Override
     public void scale(Vector3f scale) {
         mRadius *= scale.y();
-
     }
 
     public static SphereShape load(String content) {

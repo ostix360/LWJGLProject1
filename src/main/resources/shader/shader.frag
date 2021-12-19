@@ -1,9 +1,11 @@
 #version 330 core
 
+const int MAX_LIGHTS = 11;
+
 in vec2 passTextureCoords;
 in vec3 unitNormal;
 in vec3 unitVectorToCamera;
-in vec3 toLightVector[2];
+in vec3 toLightVector[MAX_LIGHTS];
 in float visibility;
 
 uniform sampler2D textureSampler;
@@ -11,9 +13,9 @@ uniform sampler2D normalMap;
 uniform sampler2D specularMap;
 
 uniform float useSpecularMap;
-uniform vec3 lightColor[2];
-uniform vec3 attenuation[2];
-uniform float lightPower[2];
+uniform vec3 lightColor[MAX_LIGHTS];
+uniform vec3 attenuation[MAX_LIGHTS];
+uniform float lightPower[MAX_LIGHTS];
 uniform float reflectivity;
 uniform float shine;
 
@@ -30,12 +32,18 @@ void main(){
 
     vec3 totalDiffuse = vec3(0.0);
     vec3 totalSpecular= vec3(0.0);
-    for (int i = 0;i<2;i++){
+    for (int i = 0;i<MAX_LIGHTS;i++){
+        float lightBottomDirectionFactor = 1;
         float distance = length(toLightVector[i]);
         float attenuationFactor = max(attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance), 1.0);
 
         vec3 unitLightVector = normalize(toLightVector[i]);
-
+        if (unitLightVector.y <= 0.5){
+            lightBottomDirectionFactor = 0.5 + unitLightVector.y;
+            if (lightBottomDirectionFactor <= 0){
+                lightBottomDirectionFactor = 0;
+            }
+        }
         float nDotl = dot(unitNormals, unitLightVector);
 
         float brightness = max(nDotl,0.0);
@@ -48,8 +56,8 @@ void main(){
         float dampedFactor = pow(specularFactor, shine);
         vec3 specular = dampedFactor * lightColor[i] * reflectivity;
 
-        totalDiffuse = totalDiffuse + (brightness * lightColor[i] * lightPower[i])/attenuationFactor;
-        totalSpecular = totalSpecular + max(vec3(0.), (dampedFactor * lightColor[i] * reflectivity))/attenuationFactor;
+        totalDiffuse = totalDiffuse + ((brightness * lightColor[i] * lightPower[i])/attenuationFactor) * lightBottomDirectionFactor;
+        totalSpecular = totalSpecular + (max(vec3(0.), (dampedFactor * lightColor[i] * reflectivity))/attenuationFactor) * lightBottomDirectionFactor;
     }
 
     if(useSpecularMap > 0.5){

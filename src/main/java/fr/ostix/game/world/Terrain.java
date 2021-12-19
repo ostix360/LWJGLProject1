@@ -1,39 +1,44 @@
 package fr.ostix.game.world;
 
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.toolBox.Logger;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.world.texture.TerrainTexture;
-import fr.ostix.game.world.texture.TerrainTexturePack;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import fr.ostix.game.core.ressourceProcessor.*;
+import fr.ostix.game.graphics.model.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.world.chunk.*;
+import fr.ostix.game.world.texture.*;
+import org.joml.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
+import javax.imageio.*;
+import java.awt.image.*;
+import java.io.*;
+import java.util.*;
+import java.lang.Math;
 
 public class Terrain {
-    private static final int SIZE = 800;
+    private static final int SIZE = 100;
     private static final int MAX_HEIGHT = 40;
     private static final float MAX_PIXEL_COLOR = 256 * 256 * 256;
 
     private float[][] heights;
     private final float x;
     private final float z;
-    private final MeshModel model;
+    private MeshModel model;
     private final TerrainTexturePack texturePack;
     private final TerrainTexture blendMap;
+    private static Map<Vector2f, Chunk> worldChunk;
+    private ModelLoaderRequest modelRequest;
 
-    public Terrain(float gridX, float gridZ, Loader loader, TerrainTexturePack texturePack, TerrainTexture blendMap,
+    public Terrain(float gridX, float gridZ, TerrainTexturePack texturePack, TerrainTexture blendMap,
                    String heightMap) {
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
-        this.model = generateTerrain(loader, heightMap);
+        generateTerrain(heightMap);
         this.texturePack = texturePack;
         this.blendMap = blendMap;
+    }
+
+    public static void setWorldChunk(Map<Vector2f, Chunk> worldChunk) {
+        Terrain.worldChunk = worldChunk;
     }
 
     public float getHeightOfTerrain(float worldX, float worldZ) {
@@ -60,13 +65,32 @@ public class Terrain {
         return answer;
     }
 
-    private MeshModel generateTerrain(Loader loader, String heigthMap) {
+    private void regenerateTerrain() {
+        this.model = null;
+        int VERTEX_COUNT = heights.length;
+        int count = VERTEX_COUNT * VERTEX_COUNT;
+        float[] vertices = new float[count * 3];
+        int vertexPointer = 0;
+        for (int z = 0; z < VERTEX_COUNT; z++) {            // Boucle de generation de monde
+            for (int x = 0; x < VERTEX_COUNT; x++) {
+                vertices[vertexPointer * 3] = (float) x / ((float) VERTEX_COUNT - 1) * SIZE;
+                vertices[vertexPointer * 3 + 1] = heights[x][z];
+                vertices[vertexPointer * 3 + 2] = (float) z / ((float) VERTEX_COUNT - 1) * SIZE;
+                vertexPointer++;
+            }
+        }
+        ModelData data = modelRequest.getData();
+        modelRequest = new ModelLoaderRequest(new ModelData(vertices, data.getTexcoords(), data.getNormals(), data.getIndices()));
+        GLRequestProcessor.sendRequest(modelRequest);
+    }
+
+    private void generateTerrain(String heightMap) {
         BufferedImage image = null;
 
         try {
-            image = ImageIO.read(Objects.requireNonNull(Terrain.class.getResource("/textures/terrain/" + heigthMap + ".png")));
+            image = ImageIO.read(new File(ToolDirectory.RES_FOLDER + "/textures/terrain/heightMap/" + heightMap + ".png"));
         } catch (IOException e) {
-            Logger.err("Couldn't load heightMap ", e);
+            Logger.err("Couldn't load heightMap "+heightMap, e);
         }
 
         assert image != null;
@@ -82,8 +106,18 @@ public class Terrain {
             for (int x = 0; x < VERTEX_COUNT; x++) {
                 float height = getHeight(x, z, image);
                 heights[x][z] = height;
+            }
+        }
+        if (worldChunk.size() > 0) {
+            smoothTerrain(worldChunk.get(new Vector2f(x / SIZE - 1, z / SIZE)),
+                    worldChunk.get(new Vector2f(x / SIZE + 1, z / SIZE)),
+                    worldChunk.get(new Vector2f(x / SIZE, z / SIZE + 1))
+                    , worldChunk.get(new Vector2f(x / SIZE, z / SIZE - 1)));
+        }
+        for (int z = 0; z < VERTEX_COUNT; z++) {            // Boucle de generation de monde
+            for (int x = 0; x < VERTEX_COUNT; x++) {
                 vertices[vertexPointer * 3] = (float) x / ((float) VERTEX_COUNT - 1) * SIZE;
-                vertices[vertexPointer * 3 + 1] = height;
+                vertices[vertexPointer * 3 + 1] = heights[x][z];
                 vertices[vertexPointer * 3 + 2] = (float) z / ((float) VERTEX_COUNT - 1) * SIZE;
                 Vector3f normal = calculateNormal(x, z, image);
                 normals[vertexPointer * 3] = normal.x;
@@ -109,7 +143,86 @@ public class Terrain {
                 indices[pointer++] = bottomRight;
             }
         }
-        return loader.loadToVAO(vertices, textureCoords, normals, indices);
+        modelRequest = new ModelLoaderRequest(new ModelData(vertices, textureCoords, normals, indices));
+        GLRequestProcessor.sendRequest(modelRequest);
+    }
+
+    private void smoothTerrain(Chunk leftC, Chunk rightC, Chunk upC, Chunk bottomC) {
+//        int edgeL = (int) Math.sqrt(left.heights.length);
+//        int edgeR = (int) Math.sqrt(right.heights.length);
+//        int edgeU = (int) Math.sqrt(up.heights.length);
+//        int edgeD = (int) Math.sqrt(bottom.heights.length);
+
+        boolean leftIsModified = false;
+        boolean rightIsModified = false;
+        boolean upIsModified = false;
+        boolean bottomIsModified = false;
+        Terrain t;
+        for (int z = 0; z < 16; z++) {
+            if (leftC == null && rightC == null) {
+                break;
+            }
+            if (leftC == null) {
+                //this.heights[z][0] = (0 + this.heights[z][0])/2;
+            } else {
+                t = leftC.getTerrain();
+                //    if (t.heights[z][0] != 0) {
+                t.heights[15][z] = this.heights[0][z]  = (t.heights[15][z]  + this.heights[0][z] ) / 2;
+                leftIsModified = true;
+                //}
+
+            }
+            if (rightC == null) {
+                //this.heights[z][63] = (0 + this.heights[z][63])/2;
+            } else {
+                t = rightC.getTerrain();
+                //if (t.heights[z][0] != 0) {
+                t.heights[0][z] = this.heights[15][z]  = (t.heights[0][z]  + this.heights[15][z] ) / 2;
+                rightIsModified = true;
+                //}
+
+            }
+        }
+        for (int x = 0; x < 16; x++) {
+            if (upC == null && bottomC == null) {
+                break;
+            }
+            if (upC == null) {
+                //this.heights[0][x] = (0 + this.heights[0][x])/2;
+            } else {
+                t = upC.getTerrain();
+                //   if (t.heights[0][x] != 0) {
+                this.heights[x][15] = (t.heights[x][0] + this.heights[x][15]) / 2;
+                t.heights[x][0] = this.heights[x][15];
+                upIsModified = true;
+                //  }
+
+            }
+            if (bottomC == null) {
+                //this.heights[63][x] = (0 + this.heights[63][x])/2;
+            } else {
+                t = bottomC.getTerrain();
+                // if (t.heights[0][x] != 0) {
+                this.heights[x][0] = (t.heights[x][15] + this.heights[x][0]) / 2;
+                t.heights[x][15] = this.heights[x][0];
+                bottomIsModified = true;
+                // }
+            }
+        }
+
+        if (leftIsModified) {
+            leftC.getTerrain().regenerateTerrain();
+        }
+        if (rightIsModified) {
+            rightC.getTerrain().regenerateTerrain();
+        }
+        if (upIsModified) {
+            upC.getTerrain().regenerateTerrain();
+        }
+        if (bottomIsModified) {
+            bottomC.getTerrain().regenerateTerrain();
+        }
+
     }
 
     private Vector3f calculateNormal(int x, int z, BufferedImage image) {
@@ -117,7 +230,7 @@ public class Terrain {
         float heightR = getHeight(x + 1, z, image);
         float heightD = getHeight(x, z - 1, image);
         float heightU = getHeight(x, z + 1, image);
-        Vector3f normal = new Vector3f(heightL - heightR, 2f, heightD - heightU);
+        Vector3f normal = new Vector3f(heightL - heightR, 1f, heightD - heightU);
         normal.normalize();
         return normal;
     }
@@ -131,6 +244,12 @@ public class Terrain {
         height /= MAX_PIXEL_COLOR / 2;
         height *= MAX_HEIGHT;
         return height;
+    }
+
+    public void setModel() {
+        if (modelRequest.isExecuted()) {
+            this.model = modelRequest.getModel();
+        }
     }
 
     public static int getSIZE() {

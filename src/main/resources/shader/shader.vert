@@ -2,6 +2,7 @@
 
 const int MAX_JOINTS = 50;//max joints allowed in a skeleton
 const int MAX_WEIGHTS = 3;//max number of joints that can affect a vertex
+const int MAX_LIGHTS = 11;//max light
 
 in vec3 position;
 in vec2 textureCoords;
@@ -13,7 +14,7 @@ uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
-uniform vec3 lightPos[2];
+uniform vec3 lightPos[MAX_LIGHTS];
 
 
 uniform float isAnimated;
@@ -27,7 +28,7 @@ uniform vec4 clipPlane;
 out vec2 passTextureCoords;
 out vec3 unitNormal;
 out vec3 unitVectorToCamera;
-out vec3 toLightVector[2];
+out vec3 toLightVector[MAX_LIGHTS];
 out float visibility;
 
 
@@ -67,7 +68,7 @@ void main(){
 
     vec3 toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
 
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < MAX_LIGHTS; i++){
         toLightVector[i] = lightPos[i] - worldPosition.xyz;
     }
     unitNormal = normalize(surfaceNormals);

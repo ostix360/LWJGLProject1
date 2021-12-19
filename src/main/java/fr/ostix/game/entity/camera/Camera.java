@@ -1,22 +1,24 @@
 package fr.ostix.game.entity.camera;
 
-import fr.ostix.game.core.Input;
-import fr.ostix.game.entity.Player;
-import fr.ostix.game.graphics.MasterRenderer;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.world.World;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import fr.ostix.game.core.*;
+import fr.ostix.game.entity.*;
+import fr.ostix.game.graphics.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.world.*;
+import org.joml.*;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.glfw.GLFW.*;
+
+import java.lang.Math;
 
 public class Camera implements ICamera {
 
     private final SmoothFloat distanceFromPlayer = new SmoothFloat(50, 8);
     private final SmoothFloat angleAroundPlayer = new SmoothFloat(0, 10);
+    public int viewDistance = 15;
     private Matrix4f projection;
 
-    private final Vector3f position = new Vector3f(-50, 35, -100);
+    private final Vector3f position;
     float pitch = 20;
     float yaw = 0;
     private final float roll = 0;
@@ -27,6 +29,7 @@ public class Camera implements ICamera {
 
     public Camera(Player player) {
         this.player = player;
+        this.position = player.getPosition();
     }
 
     private float terrainHeight;

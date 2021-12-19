@@ -1,12 +1,12 @@
 package fr.ostix.game.core.loader;
 
-import fr.ostix.game.graphics.model.MeshModel;
-import fr.ostix.game.toolBox.ToolDirectory;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import fr.ostix.game.graphics.model.*;
+import fr.ostix.game.toolBox.*;
+import org.joml.*;
 import org.lwjgl.assimp.*;
 
-import java.util.Objects;
+import java.util.*;
+import java.lang.Math;
 
 public class LoadMeshModel {
     private static final Matrix4f CORRECTION = new Matrix4f().rotate((float) Math.toRadians(-90), new Vector3f(1, 0, 0));
@@ -23,7 +23,7 @@ public class LoadMeshModel {
 
 
         if (scene == null) {
-            System.err.println("the imported file does not contain any scene.");
+            System.err.println("the imported file does not contain any scene. " + ToolDirectory.RES_FOLDER + "/models/entities/" + fileName + ".obj");
             //System.exit(0);
         }
 

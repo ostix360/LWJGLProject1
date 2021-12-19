@@ -25,10 +25,9 @@
  */
 package com.flowpowered.react.collision.shape;
 
-import com.flowpowered.react.ReactDefaults;
-import com.flowpowered.react.math.Matrix3x3;
-import com.flowpowered.react.math.Vector3;
-import org.joml.Vector3f;
+import com.flowpowered.react.*;
+import com.flowpowered.react.math.*;
+import org.joml.*;
 
 /**
  * Represents a capsule collision shape that is defined around the Y axis. A capsule shape can be seen as the convex hull of two spheres. The capsule shape is defined by its radius (radius of the two
@@ -84,6 +83,11 @@ public class CapsuleShape extends CollisionShape {
      */
     public float getHeight() {
         return mHalfHeight + mHalfHeight;
+    }
+
+    @Override
+    public Vector3f applyCorrection() {
+        return new Vector3f(0,mHalfHeight,0);
     }
 
     @Override

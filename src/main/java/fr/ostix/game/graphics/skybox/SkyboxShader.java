@@ -1,20 +1,15 @@
 package fr.ostix.game.graphics.skybox;
 
 
-import fr.ostix.game.entity.camera.Camera;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.Maths;
-import fr.ostix.game.toolBox.OpenGL.shader.ShaderProgram;
-import fr.ostix.game.toolBox.OpenGL.shader.uniform.FloatUniform;
-import fr.ostix.game.toolBox.OpenGL.shader.uniform.IntUniform;
-import fr.ostix.game.toolBox.OpenGL.shader.uniform.MatrixUniform;
-import fr.ostix.game.toolBox.OpenGL.shader.uniform.Vector3fUniform;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import fr.ostix.game.entity.camera.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.shader.*;
+import fr.ostix.game.toolBox.OpenGL.shader.uniform.*;
+import org.joml.*;
+
+import java.lang.Math;
 
 public class SkyboxShader extends ShaderProgram {
-
-    private static final float ROTATE_SPEED = 1f;
 
     private final MatrixUniform projectionMatrix = new MatrixUniform("projectionMatrix");
     private final MatrixUniform viewMatrix = new MatrixUniform("viewMatrix");
@@ -34,8 +29,7 @@ public class SkyboxShader extends ShaderProgram {
         projectionMatrix.loadMatrixToUniform(matrix);
     }
 
-    public void loadViewMatrix(Camera camera) {
-        rotate += ROTATE_SPEED * 1 / 60f;
+    public void loadViewMatrix(Camera camera,float rotate) {
         Matrix4f matrix = Maths.createViewMatrix(camera);
         matrix.m30(0);
         matrix.m31(0);

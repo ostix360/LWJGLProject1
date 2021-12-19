@@ -1,11 +1,9 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.loader.ResourcePackLoader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.gui.GuiTexture;
-import fr.ostix.game.gui.MasterGui;
-import org.joml.Vector2f;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.gui.*;
+import org.joml.*;
 
 public class LoaderMenu extends Screen {
 
@@ -26,9 +24,10 @@ public class LoaderMenu extends Screen {
 
         pack = new ResourcePackLoader(loader);
         pack.loadAllResource(masterGui);
-        if (pack.isLoaded()) {
-            this.masterGui.removeAllGui();
+        while (!pack.isLoaded()) {
+
         }
+        this.masterGui.removeAllGui();
 
     }
 

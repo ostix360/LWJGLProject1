@@ -1,12 +1,14 @@
 #version 400 core
 
+const int MAX_LIGHTS = 11;
+
 in vec3 position;
 in vec2 textureCoords;
 in vec3 normal;
 
 out vec2 pass_textureCoords;
 out vec3 surfaceNormal;
-out vec3 toLightVector[2];
+out vec3 toLightVector[MAX_LIGHTS];
 out vec3 toCameraVector;
 out float visibility;
 out vec4 shadowCoords;
@@ -14,7 +16,7 @@ out vec4 shadowCoords;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPos[2];
+uniform vec3 lightPos[MAX_LIGHTS];
 uniform vec4 plane;
 
 uniform mat4 toShadowMapSpace;
@@ -38,7 +40,7 @@ void main() {
     pass_textureCoords = textureCoords;
 
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
-    for (int i = 0; i < 2; i++){
+    for (int i = 0; i < MAX_LIGHTS; i++){
         toLightVector[i] = lightPos[i] - worldPosition.xyz;
     }
     toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz -worldPosition.xyz;

@@ -1,10 +1,8 @@
 package fr.ostix.game.toolBox;
 
-import org.joml.Vector3f;
-import org.joml.Vector4f;
+import org.joml.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Color {
 
@@ -37,6 +35,19 @@ public class Color {
         this.green = Maths.clampf(green, 0, 10);
         this.blue = Maths.clampf(blue, 0, 10);
         this.alpha = Maths.clampf(alpha, 0, 1);
+    }
+
+    public Color(float red, float green,float blue, boolean convert) {
+        if (convert){
+            this.red = (red / 255.0F);
+            this.green = (green / 255.0F);
+            this.blue = (blue / 255.0F);
+        }else{
+            this.red = Maths.clampf(red, 0, 10);
+            this.green = Maths.clampf(green, 0, 10);
+            this.blue = Maths.clampf(blue, 0, 10);
+        }
+
     }
 
     public float[] getFloatArray() {
@@ -88,6 +99,17 @@ public class Color {
         return alpha;
     }
 
+    public static Color getInterpolatedColor(Color c1, Color c2, float blendFactor) {
+        float r1 = c1.getRed() * (1.0F - blendFactor);
+        float g1 = c1.getGreen() * (1.0F - blendFactor);
+        float b1 = c1.getBlue() * (1.0F - blendFactor);
+        float a1 = c1.getAlpha() * (1.0F - blendFactor);
+        float r2 = c2.getRed() * blendFactor;
+        float g2 = c2.getGreen() * blendFactor;
+        float b2 = c2.getBlue() * blendFactor;
+        float a2 = c2.getAlpha() * blendFactor;
+        return new Color(r1 + r2, g1 + g2, b1 + b2, a1 + a2);
+    }
 
     @Override
     public String toString() {

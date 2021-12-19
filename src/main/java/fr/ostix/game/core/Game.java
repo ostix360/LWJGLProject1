@@ -1,18 +1,16 @@
 package fr.ostix.game.core;
 
-import fr.ostix.game.audio.AudioManager;
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.graphics.font.meshCreator.FontType;
-import fr.ostix.game.graphics.font.rendering.MasterFont;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.menu.Screen;
-import fr.ostix.game.menu.StateManager;
-import fr.ostix.game.menu.WorldState;
-import fr.ostix.game.toolBox.Logger;
-import fr.ostix.game.toolBox.OpenGL.DisplayManager;
-import fr.ostix.game.toolBox.OpenGL.OpenGlUtils;
-import org.lwjgl.openal.AL11;
+import fr.ostix.game.audio.*;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.core.ressourceProcessor.*;
+import fr.ostix.game.graphics.font.meshCreator.*;
+import fr.ostix.game.graphics.font.rendering.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.menu.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.*;
+import org.lwjgl.openal.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -96,8 +94,8 @@ public class Game extends Thread {
     long beforeRender = System.nanoTime();
     double elapsedUpdate;
     double elapsedRender;
-    double updateTime = 1000000000.0 / 60;
-    double renderTime = 1000000000.0 / 60;
+    double updateTime = 1_000_000_000.0 / 60;
+    double renderTime = 1_000_000_000.0 / 60;
     int ticks = 0;
     int frames = 0;
 
@@ -133,7 +131,7 @@ public class Game extends Thread {
 
     private void update() {
         Input.updateInput(window);
-
+        GLRequestProcessor.executeRequest();
         currentScreen = stateManager.getCurrentState(stateManager.update());
         currentScreen.update();
         glfwPollEvents();
