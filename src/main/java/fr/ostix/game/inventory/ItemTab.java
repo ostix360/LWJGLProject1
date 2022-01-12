@@ -1,16 +1,16 @@
 package fr.ostix.game.inventory;
 
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.items.Items;
+import fr.ostix.game.items.*;
 
 public class ItemTab {
     private final String name;
-    public Slot[] slots;
+    private final Slot[] slots;
 
     private ItemTab(String name, Slot[] slots) {
         this.name = name;
         this.slots = slots;
     }
+
 
     public static ItemTab newEmptyTab(String name, int slotCount) {
 
@@ -36,9 +36,9 @@ public class ItemTab {
         }
     }
 
-    public void startRendering(MasterGui master) {
+    public void startRendering() {
         for (Slot slot : slots) {
-            slot.startRendering(master);
+            slot.startRendering();
         }
     }
 
@@ -48,11 +48,16 @@ public class ItemTab {
         }
     }
 
-    public void stopRendering(MasterGui master) {
+    public void stopRendering() {
         for (Slot slot : slots) {
-            slot.stopRendering(master);
+            slot.stopRendering();
         }
     }
+
+    public Slot[] getSlots() {
+        return slots;
+    }
+
 
     public String getName() {
         return name;

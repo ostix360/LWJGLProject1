@@ -1,12 +1,11 @@
 package fr.ostix.game.items;
 
-import fr.ostix.game.core.Game;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.graphics.font.meshCreator.GUIText;
-import fr.ostix.game.gui.GuiTexture;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.toolBox.Color;
-import org.joml.Vector2f;
+import fr.ostix.game.core.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.graphics.font.meshCreator.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.toolBox.*;
+import org.joml.*;
 
 public class Item {
     private final int id;
@@ -49,12 +48,12 @@ public class Item {
         return texture;
     }
 
-    public void startRendering(MasterGui masterGui, float x, float y) {
+    public void startRendering(float x, float y) {
         gui = new GuiTexture(texture, new Vector2f(x, y), new Vector2f(130 * 1.23f, 130));
         MasterGui.addGui(gui);
     }
 
-    public void stopRendering(MasterGui masterGui) {
+    public void stopRendering() {
         MasterGui.removeGui(gui);
     }
 }

@@ -1,18 +1,17 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.Input;
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.inventory.Inventory;
-import fr.ostix.game.world.World;
+import fr.ostix.game.core.*;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.inventory.*;
+import fr.ostix.game.world.*;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class WorldState extends Screen {
     private final World world;
-    private final Inventory inventory;
+    private final PlayerInventory playerInventory;
     private final InGameMenu hotBar;
     private boolean worldInitialized = false;
 
@@ -23,7 +22,7 @@ public class WorldState extends Screen {
     public WorldState() {
         super("World");
         world = new World();
-        inventory = new Inventory("Player Inventory");
+        playerInventory = new PlayerInventory("Player Inventory");
         hotBar = new InGameMenu();
     }
 
@@ -35,7 +34,7 @@ public class WorldState extends Screen {
     public void init(Loader loader, MasterGui masterGui, ResourcePack pack) {
         super.init(loader, masterGui, pack);
         world.initWorld(loader, pack);
-        inventory.init(loader, pack, masterGui);
+        playerInventory.init(loader, pack, masterGui);
         hotBar.init(loader, masterGui, pack, world.getPlayer());
         worldInitialized = world.isInit();
     }
@@ -45,14 +44,14 @@ public class WorldState extends Screen {
         super.update();
         checkInputs();
         if (openInventory) {
-            if (!inventory.isOpen()) {
-                inventory.open();
+            if (!playerInventory.isOpen()) {
+                playerInventory.open();
             }
-            inventory.update();
+            playerInventory.update();
         }
         if (worldCanBeUpdated) {
-            if (inventory.isOpen()) {
-                inventory.close();
+            if (playerInventory.isOpen()) {
+                playerInventory.close();
             }
             world.update();
         }
@@ -61,10 +60,10 @@ public class WorldState extends Screen {
 
     public void render() {
         world.render();
-        if (!inventory.isOpen()) {
+        if (!playerInventory.isOpen()) {
             hotBar.render();
         } else {
-            inventory.render();
+            playerInventory.render();
         }
     }
 
@@ -74,7 +73,7 @@ public class WorldState extends Screen {
     }
 
     private void checkInputs() {
-        if (Input.keys[GLFW_KEY_E]) {
+        if (Input.keys[GLFW_KEY_TAB]) {
             if (!eIsAlreadyPressed) {
                 openInventory = !openInventory;
                 worldCanBeUpdated = !openInventory;

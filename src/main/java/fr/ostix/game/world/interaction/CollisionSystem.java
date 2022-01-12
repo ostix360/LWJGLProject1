@@ -22,7 +22,9 @@ public class CollisionSystem {
             (new Material(0.0f, 1.0f));
 
     private final Vector3 gravity = new Vector3(0, -9.81f, 0);
-    private final Map<RigidBody, Entity> motionShape = new HashMap<>();
+    private final Map<RigidBody, Entity> playerShapes = new HashMap<>();
+    private final List<Entity> interactEntity = new ArrayList<>();
+    private Player player;
     private final Map<Entity, CollisionBody> shapes = new HashMap<>();
     private static final Map<CollisionBody, Entity> aabbs = new HashMap<>();
     private final TFloatList meshPositions = new TFloatArrayList();
@@ -37,7 +39,6 @@ public class CollisionSystem {
         // addTerrain(terrains);
         dynamicsWorld.start();
     }
-
 
     private void addAllEntity(List<Entity> entities) {
         for (Entity e : entities) {
@@ -65,6 +66,9 @@ public class CollisionSystem {
 //                       } else {
 
             if (e.getCollision() != null) {
+                if (e.getCollision().getProperties().canMove()) {
+                    interactEntity.add(e);
+                }
                 for (BoundingModel b : e.getCollision().getProperties().getBoundingModels()) {
                     if (b instanceof CollisionShape) {
                         this.addBody(e, (CollisionShape) b);
@@ -108,6 +112,9 @@ public class CollisionSystem {
             }
             if (!contain) {
                 if (e.getCollision() != null) {
+                    if (e.getCollision().getProperties().canMove()) {
+                        interactEntity.add(e);
+                    }
                     for (BoundingModel b : e.getCollision().getProperties().getBoundingModels()) {
                         if (b instanceof CollisionShape) {
                             this.addBody(e, (CollisionShape) b);
@@ -126,7 +133,8 @@ public class CollisionSystem {
 //        }
         updatePlayer();
         dynamicsWorld.update();
-        for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
+        updateInteraction();
+        for (Map.Entry<RigidBody, Entity> entry : playerShapes.entrySet()) {
             final CollisionBody body = entry.getKey();
 
             Entity shape = null;
@@ -159,9 +167,27 @@ public class CollisionSystem {
 
 
     }
+    /*
+     *
+     * Event avec priorité
+     * Lorsque l'objet est proche on le met dans une liste et si il y a le bouton d'interaction donc onIteract General
+     * on interagie sur un objet par ordre de priorité mais quelque chose on va pouvoir lui mettre un evenemment  d'action.
+     *
+     *
+     */
+
+
+    private void updateInteraction() {
+        for (Entity e : interactEntity) {
+            float d = player.getRotation().distance(e.getPosition());
+            if (d < 5f) {
+                e.getInteractionListener().playerIsNear();
+            }
+        }
+    }
 
     private void updatePlayer() {
-        for (Map.Entry<RigidBody, Entity> entry : motionShape.entrySet()) {
+        for (Map.Entry<RigidBody, Entity> entry : playerShapes.entrySet()) {
             RigidBody body = entry.getKey();
             Entity shape = entry.getValue();
             body.setLinearVelocity(shape.getForceToCenter().multiply(30));//new Vector3(shape.getForceToCenter().getX(), shape.getForceToCenter().getY(), shape.getForceToCenter().getZ()));
@@ -171,7 +197,7 @@ public class CollisionSystem {
 
     public void finish() {
         dynamicsWorld.stop();
-        motionShape.clear();
+        playerShapes.clear();
     }
 
     private void addBody(CollisionShape shape) {
@@ -214,7 +240,8 @@ public class CollisionSystem {
 
     private void addBody(CollisionBody body, Entity e) {
         if (body.isMotionEnabled() && e instanceof Player) {
-            motionShape.put((RigidBody) body, e);
+            playerShapes.put((RigidBody) body, e);
+            this.player = (Player) e;
         }
         shapes.put(e, body);
         AABB aabb = body.getAABB();

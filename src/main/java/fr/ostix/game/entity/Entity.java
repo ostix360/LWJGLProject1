@@ -2,12 +2,14 @@ package fr.ostix.game.entity;
 
 
 import com.flowpowered.react.math.*;
+import fr.ostix.game.core.events.listener.*;
 import fr.ostix.game.entity.component.*;
 import fr.ostix.game.entity.component.collision.*;
 import fr.ostix.game.entity.component.particle.*;
 import fr.ostix.game.graphics.model.*;
 import org.joml.*;
 
+import javax.swing.event.*;
 import java.util.*;
 
 
@@ -23,6 +25,8 @@ public class Entity {
     protected MovementType movement;
     private CollisionComponent collision;
     private int textureIndex = 1;
+    private final EventListenerList eventListeners = new EventListenerList();
+    protected boolean canInteract = false;
 
     private final List<Component> components = new ArrayList<>();
 
@@ -32,6 +36,14 @@ public class Entity {
         this.rotation = rotation.add(0, 0, 0);
         this.scale = new Vector3f(scale);
         this.transform = new Transform(position, rotation, scale);
+    }
+
+    public void addInteractionListener(InteractionListener listener) {
+        eventListeners.add(InteractionListener.class, listener);
+    }
+
+    public InteractionListener getInteractionListener() {
+        return eventListeners.getListeners(InteractionListener.class)[0];
     }
 
     public CollisionComponent getCollision() {
@@ -53,6 +65,11 @@ public class Entity {
             }
             c.update();
         }
+    }
+
+
+    public boolean canInteract() {
+        return canInteract;
     }
 
     public void setPosition(Vector3f position) {
@@ -153,7 +170,7 @@ public class Entity {
         BACK("back"),
         JUMP("jump"),
         STATIC("staying");
-        String id;
+        private final String id;
 
         MovementType(String id) {
             this.id = id;
@@ -163,7 +180,6 @@ public class Entity {
             return id;
         }
     }
-
 
 
 }

@@ -101,11 +101,11 @@ public class World {
         system.setSpeedError(0.5f);
         system.setScaleError(0.1f);
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
-        AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3);
-        //player.addComponent(new AIComponent(player, ai));
+        AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3, new Vector3f(200, 5, 200), 30);
+        player.addComponent(new AIComponent(player, ai));
         // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
-        CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(628856598));
+        CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(-1940279936));
         player.setCollision(cp);
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
@@ -118,15 +118,15 @@ public class World {
 
         entities.add(player);
 
-        Model lamp = models.get("lantern");
-        Entity lampE = new Entity(lamp, new Vector3f(100, getTerrainHeight(2100, 2100), 100), new Vector3f(0, 0, 0), 1);
-        LoadComponents.loadComponents(pack.getComponents().get(-1925875992), lampE);
-        entities.add(lampE);
-
-        Model cube = models.get("box");
-        Entity cubeE = new Entity(cube, new Vector3f(50, 0, 20), new Vector3f(2000, 90, 2000), 20);
-        LoadComponents.loadComponents(pack.getComponents().get(2026772471), cubeE);
-        entities.add(cubeE);
+//        Model lamp = models.get("lantern");
+//        Entity lampE = new Entity(lamp, new Vector3f(100, getTerrainHeight(2100, 2100), 100), new Vector3f(0, 0, 0), 1);
+//        LoadComponents.loadComponents(pack.getComponents().get(-1925875992), lampE);
+//        entities.add(lampE);
+//
+//        Model cube = models.get("box");
+//        Entity cubeE = new Entity(cube, new Vector3f(50, 0, 20), new Vector3f(2000, 90, 2000), 20);
+//        LoadComponents.loadComponents(pack.getComponents().get(2026772471), cubeE);
+//        entities.add(cubeE);
 
         CUBE = models.get("cube");
 
@@ -152,7 +152,7 @@ public class World {
         back.setPosition(new Vector3f(0, 0, 0));
         back.setLooping(true);
         back.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
-        back.play();
+        // back.play();
 //        back2.setGain(0.2f);
 //        back2.setPosition(new Vector3f(0,0,0));
 //        back2.setLooping(true);

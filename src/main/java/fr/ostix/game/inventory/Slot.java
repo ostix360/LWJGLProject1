@@ -1,14 +1,13 @@
 package fr.ostix.game.inventory;
 
-import fr.ostix.game.core.Input;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.graphics.font.rendering.MasterFont;
-import fr.ostix.game.gui.GuiTexture;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.items.ItemStack;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.OpenGL.DisplayManager;
-import org.joml.Vector2f;
+import fr.ostix.game.core.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.graphics.font.rendering.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.items.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.*;
+import org.joml.*;
 
 public class Slot {
     private final float x, y;
@@ -60,16 +59,16 @@ public class Slot {
         }
     }
 
-    public void startRendering(MasterGui masterGui) {
+    public void startRendering() {
         if (!this.getStack().isEmpty()) {
-            stack.getItem().startRendering(masterGui, this.x + 5, this.y + 5);
+            stack.getItem().startRendering(this.x + 5, this.y + 5);
         }
         MasterGui.addGui(texture);
     }
 
-    public void stopRendering(MasterGui masterGui) {
+    public void stopRendering() {
         if (!this.getStack().isEmpty()) {
-            stack.getItem().stopRendering(masterGui);
+            stack.getItem().stopRendering();
         }
         MasterGui.removeGui(texture);
     }
