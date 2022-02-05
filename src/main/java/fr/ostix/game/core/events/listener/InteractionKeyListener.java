@@ -1,9 +1,11 @@
 package fr.ostix.game.core.events.listener;
 
+import fr.ostix.game.core.events.*;
+
 import java.util.*;
 
 public interface InteractionKeyListener extends EventListener {
-    void onKeyPressed();
+    void onKeyPressed(KeyEvent e);
 
-    void onKeyReleased();
+    void onKeyReleased(KeyEvent e);
 }

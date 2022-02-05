@@ -8,7 +8,6 @@ import org.joml.*;
 public class LoaderMenu extends Screen {
 
     private ResourcePackLoader pack;
-    private GuiTexture bar;
 
 
     public LoaderMenu() {
@@ -16,8 +15,8 @@ public class LoaderMenu extends Screen {
     }
 
     public void init(Loader loader, MasterGui masterGui) {
-        super.init(loader, masterGui, null);
-        bar = new GuiTexture(loader.loadTexture("menu/loader/progressBar").getId(),
+        super.init();
+        GuiTexture bar = new GuiTexture(loader.loadTexture("menu/loader/progressBar").getId(),
                 new Vector2f(150, 1080 - 150),
                 new Vector2f(1920 - 180, 80));
         MasterGui.addGui(bar);
@@ -27,7 +26,7 @@ public class LoaderMenu extends Screen {
         while (!pack.isLoaded()) {
 
         }
-        this.masterGui.removeAllGui();
+        masterGui.removeAllGui();
 
     }
 

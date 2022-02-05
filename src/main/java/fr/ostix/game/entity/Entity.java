@@ -43,6 +43,7 @@ public class Entity {
     }
 
     public InteractionListener getInteractionListener() {
+        if (eventListeners.getListenerCount() < 1) return null;
         return eventListeners.getListeners(InteractionListener.class)[0];
     }
 

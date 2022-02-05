@@ -1,6 +1,5 @@
 package fr.ostix.game.inventory;
 
-import fr.ostix.game.core.loader.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.gui.*;
 import fr.ostix.game.menu.*;
@@ -20,17 +19,14 @@ public class PlayerInventory extends Screen {
         this.title = title;
     }
 
-    public void init(Loader loader, ResourcePack pack, MasterGui masterGui) {
-        this.loader = loader;
-        this.pack = pack;
-        this.masterGui = masterGui;
+    public void init() {
         this.backGround = new GuiTexture(ResourcePack.getTextureByName().get("inventory").getID(),
                 new Vector2f(0), new Vector2f(1920,
                 1080));
         this.right_button = new Button(1830, 125, 90, 950,
                 ResourcePack.getTextureByName().get("right_button").getID());
         recipeTab = ItemTab.newEmptyTab("RecipeTab", 35);
-        super.init(loader, masterGui, pack);
+        super.init();
     }
 
     public boolean isOpen() {

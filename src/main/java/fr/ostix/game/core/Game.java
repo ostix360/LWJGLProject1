@@ -105,17 +105,28 @@ public class Game extends Thread {
         elapsedRender = now - beforeRender;
 
         if (elapsedUpdate > updateTime) {
-            beforeUpdate += updateTime;
-            update();
-            ticks++;
+            try {
+                beforeUpdate += updateTime;
+                update();
+                ticks++;
+            } catch (Exception e) {
+                e.printStackTrace();
+                exit();
+            }
         } else if (elapsedRender > renderTime) {
-            render();
-            DisplayManager.updateDisplay();
-            frames++;
-            beforeRender += renderTime;
+            try {
+                beforeRender += renderTime;
+                render();
+                DisplayManager.updateDisplay();
+                frames++;
+            } catch (Exception e) {
+                e.printStackTrace();
+                exit();
+            }
+
         } else {
             try {
-                sleep(100);
+                sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -1,12 +1,15 @@
 package fr.ostix.game.core;
 
-import fr.ostix.game.toolBox.Logger;
-import org.lwjgl.BufferUtils;
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.listener.*;
+import fr.ostix.game.toolBox.*;
+import org.lwjgl.*;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.*;
 
-import java.nio.DoubleBuffer;
+import javax.swing.event.*;
+import java.nio.*;
+import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -14,8 +17,10 @@ public class Input {
 
     private static final DoubleBuffer MOUSE_X = BufferUtils.createDoubleBuffer(1);
     public static boolean[] keysMouse = new boolean[65535];
+    private static final boolean[] keysRealesed = new boolean[65535];
     private static final DoubleBuffer MOUSE_Y = BufferUtils.createDoubleBuffer(1);
     public static boolean[] keys = new boolean[65535];
+    private static final EventListenerList listeners = new EventListenerList();
     private static double mouseX;
     private static double mouseY;
     public static float mouseDY;
@@ -23,16 +28,33 @@ public class Input {
     public static float mouseDWhell;
     private static float beforePositionX;
     private static float beforePositionY;
+    public static boolean[] keysMousePressed = new boolean[65535];
+
+    public static void addKeyListener(InteractionKeyListener listener) {
+        listeners.add(InteractionKeyListener.class, listener);
+    }
+
+    public static void removeKeyListener(InteractionKeyListener listener) {
+        listeners.remove(InteractionKeyListener.class, listener);
+    }
 
     public static void init(long window) {
         GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
                 if (key == -1) {
-                    Logger.err("Error this key is unknown");
+                    Logger.err("Error this key ( " + scancode + ") is unknown");
                     return;
                 }
                 keys[key] = action != GLFW_RELEASE;
+                if (action != GLFW_PRESS) {
+                    Arrays.stream(listeners.getListeners(InteractionKeyListener.class)).forEach(
+                            (l) -> l.onKeyPressed(new KeyEvent(0, key)));
+                }
+                if (action != GLFW_RELEASE) {
+                    Arrays.stream(listeners.getListeners(InteractionKeyListener.class)).forEach(
+                            (l) -> l.onKeyReleased(new KeyEvent(0, key)));
+                }
             }
         });
 
@@ -67,6 +89,15 @@ public class Input {
         MOUSE_X.flip();
         MOUSE_Y.flip();
 
+    }
+
+    public static boolean keyPressed(int key) {
+        if (keys[key] && !keysRealesed[key]) {
+            keysRealesed[key] = true;
+            return true;
+        }
+        keysRealesed[key] = keys[key];
+        return false;
     }
 
     public static double getMouseX() {

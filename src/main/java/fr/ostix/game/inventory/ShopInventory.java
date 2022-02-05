@@ -10,7 +10,7 @@ public class ShopInventory extends Inventory {
 
     public ShopInventory() {
         super("Shop");
-        shopTab = ItemTab.newEmptyTab("Shop", 10);
+        shopTab = ItemTab.newEmptyTab("Shop", 35);
         setItems();
     }
 
@@ -32,7 +32,7 @@ public class ShopInventory extends Inventory {
     @Override
     public void update() {
         super.update();
-        shopTab.update();
+        if (isOpen()) shopTab.update();
     }
 
     @Override

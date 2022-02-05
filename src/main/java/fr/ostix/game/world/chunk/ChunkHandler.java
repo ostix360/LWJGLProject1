@@ -110,6 +110,7 @@ public class ChunkHandler extends Thread{
             }
             isInit = true;
             try {
+                Thread.yield();
                 Thread.sleep(50);
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -1,9 +1,11 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.toolBox.Logger;
+import fr.ostix.game.core.loader.*;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.graphics.*;
+import fr.ostix.game.graphics.particles.*;
+import fr.ostix.game.gui.*;
+import fr.ostix.game.toolBox.*;
 
 
 public class StateManager {
@@ -12,7 +14,6 @@ public class StateManager {
     private final Loader loader;
     private final WorldState world;
     private ResourcePack pack;
-    private MasterGui masterGui;
     private MainMenu mainMenu;
 
     public StateManager(Loader loader) {
@@ -22,20 +23,20 @@ public class StateManager {
     }
 
     public void init(MasterGui masterGui) {
-        this.masterGui = masterGui;
         LoaderMenu loaderMenu = new LoaderMenu();
         loaderMenu.init(loader, masterGui);
         loaderMenu.cleanUp();
         pack = loaderMenu.getPack();
         mainMenu = new MainMenu();
-        mainMenu.init(loader, masterGui, pack);
+        mainMenu.init();
         screens[0] = mainMenu;
     }
 
     public int update() {
         if (!world.isWorldInitialized()) {
-            world.init(loader, masterGui, pack);
+            world.init(pack);
             screens[1] = world;
+            MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
             Logger.log("World is Loaded");
         }
         if (mainMenu.startWorld) {
@@ -52,9 +53,5 @@ public class StateManager {
         for (Screen s : screens) {
             s.cleanUp();
         }
-    }
-
-    public ResourcePack getPack() {
-        return pack;
     }
 }

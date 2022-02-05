@@ -3,7 +3,6 @@ package fr.ostix.game.world;
 import com.flowpowered.react.math.*;
 import fr.ostix.game.audio.*;
 import fr.ostix.game.core.*;
-import fr.ostix.game.core.loader.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.entity.*;
 import fr.ostix.game.entity.animated.animation.animatedModel.*;
@@ -43,10 +42,6 @@ public class World {
 
     private final CollisionSystem collision = new CollisionSystem();
 
-    private HashMap<String, Texture> textures;
-    private HashMap<String, SoundSource> sounds;
-    private HashMap<String, Model> models;
-
     private static final List<Entity> entities = new ArrayList<>();
     private static final List<Entity> aabbs = new ArrayList<>();
     private static final List<Light> lights = new ArrayList<>();
@@ -81,11 +76,9 @@ public class World {
         entities.addAll(aabbs);
     }
 
-    public void initWorld(Loader loader, ResourcePack pack) {
-        this.textures = ResourcePack.getTextureByName();
-        this.sounds = pack.getSoundByName();
-        this.models = pack.getModelByName();
-
+    public final void initWorld(ResourcePack pack) {
+        HashMap<String, Texture> textures = ResourcePack.getTextureByName();
+        HashMap<String, Model> models = pack.getModelByName();
 
 
         AnimatedModel an = pack.getAnimatedModelByName().get("player2");
@@ -102,7 +95,7 @@ public class World {
         system.setScaleError(0.1f);
         system.setSpawn(((Sphere) SpawnParticleType.SPHERE.getSpawn()).setRadius(10));
         AIProperties ai = new AIProperties(2f, 1, 0.25f, 0.25f, 0.65f, 6, 3, new Vector3f(200, 5, 200), 30);
-        player.addComponent(new AIComponent(player, ai));
+        //player.addComponent(new AIComponent(player, ai));
         // player.addComponent(new ParticleComponent(system, player));
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
         CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(-1940279936));
@@ -114,7 +107,7 @@ public class World {
         weather = new Weather(cam);
         renderer = new MasterRenderer(weather);
 
-        MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
+
 
         entities.add(player);
 
@@ -145,18 +138,18 @@ public class World {
 
         SoundSource back = pack.getSoundByName().get("ambient");
 
-        // SoundSource back2 = AudioManager.loadSound("test1", 1, 10, 20);
+        SoundSource back2 = AudioManager.loadSound("test1", true);
 
 
         back.setGain(0.2f);
         back.setPosition(new Vector3f(0, 0, 0));
         back.setLooping(true);
         back.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
-        // back.play();
-//        back2.setGain(0.2f);
-//        back2.setPosition(new Vector3f(0,0,0));
-//        back2.setLooping(true);
-//        back2.setProperty(AL10.AL_SOURCE_RELATIVE,AL10.AL_TRUE);
+        //back.play();
+        back2.setGain(0.2f);
+        back2.setPosition(new Vector3f(0, 0, 0));
+        back2.setLooping(true);
+        back2.setProperty(AL10.AL_SOURCE_RELATIVE, AL10.AL_TRUE);
         // back2.play();
         chunkHandler.start();
         isInit = true;
@@ -198,6 +191,8 @@ public class World {
     public void update() {
         //entity.increaseRotation(new Vector3f(0, 1, 0));
 
+        cam.move();
+
         if (Input.keys[GLFW.GLFW_KEY_O]) {
             updateTime();
         }
@@ -224,7 +219,6 @@ public class World {
 
 
     public void render() {
-        cam.move();
         renderer.renderScene(entities, waterTiles, terrains, lights, cam);
         MasterParticle.render(cam);
     }
@@ -250,6 +244,7 @@ public class World {
         renderer.cleanUp();
         MasterParticle.cleanUp();
     }
+
 
     public boolean isInit() {
         return isInit;

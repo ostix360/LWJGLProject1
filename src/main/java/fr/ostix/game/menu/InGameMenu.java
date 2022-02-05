@@ -1,11 +1,9 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.entity.Player;
-import fr.ostix.game.gui.GuiTexture;
-import fr.ostix.game.gui.MasterGui;
-import org.joml.Vector2f;
+import fr.ostix.game.core.resources.*;
+import fr.ostix.game.entity.*;
+import fr.ostix.game.gui.*;
+import org.joml.*;
 
 public class InGameMenu extends Screen {
     private Player player;
@@ -17,8 +15,8 @@ public class InGameMenu extends Screen {
         super("My World");
     }
 
-    public void init(Loader loader, MasterGui masterGui, ResourcePack pack, Player player) {
-        super.init(loader, masterGui, pack);
+    public void init(Player player) {
+        super.init();
         this.player = player;
         heartTexture = ResourcePack.getTextureByName().get("food").getID();
         enduranceBar = new GuiTexture(ResourcePack.getTextureByName().get("enduranceBar").getID(), new Vector2f(975, 955), new Vector2f(590, 135));

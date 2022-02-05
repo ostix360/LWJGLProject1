@@ -1,28 +1,18 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.Loader;
-import fr.ostix.game.core.resources.ResourcePack;
-import fr.ostix.game.gui.MasterGui;
-import fr.ostix.game.menu.component.Component;
+import fr.ostix.game.menu.component.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class Screen {
     private final List<Component> components = new ArrayList<>();
-    protected Loader loader;
     protected String title;
-    protected MasterGui masterGui;
-    protected ResourcePack pack;
 
     public Screen(String title) {
         this.title = title;
     }
 
-    public void init(Loader loader, MasterGui masterGui, ResourcePack pack) {
-        this.loader = loader;
-        this.masterGui = masterGui;
-        this.pack = pack;
+    public void init() {
     }
 
     protected void addComponent(Component c) {

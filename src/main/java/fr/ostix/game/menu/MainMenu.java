@@ -1,8 +1,6 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.loader.*;
 import fr.ostix.game.core.resources.*;
-import fr.ostix.game.gui.*;
 import fr.ostix.game.menu.component.*;
 
 public class MainMenu extends Screen {
@@ -15,8 +13,8 @@ public class MainMenu extends Screen {
     }
 
     @Override
-    public void init(Loader loader, MasterGui masterGui, ResourcePack pack) {
-        super.init(loader, masterGui, pack);
+    public void init() {
+        super.init();
 
         start = new Button((float) 1920 / 2 - 125,
                 (float) 1080 / 2 - 200, 250, 125, ResourcePack.getTextureByName().get("startButton").getID());
