@@ -1,13 +1,14 @@
 package fr.ostix.game.entity;
 
 import com.flowpowered.react.math.*;
-import fr.ostix.game.core.*;
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.keyEvent.*;
 import fr.ostix.game.graphics.model.*;
 import org.joml.*;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 import java.lang.Math;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Player extends Entity {
 
@@ -29,6 +30,53 @@ public class Player extends Entity {
 
     public Player(Model model, Vector3f position, Vector3f rotation, float scale) {
         super(model, position, rotation, scale);
+        setInputListener();
+    }
+
+    private void setInputListener() {
+        EventManager.getInstance().addListener(new InteractionKeyListener() {
+            @EventHandler
+            @Override
+            public void onKeyPressed(KeyPressedEvent e) {
+
+            }
+
+            @EventHandler
+            @Override
+            public void onKeyReleased(KeyReleasedEvent e) {
+
+            }
+
+            @EventHandler
+            @Override
+            public void onKeyMaintained(KeyMaintainedEvent e) {
+                if (e.getKEY() == GLFW_KEY_W || e.getKEY() == GLFW_KEY_UP) {
+                    movement = MovementType.FORWARD;
+                    currentSpeed = RUN_SPEED;
+                } else if (e.getKEY() == GLFW_KEY_S || e.getKEY() == GLFW_KEY_DOWN) {
+                    movement = MovementType.BACK;
+                    currentSpeed = -RUN_SPEED;
+                } else {
+                    currentSpeed = 0;
+                }
+
+                if (e.getKEY() == GLFW_KEY_A || e.getKEY() == GLFW_KEY_LEFT) {
+                    currentTurnSpeed = TURN_SPEED;
+                } else if (e.getKEY() == GLFW_KEY_D || e.getKEY() == GLFW_KEY_RIGHT) {
+                    currentTurnSpeed = -TURN_SPEED;
+                } else {
+                    currentTurnSpeed = 0;
+                }
+
+                if (e.getKEY() == GLFW_KEY_SPACE) {
+                    movement = MovementType.JUMP;
+                    jump();
+                }
+                if (e.getKEY() == GLFW_KEY_LEFT_SHIFT) {
+                    upwardsSpeed = -2;
+                }
+            }
+        });
     }
 
 //    public Player(Entity e) {
@@ -53,7 +101,9 @@ public class Player extends Entity {
     }
 
     private void move() {
-        checkInputs();
+        if (currentSpeed == 0 && currentTurnSpeed == 0) {
+            this.movement = MovementType.STATIC;
+        }
         super.increaseRotation(new Vector3f(0, this.currentTurnSpeed * 0.0023f, 0));
         torque.set(new Vector3(0, this.currentTurnSpeed, 0));
         float distance = currentSpeed * 0.006f;
@@ -84,35 +134,6 @@ public class Player extends Entity {
         this.upwardsSpeed = 2;
         canJump = false;
         // }
-    }
-
-    private void checkInputs() {
-        this.movement = MovementType.STATIC;
-        if (Input.keys[GLFW_KEY_W] || Input.keys[GLFW_KEY_UP]) {
-            this.movement = MovementType.FORWARD;
-            this.currentSpeed = RUN_SPEED;
-        } else if (Input.keys[GLFW_KEY_S] || Input.keys[GLFW_KEY_DOWN]) {
-            this.movement = MovementType.BACK;
-            this.currentSpeed = -RUN_SPEED;
-        } else {
-            this.currentSpeed = 0;
-        }
-
-        if (Input.keys[GLFW_KEY_A] || Input.keys[GLFW_KEY_LEFT]) {
-            this.currentTurnSpeed = TURN_SPEED;
-        } else if (Input.keys[GLFW_KEY_D] || Input.keys[GLFW_KEY_RIGHT]) {
-            this.currentTurnSpeed = -TURN_SPEED;
-        } else {
-            this.currentTurnSpeed = 0;
-        }
-
-        if (Input.keys[GLFW_KEY_SPACE]) {
-            this.movement = MovementType.JUMP;
-            this.jump();
-        }
-        if (Input.keys[GLFW_KEY_LEFT_SHIFT]) {
-            this.upwardsSpeed = -2;
-        }
     }
 
 

@@ -15,6 +15,7 @@ public class StateManager {
     private final WorldState world;
     private ResourcePack pack;
     private MainMenu mainMenu;
+    private Screen currentScreen;
 
     public StateManager(Loader loader) {
         this.loader = loader;
@@ -53,5 +54,9 @@ public class StateManager {
         for (Screen s : screens) {
             s.cleanUp();
         }
+    }
+
+    public void setCurrentScreen(Screen gui) {
+        currentScreen = gui;
     }
 }

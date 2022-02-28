@@ -7,6 +7,7 @@ import java.util.*;
 public abstract class Screen {
     private final List<Component> components = new ArrayList<>();
     protected String title;
+    private Screen previousScreen;
 
     public Screen(String title) {
         this.title = title;
@@ -36,6 +37,10 @@ public abstract class Screen {
         for (Component c : components) {
             c.cleanUp();
         }
+    }
+
+    public Screen getPreviousScreen() {
+        return previousScreen;
     }
 
     public String getTitle() {

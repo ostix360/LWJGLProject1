@@ -2,7 +2,7 @@ package fr.ostix.game.entity.entities;
 
 import fr.ostix.game.core.*;
 import fr.ostix.game.core.events.*;
-import fr.ostix.game.core.events.listener.*;
+import fr.ostix.game.core.events.keyEvent.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.entity.*;
 import fr.ostix.game.graphics.font.meshCreator.*;
@@ -33,7 +33,7 @@ public class Shop extends Entity {
             boolean isReleased = false;
 
             @Override
-            public void onKeyPressed(KeyEvent e) {
+            public void onKeyPressed(KeyPressedEvent e) {
 
                 if (inventory.isOpen() && e.getKEY() == GLFW.GLFW_KEY_ESCAPE) {
                     inventory.close();
@@ -41,18 +41,21 @@ public class Shop extends Entity {
             }
 
             @Override
-            public void onKeyReleased(KeyEvent e) {
+            public void onKeyReleased(KeyReleasedEvent e) {
                 isReleased = false;
+            }
+
+            @Override
+            public void onKeyMaintained(KeyMaintainedEvent e) {
+
             }
         };
         interactionText.setColour(Color.WHITE);
-        this.addInteractionListener(new InteractionListener() {
-            @Override
-            public void playerIsNear() {
-
+        EventManager.getInstance().addListener((InteractionListener) e -> {
+            if (e.isNearFromPlayer()) {
                 MasterGui.addGui(bgInteraction);
                 MasterFont.addTempFont(interactionText);
-                Input.addKeyListener(keyListener);
+                EventManager.getInstance().addListener(keyListener);
                 if (Input.keyPressed(GLFW.GLFW_KEY_E)) {
                     if (inventory.isOpen()) {
                         inventory.close();
@@ -60,11 +63,8 @@ public class Shop extends Entity {
                         inventory.open();
                     }
                 }
-            }
-
-            @Override
-            public void playerGone() {
-                Input.removeKeyListener(keyListener);
+            } else {
+                EventManager.getInstance().removeListener(keyListener);
             }
         });
 

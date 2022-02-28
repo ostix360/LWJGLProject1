@@ -2,14 +2,12 @@ package fr.ostix.game.entity;
 
 
 import com.flowpowered.react.math.*;
-import fr.ostix.game.core.events.listener.*;
 import fr.ostix.game.entity.component.*;
 import fr.ostix.game.entity.component.collision.*;
 import fr.ostix.game.entity.component.particle.*;
 import fr.ostix.game.graphics.model.*;
 import org.joml.*;
 
-import javax.swing.event.*;
 import java.util.*;
 
 
@@ -25,7 +23,6 @@ public class Entity {
     protected MovementType movement;
     private CollisionComponent collision;
     private int textureIndex = 1;
-    private final EventListenerList eventListeners = new EventListenerList();
     protected boolean canInteract = false;
 
     private final List<Component> components = new ArrayList<>();
@@ -38,14 +35,6 @@ public class Entity {
         this.transform = new Transform(position, rotation, scale);
     }
 
-    public void addInteractionListener(InteractionListener listener) {
-        eventListeners.add(InteractionListener.class, listener);
-    }
-
-    public InteractionListener getInteractionListener() {
-        if (eventListeners.getListenerCount() < 1) return null;
-        return eventListeners.getListeners(InteractionListener.class)[0];
-    }
 
     public CollisionComponent getCollision() {
         return collision;

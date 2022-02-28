@@ -181,9 +181,10 @@ public class CollisionSystem {
         for (Entity e : interactEntity) {
             float d = player.getPosition().distance(e.getPosition());
             if (d < 100) {
-                if (e.canInteract()) e.getInteractionListener().playerIsNear();
+                //TODO Change this
+                //EventManager.INSTANCE.callEvent(new InteractionEvent(true));
             } else if (d < 101) {
-                if (e.canInteract()) e.getInteractionListener().playerGone();
+                //EventManager.INSTANCE.callEvent(new InteractionEvent(false));
             }
         }
     }

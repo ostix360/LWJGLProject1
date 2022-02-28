@@ -1,15 +1,13 @@
 package fr.ostix.game.core;
 
 import fr.ostix.game.core.events.*;
-import fr.ostix.game.core.events.listener.*;
+import fr.ostix.game.core.events.keyEvent.*;
 import fr.ostix.game.toolBox.*;
 import org.lwjgl.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.*;
 
-import javax.swing.event.*;
 import java.nio.*;
-import java.util.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -20,7 +18,6 @@ public class Input {
     private static final boolean[] keysRealesed = new boolean[65535];
     private static final DoubleBuffer MOUSE_Y = BufferUtils.createDoubleBuffer(1);
     public static boolean[] keys = new boolean[65535];
-    private static final EventListenerList listeners = new EventListenerList();
     private static double mouseX;
     private static double mouseY;
     public static float mouseDY;
@@ -30,13 +27,7 @@ public class Input {
     private static float beforePositionY;
     public static boolean[] keysMousePressed = new boolean[65535];
 
-    public static void addKeyListener(InteractionKeyListener listener) {
-        listeners.add(InteractionKeyListener.class, listener);
-    }
 
-    public static void removeKeyListener(InteractionKeyListener listener) {
-        listeners.remove(InteractionKeyListener.class, listener);
-    }
 
     public static void init(long window) {
         GLFW.glfwSetKeyCallback(window, new GLFWKeyCallback() {
@@ -47,13 +38,17 @@ public class Input {
                     return;
                 }
                 keys[key] = action != GLFW_RELEASE;
-                if (action != GLFW_PRESS) {
-                    Arrays.stream(listeners.getListeners(InteractionKeyListener.class)).forEach(
-                            (l) -> l.onKeyPressed(new KeyEvent(0, key)));
+
+                if (action == GLFW_PRESS) {
+                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
+                    EventManager.getInstance().callEvent(new KeyPressedEvent(0, key));
                 }
-                if (action != GLFW_RELEASE) {
-                    Arrays.stream(listeners.getListeners(InteractionKeyListener.class)).forEach(
-                            (l) -> l.onKeyReleased(new KeyEvent(0, key)));
+                if (action == GLFW_RELEASE) {
+                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
+                    EventManager.getInstance().callEvent(new KeyReleasedEvent(0, key));
+                } else {
+                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
+                    EventManager.getInstance().callEvent(new KeyMaintainedEvent(0, key));
                 }
             }
         });

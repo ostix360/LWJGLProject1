@@ -1,4 +1,6 @@
-package fr.ostix.game.core.events;
+package fr.ostix.game.core.events.keyEvent;
+
+import fr.ostix.game.core.events.*;
 
 public class KeyEvent extends Event {
     private final int KEY;

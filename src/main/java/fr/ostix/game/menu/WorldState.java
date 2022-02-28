@@ -11,7 +11,6 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class WorldState extends Screen {
     private final World world;
-    private static InventoryListener il;
     public PlayerInventory playerInventory;
     private final InGameMenu hotBar;
     private boolean worldInitialized = false;
@@ -25,28 +24,15 @@ public class WorldState extends Screen {
         world = new World();
         playerInventory = new PlayerInventory("Player Inventory");
         hotBar = new InGameMenu();
-        il = new InventoryListener() {
-            @Override
-            public void onOpen(InventoryEvent e) {
-                worldCanBeUpdated = false;
-                currentInventory = e.getInv();
-            }
 
-            @Override
-            public void onClose(InventoryEvent e) {
-                worldCanBeUpdated = true;
-                currentInventory = null;
-            }
-        };
+        EventManager.getInstance().addListener(new InventoryListener(this));
     }
 
     public boolean isWorldInitialized() {
         return worldInitialized;
     }
 
-    public static InventoryListener getInventoryListener() {
-        return il;
-    }
+
 
     public void init(ResourcePack pack) {
         super.init();
@@ -106,6 +92,18 @@ public class WorldState extends Screen {
             if (currentInventory != null) currentInventory.close();
             currentInventory = null;
         }
+    }
+
+    public void setWorldCanBeUpdated(boolean worldCanBeUpdated) {
+        this.worldCanBeUpdated = worldCanBeUpdated;
+    }
+
+    public void setOpenInventory(boolean openInventory) {
+        this.openInventory = openInventory;
+    }
+
+    public void setCurrentInventory(Inventory currentInventory) {
+        this.currentInventory = currentInventory;
     }
 
     @Override
