@@ -39,6 +39,10 @@ public abstract class Screen {
         }
     }
 
+    public List<Component> getComponents() {
+        return components;
+    }
+
     public Screen getPreviousScreen() {
         return previousScreen;
     }

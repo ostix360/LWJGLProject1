@@ -1,9 +1,10 @@
 package fr.ostix.game.menu.component;
 
-import fr.ostix.game.core.Input;
-import fr.ostix.game.toolBox.Color;
-import fr.ostix.game.toolBox.OpenGL.DisplayManager;
-import org.lwjgl.glfw.GLFW;
+import fr.ostix.game.core.*;
+import fr.ostix.game.toolBox.*;
+import fr.ostix.game.toolBox.OpenGL.*;
+import org.joml.*;
+import org.lwjgl.glfw.*;
 
 public class Button extends Component {
 
@@ -23,6 +24,15 @@ public class Button extends Component {
         pressed = mX >= this.x && mY >= this.y &&
                 mX < (this.x + this.width) && mY < (this.y + this.height) && Input.keysMouse[GLFW.GLFW_MOUSE_BUTTON_1];
         this.texture.hasLayer(isPressed());
+    }
+
+    public boolean mouseIn(Vector2f MousePos) {
+        float mX = MousePos.x() / DisplayManager.getWidth() * 1920;
+        float mY = MousePos.y() / DisplayManager.getHeight() * 1080;
+
+
+        return pressed = mX >= this.x && mY >= this.y &&
+                mX < (this.x + this.width) && mY < (this.y + this.height);
     }
 
     public boolean isPressed() {
