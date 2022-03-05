@@ -249,4 +249,8 @@ public class World {
     public boolean isInit() {
         return isInit;
     }
+
+    public List<Entity> getEntitiesNear() {
+        return collision.getEntitiesNear();
+    }
 }

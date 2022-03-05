@@ -1,18 +1,14 @@
 package fr.ostix.game.entity.entities;
 
 import fr.ostix.game.core.*;
-import fr.ostix.game.core.events.*;
-import fr.ostix.game.core.events.keyEvent.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.entity.*;
 import fr.ostix.game.graphics.font.meshCreator.*;
-import fr.ostix.game.graphics.font.rendering.*;
 import fr.ostix.game.graphics.model.*;
 import fr.ostix.game.gui.*;
 import fr.ostix.game.inventory.*;
 import fr.ostix.game.toolBox.*;
 import org.joml.*;
-import org.lwjgl.glfw.*;
 
 public class Shop extends Entity {
 
@@ -29,44 +25,20 @@ public class Shop extends Entity {
                 new Vector2f(1920 / 2f - 60, 850), new Vector2f(120, 40));
         interactionText = new GUIText("Ouvrir", 5, Game.gameFont, new Vector2f(1920 / 2f - 50, 860),
                 20, false);
-        InteractionKeyListener keyListener = new InteractionKeyListener() {
-            boolean isReleased = false;
 
-            @Override
-            public void onKeyPressed(KeyPressedEvent e) {
-
-                if (inventory.isOpen() && e.getKEY() == GLFW.GLFW_KEY_ESCAPE) {
-                    inventory.close();
-                }
-            }
-
-            @Override
-            public void onKeyReleased(KeyReleasedEvent e) {
-                isReleased = false;
-            }
-
-            @Override
-            public void onKeyMaintained(KeyMaintainedEvent e) {
-
-            }
-        };
         interactionText.setColour(Color.WHITE);
-        EventManager.getInstance().addListener((InteractionListener) e -> {
-            if (e.isNearFromPlayer()) {
-                MasterGui.addGui(bgInteraction);
-                MasterFont.addTempFont(interactionText);
-                EventManager.getInstance().addListener(keyListener);
-                if (Input.keyPressed(GLFW.GLFW_KEY_E)) {
-                    if (inventory.isOpen()) {
-                        inventory.close();
-                    } else {
-                        inventory.open();
-                    }
-                }
-            } else {
-                EventManager.getInstance().removeListener(keyListener);
-            }
-        });
+//        EventManager.getInstance().addListener(new EntityListener(this, (e) -> {
+//            MasterGui.addGui(bgInteraction);
+//            MasterFont.addTempFont(interactionText);
+//           // EventManager.getInstance().addListener(keyListener); TODO Remove the current KeyListener and add a menu listener
+//            if (Input.keyPressed(GLFW.GLFW_KEY_E)) {
+//                if (inventory.isOpen()) {
+//                    inventory.close();
+//                } else {
+//                    inventory.open();
+//                }
+//            }
+//        }));
 
     }
 

@@ -19,7 +19,7 @@ public class EventManager {
     }
 
     public void callEvent(Event e) {
-        if (e instanceof KeyMaintainedEvent) System.out.printf("Event %s called\n", e.getClass().getName());
+        if (e instanceof KeyEvent) System.out.printf("Event %s called\n", e.getClass().getName());
         // long nano = System.nanoTime();
         this.listeners.forEach(listener -> {
             for (Method method : listener.getClass().getDeclaredMethods()) {
@@ -28,6 +28,7 @@ public class EventManager {
                         method.invoke(listener, e);
                     } catch (Exception ex) {
                         System.err.println(ex.getMessage());
+                        //ex.printStackTrace(System.err);
                     }
                 }
             }

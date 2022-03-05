@@ -1,8 +1,6 @@
 package fr.ostix.game.menu;
 
 import fr.ostix.game.core.*;
-import fr.ostix.game.core.events.*;
-import fr.ostix.game.core.events.listener.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.inventory.*;
 import fr.ostix.game.world.*;
@@ -25,7 +23,7 @@ public class WorldState extends Screen {
         playerInventory = new PlayerInventory("Player Inventory");
         hotBar = new InGameMenu();
 
-        EventManager.getInstance().addListener(new InventoryListener(this));
+        //EventManager.getInstance().addListener(new InventoryListener(this));
     }
 
     public boolean isWorldInitialized() {

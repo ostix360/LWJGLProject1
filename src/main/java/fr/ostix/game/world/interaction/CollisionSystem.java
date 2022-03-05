@@ -254,4 +254,7 @@ public class CollisionSystem {
         aabbs.put(body, aabbModel);
     }
 
+    public List<Entity> getEntitiesNear() {
+        return this.interactEntity;
+    }
 }

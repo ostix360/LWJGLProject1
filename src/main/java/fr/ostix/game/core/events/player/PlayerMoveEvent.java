@@ -4,11 +4,15 @@ import fr.ostix.game.entity.*;
 import org.joml.*;
 
 public class PlayerMoveEvent extends PlayerEvent {
-    private final Vector3f newPos;
+    private final Vector3f deltaPos;
 
 
-    public PlayerMoveEvent(Player player, int priority, Vector3f newPos) {
+    public PlayerMoveEvent(Player player, int priority, Vector3f deltaPos) {
         super(player, priority);
-        this.newPos = newPos;
+        this.deltaPos = deltaPos;
+    }
+
+    public Vector3f getDeltaPos() {
+        return deltaPos;
     }
 }
