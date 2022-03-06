@@ -4,8 +4,6 @@ import com.flowpowered.react.math.*;
 import fr.ostix.game.graphics.model.*;
 import org.joml.*;
 
-import java.lang.Math;
-
 public class Player extends Entity {
 
     private static final float RUN_SPEED = 160;
@@ -52,15 +50,15 @@ public class Player extends Entity {
     }
 
     private void move() {
-        if (currentSpeed == 0 && currentTurnSpeed == 0) {
+        if (forceToCenter.isZero()) {
             this.movement = MovementType.STATIC;
         }
         super.increaseRotation(new Vector3f(0, this.currentTurnSpeed * 0.0023f, 0));
         torque.set(new Vector3(0, this.currentTurnSpeed, 0));
-        float distance = currentSpeed * 0.006f;
-        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
-        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
-        forceToCenter.set(new Vector3(dx, 0, dz));
+//        float distance = currentSpeed * 0.006f;
+//        float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotation().y())));
+//        float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotation().y())));
+        forceToCenter.setToZero();
         //upwardsSpeed -= GRAVITY;
 
         if (upwardsSpeed <= -9.18f) {

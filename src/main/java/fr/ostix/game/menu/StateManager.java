@@ -1,6 +1,5 @@
 package fr.ostix.game.menu;
 
-import fr.ostix.game.core.events.*;
 import fr.ostix.game.core.events.listener.*;
 import fr.ostix.game.core.events.listener.keyListeners.*;
 import fr.ostix.game.core.loader.*;
@@ -49,9 +48,10 @@ public class StateManager {
             MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
             Logger.log("World is Loaded");
             keyWorldListener = new KeyInGameListener(world.getWorld(), world.getWorld().getPlayer());
-            EventManager.getInstance().addListener(keyWorldListener);
+            mainMenu.setKeyWorldListener(keyWorldListener);
         }
         if (mainMenu.startWorld) {
+            keyWorldListener.update();
             return 1;
         }
         return 0;

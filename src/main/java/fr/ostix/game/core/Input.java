@@ -40,14 +40,11 @@ public class Input {
                 keys[key] = action != GLFW_RELEASE;
 
                 if (action == GLFW_PRESS) {
-                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
                     EventManager.getInstance().callEvent(new KeyPressedEvent(0, key));
                 }
                 if (action == GLFW_RELEASE) {
-                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
                     EventManager.getInstance().callEvent(new KeyReleasedEvent(0, key));
                 } else {
-                    EventManager.getInstance().callEvent(new KeyEvent(0, key));
                     EventManager.getInstance().callEvent(new KeyMaintainedEvent(0, key));
                 }
             }

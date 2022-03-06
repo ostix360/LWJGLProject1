@@ -3,6 +3,9 @@ package fr.ostix.game.world;
 import com.flowpowered.react.math.*;
 import fr.ostix.game.audio.*;
 import fr.ostix.game.core.*;
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.listener.*;
+import fr.ostix.game.core.events.listener.player.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.entity.*;
 import fr.ostix.game.entity.animated.animation.animatedModel.*;
@@ -48,6 +51,7 @@ public class World {
     private static final Map<Vector2f, Chunk> terrains = new HashMap<>();
     public static Model CUBE;
     private final List<WaterTile> waterTiles = new ArrayList<>();
+    private final List<Listener> worldListeners = new ArrayList<>();
 
     private ChunkHandler chunkHandler;
 
@@ -100,6 +104,11 @@ public class World {
         player.addComponent(new AnimationComponent(player, ResourcePack.getAnimationByName().get(an)));
         CollisionComponent cp = (CollisionComponent) ComponentType.COLLISION_COMPONENT.loadComponent(player, pack.getComponents().get(-1940279936));
         player.setCollision(cp);
+        PlayerListener PL = new PlayerListener();
+        this.worldListeners.add(PL);
+        EventManager.getInstance().addListener(PL);
+
+
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());
         cam = new Camera(player);
         chunkHandler = new ChunkHandler(cam);
@@ -239,6 +248,7 @@ public class World {
     }
 
     public void cleanUp() {
+        EventManager.getInstance().removeAll(worldListeners);
         chunkHandler.exit();
         collision.finish();
         renderer.cleanUp();

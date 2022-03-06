@@ -24,7 +24,9 @@ public class PlayerInventory extends Screen {
                 new Vector2f(0), new Vector2f(1920,
                 1080));
         this.right_button = new Button(1830, 125, 90, 950,
-                ResourcePack.getTextureByName().get("right_button").getID());
+                ResourcePack.getTextureByName().get("right_button").getID(), (b) -> {
+            Logger.log("right button");
+        });
         recipeTab = ItemTab.newEmptyTab("RecipeTab", 35);
         super.init();
     }
@@ -55,7 +57,6 @@ public class PlayerInventory extends Screen {
     @Override
     public void update() {
         super.update();
-        if (right_button.isPressed()) Logger.log("right button");
         recipeTab.update();
     }
 
