@@ -27,7 +27,6 @@ public class AnimationComponent extends Component {
     public void update() {
         AnimatedModel model = (AnimatedModel) e.getModel();
         Animation a = animations.get(e.getMovement().getId());
-        System.out.println(e.getMovement().getId());
         if (a == null) {
             if (new Random().nextInt(4) == 0)
                 Logger.warn("The animation, " + e.getMovement().getId() + " for the model " + " is not available");

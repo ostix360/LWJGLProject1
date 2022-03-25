@@ -4,8 +4,10 @@ import fr.ostix.game.entity.*;
 import fr.ostix.game.graphics.model.*;
 import org.joml.*;
 
+import java.util.*;
+
 public class NPC extends Entity {
-    private int ID;
+    private int id;
     private String name;
 
 
@@ -13,8 +15,11 @@ public class NPC extends Entity {
         super(model, position, rotation, scale);
     }
 
-    public void talke() {
+    public void talke(List<String> dialogs) {
 
     }
 
+    public int getId() {
+        return id;
+    }
 }

@@ -47,7 +47,7 @@ public class StateManager {
             screens[1] = world;
             MasterParticle.init(loader, MasterRenderer.getProjectionMatrix());
             Logger.log("World is Loaded");
-            keyWorldListener = new KeyInGameListener(world.getWorld(), world.getWorld().getPlayer());
+            keyWorldListener = new KeyInGameListener(world.getWorld(), world.getWorld().getPlayer(), world.getPlayerInventory());
             mainMenu.setKeyWorldListener(keyWorldListener);
         }
         if (mainMenu.startWorld) {

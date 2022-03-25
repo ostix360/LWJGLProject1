@@ -2,7 +2,7 @@ package fr.ostix.game.core.events;
 
 import fr.ostix.game.inventory.*;
 
-public class InventoryEvent extends Event {
+public abstract class InventoryEvent extends Event {
     private final Inventory inv;
 
     public InventoryEvent(int priority, Inventory inv) {

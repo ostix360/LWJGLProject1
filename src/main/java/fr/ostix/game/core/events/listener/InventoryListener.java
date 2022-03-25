@@ -25,6 +25,4 @@ public class InventoryListener implements Listener {
         worldState.setOpenInventory(false);
         worldState.setCurrentInventory(null);
     }
-
-
 }

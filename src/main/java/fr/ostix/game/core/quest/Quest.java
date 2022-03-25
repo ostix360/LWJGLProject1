@@ -1,26 +1,47 @@
 package fr.ostix.game.core.quest;
 
+import fr.ostix.game.core.quest.serialization.*;
 import fr.ostix.game.entity.entities.*;
 
-import java.util.*;
-
-public class Quest {
+public abstract class Quest implements IQuestSerializer {
     private final int id;
     private final NPC npc;
     private final String title;
-    private final List<QuestAdvancement> advancements;
-    private final List<Object> gains;
+    private final String description;
+    private final Rewards rewards;
+    private QuestStatus status;
 
     private final boolean isStarted = false;
     private final boolean isFinished = false;
 
 
-    public Quest(int id, NPC npc, String title, List<QuestAdvancement> advancements, List<Object> gains) {
-        this.id = id;
-        this.npc = npc;
-        this.title = title;
-        this.advancements = advancements;
-        this.gains = gains;
+    public Quest() {
+        this.id = 0;
+        this.npc = null;
+        this.title = "Null Quest";
+        this.description = "The Quest is null";
+        this.rewards = new Rewards();
+        this.status = QuestStatus.UNAVAILABLE;
+    }
+
+    public void done() {
+        this.status = QuestStatus.DONE;
+    }
+
+    public NPC getNpc() {
+        return npc;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Rewards getRewards() {
+        return rewards;
+    }
+
+    public QuestStatus getStatus() {
+        return status;
     }
 
     public int getId() {

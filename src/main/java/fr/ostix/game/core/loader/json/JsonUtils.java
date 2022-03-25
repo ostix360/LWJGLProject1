@@ -1,18 +1,16 @@
 package fr.ostix.game.core.loader.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import fr.ostix.game.core.quest.*;
+import fr.ostix.game.core.quest.serialization.*;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class JsonUtils {
 
     public static Gson gsonInstance() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setPrettyPrinting();
+        gsonBuilder.setPrettyPrinting().registerTypeAdapter(Rewards.class, new RewardsTypeAdapter());
         return gsonBuilder.create();
     }
 

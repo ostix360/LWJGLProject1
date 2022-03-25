@@ -1,6 +1,8 @@
 package fr.ostix.game.menu;
 
 import fr.ostix.game.core.*;
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.listener.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.inventory.*;
 import fr.ostix.game.world.*;
@@ -20,10 +22,10 @@ public class WorldState extends Screen {
     public WorldState() {
         super("World");
         world = new World();
-        playerInventory = new PlayerInventory("Player Inventory");
+
         hotBar = new InGameMenu();
 
-        //EventManager.getInstance().addListener(new InventoryListener(this));
+        EventManager.getInstance().addListener(new InventoryListener(this));
     }
 
     public boolean isWorldInitialized() {
@@ -34,6 +36,7 @@ public class WorldState extends Screen {
 
     public void init(ResourcePack pack) {
         super.init();
+        playerInventory = new PlayerInventory("Player Inventory");
         world.initWorld(pack);
         playerInventory.init();
         hotBar.init(world.getPlayer());
@@ -77,12 +80,12 @@ public class WorldState extends Screen {
     }
 
     private void checkInputs() {
-        if (Input.keyPressed(GLFW_KEY_TAB)) {
-            openInventory = !openInventory;
-            worldCanBeUpdated = !openInventory;
-            if (currentInventory != null) currentInventory.close();
-            currentInventory = null;
-        }
+//        if (Input.keyPressed(GLFW_KEY_TAB)) {
+//            openInventory = !openInventory;
+//            worldCanBeUpdated = !openInventory;
+//            if (currentInventory != null) currentInventory.close();
+//            currentInventory = null;
+//        }
 
         if (Input.keys[GLFW_KEY_ESCAPE]) {
             openInventory = false;
@@ -90,6 +93,10 @@ public class WorldState extends Screen {
             if (currentInventory != null) currentInventory.close();
             currentInventory = null;
         }
+    }
+
+    public PlayerInventory getPlayerInventory() {
+        return playerInventory;
     }
 
     public void setWorldCanBeUpdated(boolean worldCanBeUpdated) {

@@ -22,7 +22,6 @@ public abstract class Inventory extends Screen {
 
     public void open() {
         MasterGui.addGui(backGround);
-        EventManager.getInstance().callEvent(new InventoryEvent(1, this));
         EventManager.getInstance().callEvent(new InventoryOpenEvent(1, this));
         isOpen = true;
     }
@@ -44,7 +43,6 @@ public abstract class Inventory extends Screen {
 
     public void close() {
         MasterGui.removeGui(backGround);
-        EventManager.getInstance().callEvent(new InventoryEvent(1, this));
         EventManager.getInstance().callEvent(new InventoryCloseEvent(1, this));
         isOpen = false;
     }

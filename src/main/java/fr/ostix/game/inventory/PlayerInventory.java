@@ -2,12 +2,11 @@ package fr.ostix.game.inventory;
 
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.gui.*;
-import fr.ostix.game.menu.*;
 import fr.ostix.game.menu.component.*;
 import fr.ostix.game.toolBox.*;
 import org.joml.*;
 
-public class PlayerInventory extends Screen {
+public class PlayerInventory extends Inventory {
 
     private GuiTexture backGround;
     private boolean isOpen = false;
