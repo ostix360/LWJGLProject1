@@ -13,6 +13,7 @@ import java.util.*;
 
 public class Entity {
 
+    private final int id;
     protected final Vector3 forceToCenter = new Vector3();
     protected final Vector3 torque = new Vector3();
     private final Model model;
@@ -27,7 +28,8 @@ public class Entity {
 
     private final List<Component> components = new ArrayList<>();
 
-    public Entity(Model model, Vector3f position, Vector3f rotation, float scale) {
+    public Entity(int id, Model model, Vector3f position, Vector3f rotation, float scale) {
+        this.id = id;
         this.model = model;
         this.position = position;
         this.rotation = rotation.add(0, 0, 0);
@@ -120,6 +122,10 @@ public class Entity {
             return row / model.getTexture().getNumbersOfRows();
         }
         return 1;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public MovementType getMovement() {

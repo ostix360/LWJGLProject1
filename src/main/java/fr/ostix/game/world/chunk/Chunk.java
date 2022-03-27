@@ -4,7 +4,6 @@ package fr.ostix.game.world.chunk;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.entity.*;
 import fr.ostix.game.entity.component.*;
-import fr.ostix.game.entity.entities.*;
 import fr.ostix.game.graphics.model.*;
 import fr.ostix.game.world.*;
 import fr.ostix.game.world.texture.*;
@@ -52,10 +51,11 @@ public class Chunk {
         while (index < lines.length) {
             String[] values = lines[index++].split(";");
             String entityName = values[0];
-            int component = Integer.parseInt(values[1]);
+            int id = Integer.parseInt(values[1]);
+            int component = Integer.parseInt(values[2]);
             Model m = res.getModelByName().get(entityName);
             Transform t = Transform.load(lines[index++]);
-            Shop e = new Shop(m, t.getPosition(), t.getRotation(), t.getScale().y());
+            Entity e = new Entity(id, m, t.getPosition(), t.getRotation(), t.getScale().y());
             LoadComponents.loadComponents(res.getComponents().get(component), e);
 
             entities.add(e);

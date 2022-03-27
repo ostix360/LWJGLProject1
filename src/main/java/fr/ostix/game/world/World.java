@@ -70,7 +70,7 @@ public class World {
     }
 
     public static Entity addAABB(Vector3 bodyPosition, Vector3 size) {
-        Entity entity = new Entity(CUBE, Maths.toVector3f(bodyPosition), new Vector3f(), 1);
+        Entity entity = new Entity(-1, CUBE, Maths.toVector3f(bodyPosition), new Vector3f(), 1);
         entity.setScale(Maths.toVector3f(size));
         aabbs.add(entity);
         return entity;

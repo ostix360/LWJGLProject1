@@ -23,7 +23,7 @@ public class Player extends Entity {
 
 
     public Player(Model model, Vector3f position, Vector3f rotation, float scale) {
-        super(model, position, rotation, scale);
+        super(0, model, position, rotation, scale);
     }
 
 

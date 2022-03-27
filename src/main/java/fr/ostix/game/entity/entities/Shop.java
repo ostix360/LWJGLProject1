@@ -16,8 +16,8 @@ public class Shop extends Entity {
     private final GuiTexture bgInteraction;
     private final GUIText interactionText;
 
-    public Shop(Model model, Vector3f position, Vector3f rotation, float scale) {
-        super(model, position, rotation, scale);
+    public Shop(Model model, Vector3f position, Vector3f rotation, float scale, int id) {
+        super(id, model, position, rotation, scale);
         inventory = new ShopInventory();
         inventory.init();
         this.canInteract = true;

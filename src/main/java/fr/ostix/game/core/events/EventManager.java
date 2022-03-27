@@ -1,7 +1,6 @@
 package fr.ostix.game.core.events;
 
 import fr.ostix.game.core.events.listener.*;
-import fr.ostix.game.core.events.player.*;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -19,7 +18,7 @@ public class EventManager {
     }
 
     public void callEvent(Event e) {
-        if (e instanceof PlayerEvent) System.out.printf("Event %s called\n", e.getClass().getSimpleName());
+        //if (e instanceof PlayerEvent) System.out.printf("Event %s called\n", e.getClass().getSimpleName());
         //long nano = System.nanoTime();
         this.listeners.forEach(listener -> {
             for (Method method : listener.getClass().getDeclaredMethods()) {
