@@ -37,8 +37,8 @@ public class StateManager {
         screens[0] = mainMenu;
         keyMainMenuListener = new KeyMenuListener(mainMenu);
 
-        //EventManager.getInstance().addListener(keyMainMenuListener);
-        //EventManager.getInstance().removeListener(keyMainMenuListener);
+        //EventManager.getInstance().register(keyMainMenuListener);
+        //EventManager.getInstance().unRegister(keyMainMenuListener);
     }
 
     public int update() {

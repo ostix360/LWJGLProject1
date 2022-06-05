@@ -1,5 +1,7 @@
 package fr.ostix.game.core.quest;
 
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.listener.quest.*;
 import fr.ostix.game.core.loader.json.*;
 
 import java.util.*;
@@ -10,6 +12,11 @@ public class QuestDialog extends Quest {
     public QuestDialog() {
 
         this.dialogs = new ArrayList<>();
+    }
+
+    @Override
+    public void execute() {
+        EventManager.getInstance().register(new QuestTalkListener(this));
     }
 
     public static QuestDialog load(String questData) {

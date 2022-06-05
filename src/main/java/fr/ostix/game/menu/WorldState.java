@@ -25,7 +25,7 @@ public class WorldState extends Screen {
 
         hotBar = new InGameMenu();
 
-        EventManager.getInstance().addListener(new InventoryListener(this));
+        EventManager.getInstance().register(new InventoryListener(this));
     }
 
     public boolean isWorldInitialized() {
@@ -38,7 +38,7 @@ public class WorldState extends Screen {
         super.init();
         playerInventory = new PlayerInventory("Player Inventory");
         world.initWorld(pack);
-        playerInventory.init();
+        world.getPlayer().setInventory(playerInventory);
         hotBar.init(world.getPlayer());
         worldInitialized = world.isInit();
 

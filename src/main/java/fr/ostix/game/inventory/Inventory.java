@@ -4,10 +4,14 @@ import fr.ostix.game.core.events.*;
 import fr.ostix.game.core.events.inventoryEvent.*;
 import fr.ostix.game.core.resources.*;
 import fr.ostix.game.gui.*;
+import fr.ostix.game.items.*;
 import fr.ostix.game.menu.*;
 import org.joml.*;
 
+import java.util.*;
+
 public abstract class Inventory extends Screen {
+    protected final List<ItemStack> items = new ArrayList<>();
     private final GuiTexture backGround;
     private boolean isOpen = false;
 
@@ -45,5 +49,11 @@ public abstract class Inventory extends Screen {
         MasterGui.removeGui(backGround);
         EventManager.getInstance().callEvent(new InventoryCloseEvent(1, this));
         isOpen = false;
+    }
+
+    public boolean has(ItemStack item) {
+        return items.stream().anyMatch(itemStack ->
+                itemStack.getItem().getId() == item.getItem().getId()
+                        && itemStack.getCount() >= item.getCount());
     }
 }

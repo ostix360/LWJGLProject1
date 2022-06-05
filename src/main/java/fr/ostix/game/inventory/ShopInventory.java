@@ -2,10 +2,8 @@ package fr.ostix.game.inventory;
 
 import fr.ostix.game.items.*;
 
-import java.util.*;
-
 public class ShopInventory extends Inventory {
-    private final HashMap<Integer, ItemStack> items = new HashMap<>();
+
     private final ItemTab shopTab;
 
     public ShopInventory() {
@@ -15,12 +13,9 @@ public class ShopInventory extends Inventory {
     }
 
     private void setItems() {
-        items.put(10, new ItemStack(Items.potion, 1));
+        this.items.add(new ItemStack(Items.potion, 10));
         int i = 0;
-        for (ItemStack is : items.values()) {
-            shopTab.getSlots()[i].setStack(is);
-            i++;
-        }
+        shopTab.getSlots()[i].setStack(new ItemStack(Items.potion, 10));
     }
 
     @Override

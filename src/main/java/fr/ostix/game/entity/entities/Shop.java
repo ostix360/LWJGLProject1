@@ -27,10 +27,10 @@ public class Shop extends Entity {
                 20, false);
 
         interactionText.setColour(Color.WHITE);
-//        EventManager.getInstance().addListener(new EntityListener(this, (e) -> {
+//        EventManager.getInstance().register(new EntityListener(this, (e) -> {
 //            MasterGui.addGui(bgInteraction);
 //            MasterFont.addTempFont(interactionText);
-//           // EventManager.getInstance().addListener(keyListener); TODO Remove the current KeyListener and add a menu listener
+//           // EventManager.getInstance().register(keyListener); TODO Remove the current KeyListener and add a menu listener
 //            if (Input.keyPressed(GLFW.GLFW_KEY_E)) {
 //                if (inventory.isOpen()) {
 //                    inventory.close();

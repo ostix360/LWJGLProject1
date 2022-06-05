@@ -21,4 +21,7 @@ public class NPC extends Entity {
 
     }
 
+    public void talke(String dialog) {
+
+    }
 }

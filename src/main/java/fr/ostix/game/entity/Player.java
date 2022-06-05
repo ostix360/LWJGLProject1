@@ -2,6 +2,7 @@ package fr.ostix.game.entity;
 
 import com.flowpowered.react.math.*;
 import fr.ostix.game.graphics.model.*;
+import fr.ostix.game.inventory.*;
 import org.joml.*;
 
 public class Player extends Entity {
@@ -21,11 +22,12 @@ public class Player extends Entity {
     private int sprintTime = 60 * 5;
     private final boolean isSprinting = false;
 
+    private PlayerInventory inventory;
+
 
     public Player(Model model, Vector3f position, Vector3f rotation, float scale) {
         super(0, model, position, rotation, scale);
     }
-
 
 
 //    public Player(Entity e) {
@@ -95,5 +97,12 @@ public class Player extends Entity {
     }
 
 
+    public PlayerInventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(PlayerInventory playerInventory) {
+        this.inventory = playerInventory;
+    }
 }
 

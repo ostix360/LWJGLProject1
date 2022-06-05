@@ -106,7 +106,7 @@ public class World {
         player.setCollision(cp);
         PlayerListener PL = new PlayerListener();
         this.worldListeners.add(PL);
-        EventManager.getInstance().addListener(PL);
+        EventManager.getInstance().register(PL);
 
 
         listener = new SoundListener(player.getPosition(), new Vector3f(), player.getRotation());

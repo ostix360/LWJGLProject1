@@ -45,11 +45,11 @@ public class EventManager {
         listeners.forEach(this.listeners::remove);
     }
 
-    public void addListener(Listener listener) {
+    public void register(Listener listener) {
         this.listeners.add(listener);
     }
 
-    public void removeListener(Listener listener) {
+    public void unRegister(Listener listener) {
         this.listeners.remove(listener);
     }
 }

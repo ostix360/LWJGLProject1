@@ -1,5 +1,7 @@
 package fr.ostix.game.core.quest;
 
+import fr.ostix.game.core.events.*;
+import fr.ostix.game.core.events.listener.quest.*;
 import fr.ostix.game.core.loader.json.*;
 import org.joml.*;
 
@@ -11,6 +13,11 @@ public class QuestLocation extends Quest {
     public QuestLocation() {
         this.pos = new Vector3f();
         this.range = 5;
+    }
+
+    @Override
+    public void execute() {
+        EventManager.getInstance().register(new QuestLocationListener(this));
     }
 
     public static QuestLocation load(String questData) {

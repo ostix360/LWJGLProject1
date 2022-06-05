@@ -24,7 +24,7 @@ public class MainMenu extends Screen {
                 ResourcePack.getTextureByName().get("startButton").getID(), (b) -> {
             startWorld = true;
             start.cleanUp();
-            EventManager.getInstance().addListener(keyInGameListener);
+            EventManager.getInstance().register(keyInGameListener);
         });
         this.addComponent(start);
 
